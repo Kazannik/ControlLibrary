@@ -2,12 +2,12 @@
 using System.Windows.Forms;
 using System.Windows.Forms.Design;
 
-namespace ControlLibrary.PickerBox
+namespace ControlLibrary.PickerControl
 {
 	[System.ComponentModel.DesignerCategory("Form")]
 	[System.Drawing.ToolboxBitmap(typeof(ComboBox))]
 	[ToolStripItemDesignerAvailability(ToolStripItemDesignerAvailability.All)]
-	internal abstract class PickerControl <T> : ComboBox where T : UserControl, new()
+	internal abstract class PickerControl<T> : ComboBox where T : UserControl, new()
 	{
 		private readonly ToolStripControlHost controlHost;
 		private readonly T popupForm;
@@ -30,10 +30,10 @@ namespace ControlLibrary.PickerBox
 		}
 
 		public T PopupForm
-		{ 
+		{
 			get { return (T)controlHost.Control; }
-		} 
-		
+		}
+
 		private void ShowDropDown()
 		{
 			if (dropDown != null)

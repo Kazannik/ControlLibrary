@@ -7,12 +7,12 @@ using System.Drawing.Drawing2D;
 using System.Runtime.InteropServices;
 using System.Windows.Forms;
 
-namespace DatabaseToolSuite.Controls
+namespace Controls.ComboControls
 {
 	[DesignerCategory("code")]
-	[ToolboxBitmap(typeof(ComboBox))]
+	[ToolboxBitmap(typeof(System.Windows.Forms.ComboBox))]
 	[ComVisible(false)]
-	internal abstract class ComboControl<T> : ComboBox where T : ComboControl<T>.IComboControlItem
+	internal abstract class ComboControl<T> : System.Windows.Forms.ComboBox where T : ComboControl<T>.IComboControlItem
 	{
 		protected StringFormat sfCode;
 		protected StringFormat sfCaption;
@@ -388,7 +388,7 @@ namespace DatabaseToolSuite.Controls
 
 		protected void Remove(T value)
 		{
-		Items.Remove(value);
+			Items.Remove(value);
 		}
 
 		protected void RemoveAt(int index)

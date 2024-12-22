@@ -49,38 +49,54 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="ComboBox\BasePeriodBox.cs">
+    <Compile Include="ComboControl\BasePeriodBox.cs">
       <SubType>Component</SubType>
     </Compile>
-    <Compile Include="ComboBox\ColorThemeList.cs">
+    <Compile Include="ComboControl\ColorThemeList.cs">
       <SubType>Component</SubType>
     </Compile>
-    <Compile Include="ComboBox\ColorThemeList.Designer.cs">
+    <Compile Include="ComboControl\ColorThemeList.Designer.cs">
       <DependentUpon>ColorThemeList.cs</DependentUpon>
     </Compile>
-    <Compile Include="ComboBox\ComboControl.cs" />
-    <Compile Include="ComboBox\DataGridViewDateTimePickerCell.cs" />
-    <Compile Include="ComboBox\NumericTextBox.cs" />
-    <Compile Include="ComboBox\PeriodBox.cs">
+    <Compile Include="ComboControl\ComboControl.cs" />
+    <Compile Include="ComboControl\DataGridViewDateTimePickerCell.cs" />
+    <Compile Include="ComboControl\NumericTextBox.cs" />
+    <Compile Include="ComboControl\PeriodBox.cs">
       <SubType>UserControl</SubType>
     </Compile>
-    <Compile Include="ComboBox\PeriodBox.Designer.cs">
+    <Compile Include="ComboControl\PeriodBox.Designer.cs">
       <DependentUpon>PeriodBox.cs</DependentUpon>
     </Compile>
-    <Compile Include="ComboBox\PeriodPicker.cs">
+    <Compile Include="ComboControl\PeriodPicker.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="ComboBox\PeriodPickerPopupForm.cs">
+    <Compile Include="ComboControl\PeriodPickerPopupForm.cs">
       <SubType>UserControl</SubType>
     </Compile>
-    <Compile Include="ComboBox\PeriodPickerPopupForm.Designer.cs">
+    <Compile Include="ComboControl\PeriodPickerPopupForm.Designer.cs">
       <DependentUpon>PeriodPickerPopupForm.cs</DependentUpon>
     </Compile>
-    <Compile Include="ComboBox\ToolStripCheckBox.cs" />
-    <Compile Include="ComboBox\ToolStripNumericUpDown.cs" />
-    <Compile Include="PickerBox\PickerControl.cs">
+    <Compile Include="ComboControl\ToolStripCheckBox.cs" />
+    <Compile Include="ComboControl\ToolStripNumericUpDown.cs" />
+    <Compile Include="PickerControl\PickerControl.cs">
       <SubType>Form</SubType>
     </Compile>
+    <Compile Include="QRControl\AbstractQRCode.cs" />
+    <Compile Include="QRControl\ArtQRCode.cs" />
+    <Compile Include="QRControl\ASCIIQRCode.cs" />
+    <Compile Include="QRControl\Base64QRCode.cs" />
+    <Compile Include="QRControl\BitmapByteQRCode.cs" />
+    <Compile Include="QRControl\Exceptions\DataTooLongException.cs" />
+    <Compile Include="QRControl\Extensions\StringValueAttribute.cs" />
+    <Compile Include="QRControl\Framework4.0Methods\Stream4Methods.cs" />
+    <Compile Include="QRControl\PayloadGenerator.cs" />
+    <Compile Include="QRControl\PdfByteQRCode.cs" />
+    <Compile Include="QRControl\PngByteQRCode.cs" />
+    <Compile Include="QRControl\PostscriptQRCode.cs" />
+    <Compile Include="QRControl\QRCode.cs" />
+    <Compile Include="QRControl\QRCodeData.cs" />
+    <Compile Include="QRControl\QRCodeGenerator.cs" />
+    <Compile Include="QRControl\SvgQRCode.cs" />
     <Compile Include="Structures\Period.cs" />
     <Compile Include="TextEditorBox\Actions\BookmarkActions.cs" />
     <Compile Include="TextEditorBox\Actions\CaretActions.cs" />
@@ -218,18 +234,22 @@
     <Compile Include="TextEditorBox\Util\TipText.cs" />
     <Compile Include="TextEditorBox\Util\WeakCollection.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Utils\FileCopier.cs" />
     <Compile Include="Utils\Gdi32.cs" />
+    <Compile Include="Utils\Shortcut.cs" />
     <Service Include="{94E38DFF-614B-4cbd-B67C-F211BB35CE8B}" />
   </ItemGroup>
-  <ItemGroup />
   <ItemGroup>
-    <EmbeddedResource Include="ComboBox\BasePeriodBox.resx">
+    <Folder Include="ToolStripControl\" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="ComboControl\BasePeriodBox.resx">
       <DependentUpon>BasePeriodBox.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="ComboBox\PeriodBox.resx">
+    <EmbeddedResource Include="ComboControl\PeriodBox.resx">
       <DependentUpon>PeriodBox.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="ComboBox\PeriodPickerPopupForm.resx">
+    <EmbeddedResource Include="ComboControl\PeriodPickerPopupForm.resx">
       <DependentUpon>PeriodPickerPopupForm.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
