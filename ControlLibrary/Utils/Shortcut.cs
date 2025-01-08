@@ -29,7 +29,7 @@ namespace ControlLibrary.Utils
 			int WindowStyle { [DispId(0x3ee)] get; [param: In][DispId(0x3ee)] set; }
 			[DispId(0x3ef)]
 			string WorkingDirectory { [return: MarshalAs(UnmanagedType.BStr)][DispId(0x3ef)] get; [param: In, MarshalAs(UnmanagedType.BStr)][DispId(0x3ef)] set; }
-			[TypeLibFunc((short)0x40), DispId(0x7d0)]
+			[TypeLibFunc(0x40), DispId(0x7d0)]
 			void Load([In, MarshalAs(UnmanagedType.BStr)] string PathLink);
 			[DispId(0x7d1)]
 			void Save();

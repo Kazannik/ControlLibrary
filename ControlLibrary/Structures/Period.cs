@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Globalization;
 
-namespace ExcelAnalyzer.Arm
+namespace ControlLibrary.Structures
 {
 	public readonly struct Period : IComparable<Period>, IComparable<DateTime>
 	{
@@ -166,7 +166,7 @@ namespace ExcelAnalyzer.Arm
 			}
 		}
 
-		public override string ToString()
+		public new string ToString()
 		{
 			return Year.ToString("0000") + Month.ToString("00");
 		}
@@ -206,8 +206,7 @@ namespace ExcelAnalyzer.Arm
 
 		public override int GetHashCode()
 		{
-			int sum = Year * 12 + Month;
-			return sum.GetHashCode();
+			return unchecked(87 * Year.GetHashCode() ^ Month.GetHashCode());
 		}
 
 		public static Period operator +(Period a, Period b)
