@@ -12,25 +12,12 @@ namespace ControlLibrary.Controls.TextControl.TextEditor
 	/// </summary>
 	public class IconBarMargin : AbstractMargin
 	{
-		const int iconBarWidth = 18;
+		private const int iconBarWidth = 18;
+		private static readonly Size iconBarSize = new Size(iconBarWidth, -1);
 
-		static readonly Size iconBarSize = new Size(iconBarWidth, -1);
+		public override Size Size => iconBarSize;
 
-		public override Size Size
-		{
-			get
-			{
-				return iconBarSize;
-			}
-		}
-
-		public override bool IsVisible
-		{
-			get
-			{
-				return textArea.TextEditorProperties.IsIconBarVisible;
-			}
-		}
+		public override bool IsVisible => textArea.TextEditorProperties.IsIconBarVisible;
 
 
 		public IconBarMargin(TextArea textArea) : base(textArea)
@@ -109,7 +96,7 @@ namespace ControlLibrary.Controls.TextControl.TextEditor
 		{
 			int diameter = Math.Min(iconBarWidth - 2, textArea.TextView.FontHeight);
 			Rectangle rect = new Rectangle(1,
-										   y + (textArea.TextView.FontHeight - diameter) / 2,
+										   y + ((textArea.TextView.FontHeight - diameter) / 2),
 										   diameter,
 										   diameter);
 
@@ -119,7 +106,7 @@ namespace ControlLibrary.Controls.TextControl.TextEditor
 				path.AddEllipse(rect);
 				using (PathGradientBrush pthGrBrush = new PathGradientBrush(path))
 				{
-					pthGrBrush.CenterPoint = new PointF(rect.Left + rect.Width / 3, rect.Top + rect.Height / 3);
+					pthGrBrush.CenterPoint = new PointF(rect.Left + (rect.Width / 3), rect.Top + (rect.Height / 3));
 					pthGrBrush.CenterColor = Color.MistyRose;
 					Color[] colors = { isHealthy ? Color.Firebrick : Color.Olive };
 					pthGrBrush.SurroundColors = colors;
@@ -143,7 +130,7 @@ namespace ControlLibrary.Controls.TextControl.TextEditor
 		public void DrawBookmark(Graphics g, int y, bool isEnabled)
 		{
 			int delta = textArea.TextView.FontHeight / 8;
-			Rectangle rect = new Rectangle(1, y + delta, base.drawingPosition.Width - 4, textArea.TextView.FontHeight - delta * 2);
+			Rectangle rect = new Rectangle(1, y + delta, base.drawingPosition.Width - 4, textArea.TextView.FontHeight - (delta * 2));
 
 			if (isEnabled)
 			{
@@ -174,7 +161,7 @@ namespace ControlLibrary.Controls.TextControl.TextEditor
 		public void DrawArrow(Graphics g, int y)
 		{
 			int delta = textArea.TextView.FontHeight / 8;
-			Rectangle rect = new Rectangle(1, y + delta, base.drawingPosition.Width - 4, textArea.TextView.FontHeight - delta * 2);
+			Rectangle rect = new Rectangle(1, y + delta, base.drawingPosition.Width - 4, textArea.TextView.FontHeight - (delta * 2));
 			using (Brush brush = new LinearGradientBrush(new Point(rect.Left, rect.Top),
 														 new Point(rect.Right, rect.Bottom),
 														 Color.LightYellow,
@@ -195,23 +182,23 @@ namespace ControlLibrary.Controls.TextControl.TextEditor
 			}
 		}
 
-		GraphicsPath CreateArrowGraphicsPath(Rectangle r)
+		private GraphicsPath CreateArrowGraphicsPath(Rectangle r)
 		{
 			GraphicsPath gp = new GraphicsPath();
 			int halfX = r.Width / 2;
 			int halfY = r.Height / 2;
-			gp.AddLine(r.X, r.Y + halfY / 2, r.X + halfX, r.Y + halfY / 2);
-			gp.AddLine(r.X + halfX, r.Y + halfY / 2, r.X + halfX, r.Y);
+			gp.AddLine(r.X, r.Y + (halfY / 2), r.X + halfX, r.Y + (halfY / 2));
+			gp.AddLine(r.X + halfX, r.Y + (halfY / 2), r.X + halfX, r.Y);
 			gp.AddLine(r.X + halfX, r.Y, r.Right, r.Y + halfY);
 			gp.AddLine(r.Right, r.Y + halfY, r.X + halfX, r.Bottom);
-			gp.AddLine(r.X + halfX, r.Bottom, r.X + halfX, r.Bottom - halfY / 2);
-			gp.AddLine(r.X + halfX, r.Bottom - halfY / 2, r.X, r.Bottom - halfY / 2);
-			gp.AddLine(r.X, r.Bottom - halfY / 2, r.X, r.Y + halfY / 2);
+			gp.AddLine(r.X + halfX, r.Bottom, r.X + halfX, r.Bottom - (halfY / 2));
+			gp.AddLine(r.X + halfX, r.Bottom - (halfY / 2), r.X, r.Bottom - (halfY / 2));
+			gp.AddLine(r.X, r.Bottom - (halfY / 2), r.X, r.Y + (halfY / 2));
 			gp.CloseFigure();
 			return gp;
 		}
 
-		GraphicsPath CreateRoundRectGraphicsPath(Rectangle r)
+		private GraphicsPath CreateRoundRectGraphicsPath(Rectangle r)
 		{
 			GraphicsPath gp = new GraphicsPath();
 			int radius = r.Width / 2;
@@ -231,7 +218,7 @@ namespace ControlLibrary.Controls.TextControl.TextEditor
 			return gp;
 		}
 
-		void DrawRoundRect(Graphics g, Pen p, Rectangle r)
+		private void DrawRoundRect(Graphics g, Pen p, Rectangle r)
 		{
 			using (GraphicsPath gp = CreateRoundRectGraphicsPath(r))
 			{
@@ -239,7 +226,7 @@ namespace ControlLibrary.Controls.TextControl.TextEditor
 			}
 		}
 
-		void FillRoundRect(Graphics g, Brush b, Rectangle r)
+		private void FillRoundRect(Graphics g, Brush b, Rectangle r)
 		{
 			using (GraphicsPath gp = CreateRoundRectGraphicsPath(r))
 			{
@@ -247,7 +234,7 @@ namespace ControlLibrary.Controls.TextControl.TextEditor
 			}
 		}
 
-		void DrawArrow(Graphics g, Pen p, Rectangle r)
+		private void DrawArrow(Graphics g, Pen p, Rectangle r)
 		{
 			using (GraphicsPath gp = CreateArrowGraphicsPath(r))
 			{
@@ -255,7 +242,7 @@ namespace ControlLibrary.Controls.TextControl.TextEditor
 			}
 		}
 
-		void FillArrow(Graphics g, Brush b, Rectangle r)
+		private void FillArrow(Graphics g, Brush b, Rectangle r)
 		{
 			using (GraphicsPath gp = CreateArrowGraphicsPath(r))
 			{
@@ -265,7 +252,7 @@ namespace ControlLibrary.Controls.TextControl.TextEditor
 
 		#endregion
 
-		static bool IsLineInsideRegion(int top, int bottom, int regionTop, int regionBottom)
+		private static bool IsLineInsideRegion(int top, int bottom, int regionTop, int regionBottom)
 		{
 			if (top >= regionTop && top <= regionBottom)
 			{

@@ -11,29 +11,20 @@ namespace ControlLibrary.Controls.TextControl.TextEditor.Gui.CompletionWindow
 	[ToolboxItem(false)]
 	public class CodeCompletionListView : System.Windows.Forms.UserControl
 	{
-		ICompletionData[] completionData;
-		int firstItem = 0;
-		int selectedItem = -1;
-		ImageList imageList;
+		private ICompletionData[] completionData;
+		private int firstItem = 0;
+		private int selectedItem = -1;
+		private ImageList imageList;
 
 		public ImageList ImageList
 		{
-			get
-			{
-				return imageList;
-			}
-			set
-			{
-				imageList = value;
-			}
+			get => imageList;
+			set => imageList = value;
 		}
 
 		public int FirstItem
 		{
-			get
-			{
-				return firstItem;
-			}
+			get => firstItem;
 			set
 			{
 				if (firstItem != value)
@@ -44,33 +35,11 @@ namespace ControlLibrary.Controls.TextControl.TextEditor.Gui.CompletionWindow
 			}
 		}
 
-		public ICompletionData SelectedCompletionData
-		{
-			get
-			{
-				if (selectedItem < 0)
-				{
-					return null;
-				}
-				return completionData[selectedItem];
-			}
-		}
+		public ICompletionData SelectedCompletionData => selectedItem < 0 ? null : completionData[selectedItem];
 
-		public int ItemHeight
-		{
-			get
-			{
-				return Math.Max(imageList.ImageSize.Height, (int)(Font.Height * 1.25));
-			}
-		}
+		public int ItemHeight => Math.Max(imageList.ImageSize.Height, (int)(Font.Height * 1.25));
 
-		public int MaxVisibleItem
-		{
-			get
-			{
-				return Height / ItemHeight;
-			}
-		}
+		public int MaxVisibleItem => Height / ItemHeight;
 
 		public CodeCompletionListView(ICompletionData[] completionData)
 		{
@@ -117,7 +86,7 @@ namespace ControlLibrary.Controls.TextControl.TextEditor.Gui.CompletionWindow
 				{
 					int min = Math.Min(selectedItem, oldSelectedItem) - firstItem;
 					int max = Math.Max(selectedItem, oldSelectedItem) - firstItem;
-					Invalidate(new Rectangle(0, 1 + min * ItemHeight, Width, (max - min + 1) * ItemHeight));
+					Invalidate(new Rectangle(0, 1 + (min * ItemHeight), Width, (max - min + 1) * ItemHeight));
 				}
 				OnSelectedItemChanged(EventArgs.Empty);
 			}
@@ -126,13 +95,8 @@ namespace ControlLibrary.Controls.TextControl.TextEditor.Gui.CompletionWindow
 		public void CenterViewOn(int index)
 		{
 			int oldFirstItem = this.FirstItem;
-			int firstItem = index - MaxVisibleItem / 2;
-			if (firstItem < 0)
-				this.FirstItem = 0;
-			else if (firstItem >= completionData.Length - MaxVisibleItem)
-				this.FirstItem = completionData.Length - MaxVisibleItem;
-			else
-				this.FirstItem = firstItem;
+			int firstItem = index - (MaxVisibleItem / 2);
+			this.FirstItem = firstItem < 0 ? 0 : firstItem >= completionData.Length - MaxVisibleItem ? completionData.Length - MaxVisibleItem : firstItem;
 			if (this.FirstItem != oldFirstItem)
 			{
 				Invalidate();
@@ -145,7 +109,7 @@ namespace ControlLibrary.Controls.TextControl.TextEditor.Gui.CompletionWindow
 				return;
 			int itemNum = selectedItem - firstItem;
 			selectedItem = -1;
-			Invalidate(new Rectangle(0, itemNum * ItemHeight, Width, (itemNum + 1) * ItemHeight + 1));
+			Invalidate(new Rectangle(0, itemNum * ItemHeight, Width, ((itemNum + 1) * ItemHeight) + 1));
 			Update();
 			OnSelectedItemChanged(EventArgs.Empty);
 		}
@@ -189,42 +153,12 @@ namespace ControlLibrary.Controls.TextControl.TextEditor.Gui.CompletionWindow
 				if (lowerText.StartsWith(startText))
 				{
 					double priority = completionData[i].Priority;
-					int quality;
-					if (lowerText == startText)
-					{
-						if (itemText == originalStartText)
-							quality = 3;
-						else
-							quality = 2;
-					}
-					else if (itemText.StartsWith(originalStartText))
-					{
-						quality = 1;
-					}
-					else
-					{
-						quality = 0;
-					}
-					bool useThisItem;
-					if (bestQuality < quality)
-					{
-						useThisItem = true;
-					}
-					else
-					{
-						if (bestIndex == selectedItem)
-						{
-							useThisItem = false;
-						}
-						else if (i == selectedItem)
-						{
-							useThisItem = bestQuality == quality;
-						}
-						else
-						{
-							useThisItem = bestQuality == quality && bestPriority < priority;
-						}
-					}
+					int quality = lowerText == startText ? itemText == originalStartText ? 3 : 2 : itemText.StartsWith(originalStartText) ? 1 : 0;
+					bool useThisItem = bestQuality < quality
+						? true
+						: bestIndex == selectedItem
+							? false
+							: i == selectedItem ? bestQuality == quality : bestQuality == quality && bestPriority < priority;
 					if (useThisItem)
 					{
 						bestIndex = i;
@@ -325,18 +259,12 @@ namespace ControlLibrary.Controls.TextControl.TextEditor.Gui.CompletionWindow
 
 		protected virtual void OnSelectedItemChanged(EventArgs e)
 		{
-			if (SelectedItemChanged != null)
-			{
-				SelectedItemChanged(this, e);
-			}
+			SelectedItemChanged?.Invoke(this, e);
 		}
 
 		protected virtual void OnFirstItemChanged(EventArgs e)
 		{
-			if (FirstItemChanged != null)
-			{
-				FirstItemChanged(this, e);
-			}
+			FirstItemChanged?.Invoke(this, e);
 		}
 
 		public event EventHandler SelectedItemChanged;

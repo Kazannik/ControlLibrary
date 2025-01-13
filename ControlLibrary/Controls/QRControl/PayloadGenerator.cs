@@ -9,9 +9,9 @@ namespace ControlLibrary.Controls.QRCoder
 	{
 		public abstract class Payload
 		{
-			public virtual int Version { get { return -1; } }
-			public virtual QRCodeGenerator.ECCLevel EccLevel { get { return QRCodeGenerator.ECCLevel.M; } }
-			public virtual QRCodeGenerator.EciMode EciMode { get { return QRCodeGenerator.EciMode.Default; } }
+			public virtual int Version => -1;
+			public virtual QRCodeGenerator.ECCLevel EccLevel => QRCodeGenerator.ECCLevel.M;
+			public virtual QRCodeGenerator.EciMode EciMode => QRCodeGenerator.EciMode.Default;
 			public abstract override string ToString();
 		}
 
@@ -305,7 +305,7 @@ namespace ControlLibrary.Controls.QRCoder
 
 			public override string ToString()
 			{
-				return (!this.url.StartsWith("http") ? "http://" + this.url : this.url);
+				return !this.url.StartsWith("http") ? "http://" + this.url : this.url;
 			}
 		}
 
@@ -340,7 +340,7 @@ namespace ControlLibrary.Controls.QRCoder
 			public override string ToString()
 			{
 				var cleanedPhone = Regex.Replace(this.number, @"^[0+]+|[ ()-]", string.Empty);
-				return ($"https://wa.me/{cleanedPhone}?text={Uri.EscapeDataString(message)}");
+				return $"https://wa.me/{cleanedPhone}?text={Uri.EscapeDataString(message)}";
 			}
 		}
 
@@ -601,7 +601,7 @@ namespace ControlLibrary.Controls.QRCoder
 
 		private static bool IsHexStyle(string inp)
 		{
-			return (System.Text.RegularExpressions.Regex.IsMatch(inp, @"\A\b[0-9a-fA-F]+\b\Z") || System.Text.RegularExpressions.Regex.IsMatch(inp, @"\A\b(0[xX])?[0-9a-fA-F]+\b\Z"));
+			return System.Text.RegularExpressions.Regex.IsMatch(inp, @"\A\b[0-9a-fA-F]+\b\Z") || System.Text.RegularExpressions.Regex.IsMatch(inp, @"\A\b(0[xX])?[0-9a-fA-F]+\b\Z");
 		}
 	}
 }

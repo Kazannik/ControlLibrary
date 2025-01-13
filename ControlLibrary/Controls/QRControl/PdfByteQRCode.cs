@@ -6,10 +6,10 @@ using System.IO;
 using System.Linq;
 using static ControlLibrary.Controls.QRCoder.QRCodeGenerator;
 
+
 /* This renderer is inspired by RemusVasii: https://github.com/codebude/QRCoder/issues/223 */
 namespace ControlLibrary.Controls.QRCoder
 {
-
 	// ReSharper disable once InconsistentNaming
 	public class PdfByteQRCode : AbstractQRCode, IDisposable
 	{

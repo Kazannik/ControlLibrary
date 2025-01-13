@@ -5,7 +5,7 @@ namespace ControlLibrary.Controls.TextControl.TextEditor.Document
 	/// <summary>
 	/// A list of events that are fired after the line manager has finished working.
 	/// </summary>
-	struct DeferredEventList
+	internal struct DeferredEventList
 	{
 		internal List<LineSegment> removedLines;
 		internal List<TextAnchor> textAnchor;

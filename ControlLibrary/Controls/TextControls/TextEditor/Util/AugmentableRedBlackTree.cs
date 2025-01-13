@@ -53,8 +53,8 @@ namespace ControlLibrary.Controls.TextControl.TextEditor.Util
 	/// </summary>
 	internal sealed class AugmentableRedBlackTree<T, Host> : ICollection<T> where Host : IRedBlackTreeHost<T>
 	{
-		readonly Host host;
-		int count;
+		private readonly Host host;
+		private int count;
 		internal RedBlackTreeNode<T> root;
 
 		public AugmentableRedBlackTree(Host host)
@@ -63,10 +63,7 @@ namespace ControlLibrary.Controls.TextControl.TextEditor.Util
 			this.host = host;
 		}
 
-		public int Count
-		{
-			get { return count; }
-		}
+		public int Count => count;
 
 		public void Clear()
 		{
@@ -80,7 +77,7 @@ namespace ControlLibrary.Controls.TextControl.TextEditor.Util
 		/// Check tree for consistency and being balanced.
 		/// </summary>
 		[Conditional("DATACONSISTENCYTEST")]
-		void CheckProperties()
+		private void CheckProperties()
 		{
 			int blackCount = -1;
 			CheckNodeProperties(root, null, RED, 0, ref blackCount);
@@ -100,7 +97,7 @@ namespace ControlLibrary.Controls.TextControl.TextEditor.Util
 		4. Both children of every red node are black. (So every red node must have a black parent.)
 		5. Every simple path from a node to a descendant leaf contains the same number of black nodes. (Not counting the leaf node.)
 		 */
-		void CheckNodeProperties(RedBlackTreeNode<T> node, RedBlackTreeNode<T> parentNode, bool parentColor, int blackCount, ref int expectedBlackCount)
+		private void CheckNodeProperties(RedBlackTreeNode<T> node, RedBlackTreeNode<T> parentNode, bool parentColor, int blackCount, ref int expectedBlackCount)
 		{
 			if (node == null) return;
 
@@ -133,7 +130,7 @@ namespace ControlLibrary.Controls.TextControl.TextEditor.Util
 			return b.ToString();
 		}
 
-		static void AppendTreeToString(RedBlackTreeNode<T> node, StringBuilder b, int indent)
+		private static void AppendTreeToString(RedBlackTreeNode<T> node, StringBuilder b, int indent)
 		{
 			if (node.color == RED)
 				b.Append("RED   ");
@@ -166,7 +163,7 @@ namespace ControlLibrary.Controls.TextControl.TextEditor.Util
 #endif
 		}
 
-		void AddInternal(RedBlackTreeNode<T> newNode)
+		private void AddInternal(RedBlackTreeNode<T> newNode)
 		{
 			Debug.Assert(newNode.color == BLACK);
 			if (root == null)
@@ -222,7 +219,7 @@ namespace ControlLibrary.Controls.TextControl.TextEditor.Util
 			count++;
 		}
 
-		void FixTreeOnInsert(RedBlackTreeNode<T> node)
+		private void FixTreeOnInsert(RedBlackTreeNode<T> node)
 		{
 			Debug.Assert(node != null);
 			Debug.Assert(node.color == RED);
@@ -290,7 +287,7 @@ namespace ControlLibrary.Controls.TextControl.TextEditor.Util
 			}
 		}
 
-		void ReplaceNode(RedBlackTreeNode<T> replacedNode, RedBlackTreeNode<T> newNode)
+		private void ReplaceNode(RedBlackTreeNode<T> replacedNode, RedBlackTreeNode<T> newNode)
 		{
 			if (replacedNode.parent == null)
 			{
@@ -311,7 +308,7 @@ namespace ControlLibrary.Controls.TextControl.TextEditor.Util
 			replacedNode.parent = null;
 		}
 
-		void RotateLeft(RedBlackTreeNode<T> p)
+		private void RotateLeft(RedBlackTreeNode<T> p)
 		{
 			// let q be p's right child
 			RedBlackTreeNode<T> q = p.right;
@@ -329,7 +326,7 @@ namespace ControlLibrary.Controls.TextControl.TextEditor.Util
 			host.UpdateAfterRotateLeft(p);
 		}
 
-		void RotateRight(RedBlackTreeNode<T> p)
+		private void RotateRight(RedBlackTreeNode<T> p)
 		{
 			// let q be p's left child
 			RedBlackTreeNode<T> q = p.left;
@@ -347,12 +344,9 @@ namespace ControlLibrary.Controls.TextControl.TextEditor.Util
 			host.UpdateAfterRotateRight(p);
 		}
 
-		RedBlackTreeNode<T> Sibling(RedBlackTreeNode<T> node)
+		private RedBlackTreeNode<T> Sibling(RedBlackTreeNode<T> node)
 		{
-			if (node == node.parent.left)
-				return node.parent.right;
-			else
-				return node.parent.left;
+			return node == node.parent.left ? node.parent.right : node.parent.left;
 		}
 		#endregion
 
@@ -415,24 +409,21 @@ namespace ControlLibrary.Controls.TextControl.TextEditor.Util
 			}
 		}
 
-		static RedBlackTreeNode<T> Sibling(RedBlackTreeNode<T> node, RedBlackTreeNode<T> parentNode)
+		private static RedBlackTreeNode<T> Sibling(RedBlackTreeNode<T> node, RedBlackTreeNode<T> parentNode)
 		{
 			Debug.Assert(node == null || node.parent == parentNode);
-			if (node == parentNode.left)
-				return parentNode.right;
-			else
-				return parentNode.left;
+			return node == parentNode.left ? parentNode.right : parentNode.left;
 		}
 
-		const bool RED = true;
-		const bool BLACK = false;
+		private const bool RED = true;
+		private const bool BLACK = false;
 
-		static bool GetColor(RedBlackTreeNode<T> node)
+		private static bool GetColor(RedBlackTreeNode<T> node)
 		{
 			return node != null ? node.color : BLACK;
 		}
 
-		void FixTreeOnDelete(RedBlackTreeNode<T> node, RedBlackTreeNode<T> parentNode)
+		private void FixTreeOnDelete(RedBlackTreeNode<T> node, RedBlackTreeNode<T> parentNode)
 		{
 			Debug.Assert(node == null || node.parent == parentNode);
 			if (parentNode == null)
@@ -532,7 +523,7 @@ namespace ControlLibrary.Controls.TextControl.TextEditor.Util
 					return it;
 				it.MoveNext();
 			}
-			return default(RedBlackTreeIterator<T>);
+			return default;
 		}
 
 		/// <summary>
@@ -575,8 +566,7 @@ namespace ControlLibrary.Controls.TextControl.TextEditor.Util
 		/// </summary>
 		public RedBlackTreeIterator<T> Begin()
 		{
-			if (root == null) return default(RedBlackTreeIterator<T>);
-			return new RedBlackTreeIterator<T>(root.LeftMost);
+			return root == null ? default : new RedBlackTreeIterator<T>(root.LeftMost);
 		}
 
 		/// <summary>
@@ -584,9 +574,11 @@ namespace ControlLibrary.Controls.TextControl.TextEditor.Util
 		/// </summary>
 		public RedBlackTreeIterator<T> GetEnumerator()
 		{
-			if (root == null) return default(RedBlackTreeIterator<T>);
-			RedBlackTreeNode<T> dummyNode = new RedBlackTreeNode<T>(default(T));
-			dummyNode.right = root;
+			if (root == null) return default;
+			RedBlackTreeNode<T> dummyNode = new RedBlackTreeNode<T>(default)
+			{
+				right = root
+			};
 			return new RedBlackTreeIterator<T>(dummyNode);
 		}
 		#endregion
@@ -621,10 +613,7 @@ namespace ControlLibrary.Controls.TextControl.TextEditor.Util
 			return GetEnumerator();
 		}
 
-		bool ICollection<T>.IsReadOnly
-		{
-			get { return false; }
-		}
+		bool ICollection<T>.IsReadOnly => false;
 
 		public void CopyTo(T[] array, int arrayIndex)
 		{

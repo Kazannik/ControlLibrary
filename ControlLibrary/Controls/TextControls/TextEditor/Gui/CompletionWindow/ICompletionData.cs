@@ -44,50 +44,26 @@ namespace ControlLibrary.Controls.TextControl.TextEditor.Gui.CompletionWindow
 
 	public class DefaultCompletionData : ICompletionData
 	{
-		string text;
-		string description;
-		int imageIndex;
+		private string text;
+		private string description;
+		private int imageIndex;
 
-		public int ImageIndex
-		{
-			get
-			{
-				return imageIndex;
-			}
-		}
+		public int ImageIndex => imageIndex;
 
 		public string Text
 		{
-			get
-			{
-				return text;
-			}
-			set
-			{
-				text = value;
-			}
+			get => text;
+			set => text = value;
 		}
 
-		public virtual string Description
-		{
-			get
-			{
-				return description;
-			}
-		}
+		public virtual string Description => description;
 
-		double priority;
+		private double priority;
 
 		public double Priority
 		{
-			get
-			{
-				return priority;
-			}
-			set
-			{
-				priority = value;
-			}
+			get => priority;
+			set => priority = value;
 		}
 
 		public virtual bool InsertAction(TextArea textArea, char ch)
@@ -111,11 +87,11 @@ namespace ControlLibrary.Controls.TextControl.TextEditor.Gui.CompletionWindow
 
 		public static int Compare(ICompletionData a, ICompletionData b)
 		{
-			if (a == null)
-				throw new ArgumentNullException("a");
-			if (b == null)
-				throw new ArgumentNullException("b");
-			return string.Compare(a.Text, b.Text, StringComparison.InvariantCultureIgnoreCase);
+			return a == null
+				? throw new ArgumentNullException("a")
+				: b == null
+				? throw new ArgumentNullException("b")
+				: string.Compare(a.Text, b.Text, StringComparison.InvariantCultureIgnoreCase);
 		}
 	}
 }

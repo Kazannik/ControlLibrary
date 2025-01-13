@@ -8,24 +8,12 @@ namespace ControlLibrary.Controls.TextControl.TextEditor.Document
 	/// </summary>
 	public sealed class MarkerStrategy
 	{
-		List<TextMarker> textMarker = new List<TextMarker>();
-		IDocument document;
+		private List<TextMarker> textMarker = new List<TextMarker>();
+		private IDocument document;
 
-		public IDocument Document
-		{
-			get
-			{
-				return document;
-			}
-		}
+		public IDocument Document => document;
 
-		public IEnumerable<TextMarker> TextMarker
-		{
-			get
-			{
-				return textMarker.AsReadOnly();
-			}
-		}
+		public IEnumerable<TextMarker> TextMarker => textMarker.AsReadOnly();
 
 		public void AddMarker(TextMarker item)
 		{
@@ -57,7 +45,7 @@ namespace ControlLibrary.Controls.TextControl.TextEditor.Document
 			document.DocumentChanged += new DocumentEventHandler(DocumentChanged);
 		}
 
-		Dictionary<int, List<TextMarker>> markersTable = new Dictionary<int, List<TextMarker>>();
+		private Dictionary<int, List<TextMarker>> markersTable = new Dictionary<int, List<TextMarker>>();
 
 		public List<TextMarker> GetMarkers(int offset)
 		{
@@ -85,13 +73,13 @@ namespace ControlLibrary.Controls.TextControl.TextEditor.Document
 			{
 				TextMarker marker = (TextMarker)textMarker[i];
 				if (// start in marker region
-					marker.Offset <= offset && offset <= marker.EndOffset ||
+					(marker.Offset <= offset && offset <= marker.EndOffset) ||
 					// end in marker region
-					marker.Offset <= endOffset && endOffset <= marker.EndOffset ||
+					(marker.Offset <= endOffset && endOffset <= marker.EndOffset) ||
 					// marker start in region
-					offset <= marker.Offset && marker.Offset <= endOffset ||
+					(offset <= marker.Offset && marker.Offset <= endOffset) ||
 					// marker end in region
-					offset <= marker.EndOffset && marker.EndOffset <= endOffset
+					(offset <= marker.EndOffset && marker.EndOffset <= endOffset)
 				   )
 				{
 					markers.Add(marker);
@@ -110,7 +98,7 @@ namespace ControlLibrary.Controls.TextControl.TextEditor.Document
 			return GetMarkers(segment.Offset + position.X);
 		}
 
-		void DocumentChanged(object sender, DocumentEventArgs e)
+		private void DocumentChanged(object sender, DocumentEventArgs e)
 		{
 			// reset markers table
 			markersTable.Clear();

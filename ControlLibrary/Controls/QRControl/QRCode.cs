@@ -3,6 +3,7 @@ using System.Drawing;
 using System.Drawing.Drawing2D;
 using static ControlLibrary.Controls.QRCoder.QRCodeGenerator;
 
+
 namespace ControlLibrary.Controls.QRCoder
 {
 	public class QRCode : AbstractQRCode, IDisposable
@@ -38,7 +39,7 @@ namespace ControlLibrary.Controls.QRCoder
 				{
 					for (var y = 0; y < size + offset; y = y + pixelsPerModule)
 					{
-						var module = QrCodeData.ModuleMatrix[(y + pixelsPerModule) / pixelsPerModule - 1][(x + pixelsPerModule) / pixelsPerModule - 1];
+						var module = QrCodeData.ModuleMatrix[((y + pixelsPerModule) / pixelsPerModule) - 1][((x + pixelsPerModule) / pixelsPerModule) - 1];
 
 						if (module)
 						{
@@ -77,7 +78,7 @@ namespace ControlLibrary.Controls.QRCoder
 				{
 					for (var y = 0; y < size + offset; y = y + pixelsPerModule)
 					{
-						var moduleBrush = QrCodeData.ModuleMatrix[(y + pixelsPerModule) / pixelsPerModule - 1][(x + pixelsPerModule) / pixelsPerModule - 1] ? darkBrush : lightBrush;
+						var moduleBrush = QrCodeData.ModuleMatrix[((y + pixelsPerModule) / pixelsPerModule) - 1][((x + pixelsPerModule) / pixelsPerModule) - 1] ? darkBrush : lightBrush;
 						gfx.FillRectangle(moduleBrush, new Rectangle(x - offset, y - offset, pixelsPerModule, pixelsPerModule));
 					}
 				}
@@ -88,7 +89,7 @@ namespace ControlLibrary.Controls.QRCoder
 					float iconDestHeight = drawIconFlag ? iconDestWidth * icon.Height / icon.Width : 0;
 					float iconX = (bmp.Width - iconDestWidth) / 2;
 					float iconY = (bmp.Height - iconDestHeight) / 2;
-					var centerDest = new RectangleF(iconX - iconBorderWidth, iconY - iconBorderWidth, iconDestWidth + iconBorderWidth * 2, iconDestHeight + iconBorderWidth * 2);
+					var centerDest = new RectangleF(iconX - iconBorderWidth, iconY - iconBorderWidth, iconDestWidth + (iconBorderWidth * 2), iconDestHeight + (iconBorderWidth * 2));
 					var iconDestRect = new RectangleF(iconX, iconY, iconDestWidth, iconDestHeight);
 					var iconBgBrush = iconBackgroundColor != null ? new SolidBrush((Color)iconBackgroundColor) : lightBrush;
 					//Only render icon/logo background, if iconBorderWith is set > 0
@@ -110,13 +111,13 @@ namespace ControlLibrary.Controls.QRCoder
 		{
 			var roundedRect = new GraphicsPath();
 			roundedRect.AddArc(rect.X, rect.Y, cornerRadius * 2, cornerRadius * 2, 180, 90);
-			roundedRect.AddLine(rect.X + cornerRadius, rect.Y, rect.Right - cornerRadius * 2, rect.Y);
-			roundedRect.AddArc(rect.X + rect.Width - cornerRadius * 2, rect.Y, cornerRadius * 2, cornerRadius * 2, 270, 90);
-			roundedRect.AddLine(rect.Right, rect.Y + cornerRadius * 2, rect.Right, rect.Y + rect.Height - cornerRadius * 2);
-			roundedRect.AddArc(rect.X + rect.Width - cornerRadius * 2, rect.Y + rect.Height - cornerRadius * 2, cornerRadius * 2, cornerRadius * 2, 0, 90);
-			roundedRect.AddLine(rect.Right - cornerRadius * 2, rect.Bottom, rect.X + cornerRadius * 2, rect.Bottom);
-			roundedRect.AddArc(rect.X, rect.Bottom - cornerRadius * 2, cornerRadius * 2, cornerRadius * 2, 90, 90);
-			roundedRect.AddLine(rect.X, rect.Bottom - cornerRadius * 2, rect.X, rect.Y + cornerRadius * 2);
+			roundedRect.AddLine(rect.X + cornerRadius, rect.Y, rect.Right - (cornerRadius * 2), rect.Y);
+			roundedRect.AddArc(rect.X + rect.Width - (cornerRadius * 2), rect.Y, cornerRadius * 2, cornerRadius * 2, 270, 90);
+			roundedRect.AddLine(rect.Right, rect.Y + (cornerRadius * 2), rect.Right, rect.Y + rect.Height - (cornerRadius * 2));
+			roundedRect.AddArc(rect.X + rect.Width - (cornerRadius * 2), rect.Y + rect.Height - (cornerRadius * 2), cornerRadius * 2, cornerRadius * 2, 0, 90);
+			roundedRect.AddLine(rect.Right - (cornerRadius * 2), rect.Bottom, rect.X + (cornerRadius * 2), rect.Bottom);
+			roundedRect.AddArc(rect.X, rect.Bottom - (cornerRadius * 2), cornerRadius * 2, cornerRadius * 2, 90, 90);
+			roundedRect.AddLine(rect.X, rect.Bottom - (cornerRadius * 2), rect.X, rect.Y + (cornerRadius * 2));
 			roundedRect.CloseFigure();
 			return roundedRect;
 		}

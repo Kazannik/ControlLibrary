@@ -4,42 +4,24 @@ namespace ControlLibrary.Controls.TextControl.TextEditor.Document
 {
 	public class LineCountChangeEventArgs : EventArgs
 	{
-		IDocument document;
-		int start;
-		int moved;
+		private IDocument document;
+		private int start;
+		private int moved;
 
 		/// <returns>
 		/// always a valid Document which is related to the Event.
 		/// </returns>
-		public IDocument Document
-		{
-			get
-			{
-				return document;
-			}
-		}
+		public IDocument Document => document;
 
 		/// <returns>
 		/// -1 if no offset was specified for this event
 		/// </returns>
-		public int LineStart
-		{
-			get
-			{
-				return start;
-			}
-		}
+		public int LineStart => start;
 
 		/// <returns>
 		/// -1 if no length was specified for this event
 		/// </returns>
-		public int LinesMoved
-		{
-			get
-			{
-				return moved;
-			}
-		}
+		public int LinesMoved => moved;
 
 		public LineCountChangeEventArgs(IDocument document, int lineStart, int linesMoved)
 		{
@@ -51,18 +33,12 @@ namespace ControlLibrary.Controls.TextControl.TextEditor.Document
 
 	public class LineEventArgs : EventArgs
 	{
-		IDocument document;
-		LineSegment lineSegment;
+		private IDocument document;
+		private LineSegment lineSegment;
 
-		public IDocument Document
-		{
-			get { return document; }
-		}
+		public IDocument Document => document;
 
-		public LineSegment LineSegment
-		{
-			get { return lineSegment; }
-		}
+		public LineSegment LineSegment => lineSegment;
 
 		public LineEventArgs(IDocument document, LineSegment lineSegment)
 		{
@@ -78,12 +54,9 @@ namespace ControlLibrary.Controls.TextControl.TextEditor.Document
 
 	public class LineLengthChangeEventArgs : LineEventArgs
 	{
-		int lengthDelta;
+		private int lengthDelta;
 
-		public int LengthDelta
-		{
-			get { return lengthDelta; }
-		}
+		public int LengthDelta => lengthDelta;
 
 		public LineLengthChangeEventArgs(IDocument document, LineSegment lineSegment, int moved)
 			: base(document, lineSegment)

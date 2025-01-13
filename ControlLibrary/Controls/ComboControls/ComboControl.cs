@@ -79,8 +79,8 @@ namespace ControlLibrary.Controls.ComboControls
 			Graphics graphics = e.Graphics;
 
 			SizeF CodeSize = graphics.MeasureString("FFFFF", Font);
-			ItemHeight = (int)CodeSize.Height + SystemInformation.BorderSize.Height * 4;
-			DropDownHeight = ItemHeight * 20 + SystemInformation.BorderSize.Height * 4;
+			ItemHeight = (int)CodeSize.Height + (SystemInformation.BorderSize.Height * 4);
+			DropDownHeight = (ItemHeight * 20) + (SystemInformation.BorderSize.Height * 4);
 
 			Rectangle rectSelection = new Rectangle(e.Bounds.X + 1, e.Bounds.Y, e.Bounds.Width - 3, e.Bounds.Height - 1);
 			Rectangle rectCode = new Rectangle(rectSelection.X + 2, rectSelection.Y + 2, (int)CodeSize.Width, rectSelection.Height - 4);
@@ -155,41 +155,41 @@ namespace ControlLibrary.Controls.ComboControls
 			}
 		}
 
-		private void DrawHighlightText(Graphics graphics, Rectangle rectagle, Font font, Brush foreColorBrush, Brush highlightForeColor, Brush highlightBackColor, string text, StringFormat format, string buffer)
+		private void DrawHighlightText(Graphics graphics, Rectangle rectangle, Font font, Brush foreColorBrush, Brush highlightForeColor, Brush highlightBackColor, string text, StringFormat format, string buffer)
 		{
 			if (string.IsNullOrWhiteSpace(buffer) || !text.Contains(buffer))
 			{
-				graphics.DrawString(text, font, foreColorBrush, rectagle, format);
+				graphics.DrawString(text, font, foreColorBrush, rectangle, format);
 			}
 			else
 			{
 				string firstText = text.Substring(0, text.IndexOf(buffer, StringComparison.CurrentCultureIgnoreCase));
-				SizeF firstSize = graphics.MeasureString(firstText, font, rectagle.Width, format);
+				SizeF firstSize = graphics.MeasureString(firstText, font, rectangle.Width, format);
 
 				string centerText = text.Substring(firstText.Length, buffer.Length);
-				SizeF centerSize = graphics.MeasureString(centerText, font, rectagle.Width, format);
+				SizeF centerSize = graphics.MeasureString(centerText, font, rectangle.Width, format);
 
 				string lastText = text.Substring(firstText.Length + centerText.Length);
-				SizeF lastSize = graphics.MeasureString(lastText, font, rectagle.Width, format);
+				SizeF lastSize = graphics.MeasureString(lastText, font, rectangle.Width, format);
 
 				Rectangle firstRect;
 				if (format.Alignment == StringAlignment.Near)
 				{
-					firstRect = new Rectangle(rectagle.X, rectagle.Y, (int)firstSize.Width, rectagle.Height);
+					firstRect = new Rectangle(rectangle.X, rectangle.Y, (int)firstSize.Width, rectangle.Height);
 				}
 				else if (format.Alignment == StringAlignment.Far)
 				{
-					SizeF textSize = graphics.MeasureString(text, font, rectagle.Width, format);
-					firstRect = new Rectangle(rectagle.Width - (int)textSize.Width, rectagle.Y, (int)firstSize.Width, rectagle.Height);
+					SizeF textSize = graphics.MeasureString(text, font, rectangle.Width, format);
+					firstRect = new Rectangle(rectangle.Width - (int)textSize.Width, rectangle.Y, (int)firstSize.Width, rectangle.Height);
 				}
 				else
 				{
-					SizeF textSize = graphics.MeasureString(text, font, rectagle.Width, format);
-					firstRect = new Rectangle((rectagle.Width - (int)textSize.Width + 2) / 2 + 3, rectagle.Y, (int)firstSize.Width, rectagle.Height);
+					SizeF textSize = graphics.MeasureString(text, font, rectangle.Width, format);
+					firstRect = new Rectangle(((rectangle.Width - (int)textSize.Width + 2) / 2) + 3, rectangle.Y, (int)firstSize.Width, rectangle.Height);
 				}
 
-				Rectangle centerRect = new Rectangle(firstRect.X + firstRect.Width + 1, rectagle.Y, (int)centerSize.Width, rectagle.Height);
-				Rectangle lastRect = new Rectangle(centerRect.X + centerRect.Width + 1, rectagle.Y, (int)lastSize.Width, rectagle.Height);
+				Rectangle centerRect = new Rectangle(firstRect.X + firstRect.Width + 1, rectangle.Y, (int)centerSize.Width, rectangle.Height);
+				Rectangle lastRect = new Rectangle(centerRect.X + centerRect.Width + 1, rectangle.Y, (int)lastSize.Width, rectangle.Height);
 
 				graphics.FillRectangle(highlightBackColor, centerRect);
 
@@ -237,7 +237,7 @@ namespace ControlLibrary.Controls.ComboControls
 				}
 				findNext = 0;
 			}
-			else if (e.KeyChar == (0x0d))
+			else if (e.KeyChar == 0x0d)
 			{
 				e.Handled = false;
 				findNext += 1;
@@ -312,17 +312,7 @@ namespace ControlLibrary.Controls.ComboControls
 
 		public string Code
 		{
-			get
-			{
-				if (SelectedItem != null)
-				{
-					return SelectedItem.Code;
-				}
-				else
-				{
-					return string.Empty;
-				}
-			}
+			get => SelectedItem != null ? SelectedItem.Code : string.Empty;
 			set
 			{
 				if (string.IsNullOrWhiteSpace(value))
@@ -345,17 +335,7 @@ namespace ControlLibrary.Controls.ComboControls
 
 		public long Id
 		{
-			get
-			{
-				if (SelectedItem != null)
-				{
-					return SelectedItem.Id;
-				}
-				else
-				{
-					return -1;
-				}
-			}
+			get => SelectedItem != null ? SelectedItem.Id : -1;
 			set
 			{
 				if (Contains(value))
@@ -369,28 +349,13 @@ namespace ControlLibrary.Controls.ComboControls
 			}
 		}
 
-		public long? Value
-		{
-			get
-			{
-				return string.IsNullOrWhiteSpace(Code) ? (long?)null : long.Parse(Code);
-			}
-		}
+		public long? Value => string.IsNullOrWhiteSpace(Code) ? (long?)null : long.Parse(Code);
 
 		[ReadOnly(true)]
-		public T this[int index]
-		{
-			get
-			{
-				return (T)Items[index: index];
-			}
-		}
+		public T this[int index] => (T)Items[index: index];
 
 		[ReadOnly(true)]
-		public new ComboBoxStyle DropDownStyle
-		{
-			get { return base.DropDownStyle; }
-		}
+		public new ComboBoxStyle DropDownStyle => base.DropDownStyle;
 
 		protected void Insert(int index, T item)
 		{
@@ -450,8 +415,8 @@ namespace ControlLibrary.Controls.ComboControls
 
 		public new T SelectedItem
 		{
-			get { return (T)base.SelectedItem; }
-			set { base.SelectedItem = value; }
+			get => (T)base.SelectedItem;
+			set => base.SelectedItem = value;
 		}
 
 		public T GetItem(long id)
@@ -494,15 +459,10 @@ namespace ControlLibrary.Controls.ComboControls
 
 			public static int Compare(T x, T y)
 			{
-				if (int.TryParse(x.Code, out int xCode)
-					&& int.TryParse(y.Code, out int yCode))
-				{
-					return decimal.Compare(xCode, yCode);
-				}
-				else
-				{
-					return string.Compare(x.Code, y.Code);
-				}
+				return int.TryParse(x.Code, out int xCode)
+					&& int.TryParse(y.Code, out int yCode)
+					? decimal.Compare(xCode, yCode)
+					: string.Compare(x.Code, y.Code);
 			}
 		}
 	}

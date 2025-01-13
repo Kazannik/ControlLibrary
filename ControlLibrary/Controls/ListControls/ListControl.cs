@@ -11,15 +11,19 @@ namespace ControlLibrary.Controls.ListControls
 	[DesignerCategory("code")]
 	[ToolboxBitmap(typeof(ListBox))]
 	[ComVisible(false)]
-	public abstract class ListControl<T>: ListBox where T : IListItem, new()
+	public abstract class ListControl<I, S> : ListBox
+		where I : IListItem, new()
+		where S : IListItemNote
 	{
 		private Timer resizeTimer;
 		private Size oldSize;
-		private Color ratingStarColor;
+
+		private BufferedGraphicsContext context;
+		private BufferedGraphics grafx;
 
 		protected override ObjectCollection CreateItemCollection()
 		{
-			ItemCollection<T> collection = new ItemCollection<T>(this);
+			ItemCollection<I, S> collection = new ItemCollection<I, S>(this);
 			collection.ContentChanged += new EventHandler<EventArgs>(Collection_ContentChanged);
 			collection.CountChanged += new EventHandler<EventArgs>(Collection_CountChanged);
 			return collection;
@@ -52,7 +56,7 @@ namespace ControlLibrary.Controls.ListControls
 		{
 			base.OnResize(e);
 
-			if (!DesignMode && Size != oldSize) 
+			if (!DesignMode && Size != oldSize)
 				resizeTimer.Start();
 		}
 
@@ -60,12 +64,12 @@ namespace ControlLibrary.Controls.ListControls
 		{
 			base.OnMeasureItem(e);
 
-			if (!DesignMode 
-				&& e.Index >= 0 
+			if (!DesignMode
+				&& e.Index >= 0
 				&& e.Index < Items.Count)
 			{
-				T item = this[e.Index];
-				
+				I item = this[e.Index];
+
 				item.MeasureBound(e.Graphics, Font, ClientSize.Width, ClientSize.Height);
 
 				e.ItemHeight = item.Size.Height;
@@ -75,76 +79,68 @@ namespace ControlLibrary.Controls.ListControls
 
 		protected override void OnDrawItem(System.Windows.Forms.DrawItemEventArgs e)
 		{
+			if (e.Bounds.Height > 0)
+			{
+				grafx = context.Allocate(e.Graphics, e.Bounds);
+				DrawItemEventArgs args = new DrawItemEventArgs(grafx.Graphics, e.Font, e.Bounds, e.Index, e.State, e.ForeColor, e.BackColor);
+				args.DrawBackground();
+				if (DesignMode || args.Index < 0)
+				{
+					const TextFormatFlags flags = TextFormatFlags.Left | TextFormatFlags.Top;
+					TextRenderer.DrawText(args.Graphics, GetType().Name, args.Font, ClientRectangle, args.ForeColor, flags);
+				}
+				else 
+				{
+					this[args.Index].Draw(args);
+					args.DrawFocusRectangle();
+				}
+				grafx.Render(e.Graphics);
+			}
 			base.OnDrawItem(e);
-			e.DrawBackground();
-			if (DesignMode)
-			{
-				const TextFormatFlags flags = TextFormatFlags.Left | TextFormatFlags.Top;
-				TextRenderer.DrawText(e.Graphics, GetType().Name, e.Font, ClientRectangle, e.ForeColor, flags);
-			}
-			else if (e.Index >= 0)
-			{
-				this[e.Index].Draw(new DrawItemEventArgs(e, RatingStarColor));
-				e.DrawFocusRectangle();
-			}
-		}
-				
-		public new ItemCollection<T> Items
-		{
-			get { return (ItemCollection<T>)base.Items; }
 		}
 
-		public T this[int index]
-		{
-			get { return (T)base.Items[index]; }
-		}
+		public new ItemCollection<I, S> Items => (ItemCollection<I, S>)base.Items;
+
+		public I this[int index] => (I)base.Items[index];
 
 		#region Click Event
 
-		public event EventHandler<ItemMouseEventArgs> ItemMouseDown;
-		public event EventHandler<ItemMouseEventArgs> ItemMouseUp;
-		public event EventHandler<ItemMouseEventArgs> ItemMouseClick;
-		public event EventHandler<ItemMouseEventArgs> ItemMouseDoubleClick;
+		public event EventHandler<ItemMouseEventArgs<I, S>> ItemMouseDown;
+		public event EventHandler<ItemMouseEventArgs<I, S>> ItemMouseUp;
+		public event EventHandler<ItemMouseEventArgs<I, S>> ItemMouseClick;
+		public event EventHandler<ItemMouseEventArgs<I, S>> ItemMouseDoubleClick;
+		public event EventHandler<ItemMouseEventArgs<I, S>> ItemMouseMove;
 
-		public event EventHandler<ItemMouseEventArgs> ItemApplyClick;
-		public event EventHandler<ItemMouseEventArgs> ItemCancelClick;
-
-
-		protected virtual void OnItemMouseDown(ItemMouseEventArgs e)
+		protected virtual void OnItemMouseDown(ItemMouseEventArgs<I, S> e)
 		{
 			ItemMouseDown?.Invoke(this, e);
 		}
 
-		protected virtual void OnItemMouseUp(ItemMouseEventArgs e)
+		protected virtual void OnItemMouseUp(ItemMouseEventArgs<I, S> e)
 		{
 			ItemMouseUp?.Invoke(this, e);
 		}
 
-		protected virtual void OnItemMouseClick(ItemMouseEventArgs e)
+		protected virtual void OnItemMouseClick(ItemMouseEventArgs<I, S> e)
 		{
 			ItemMouseClick?.Invoke(this, e);
 		}
 
-		protected virtual void OnItemMouseDoubleClick(ItemMouseEventArgs e)
+		protected virtual void OnItemMouseDoubleClick(ItemMouseEventArgs<I, S> e)
 		{
 			ItemMouseDoubleClick?.Invoke(this, e);
 		}
-
-		protected virtual void OnItemApplyClick(ItemMouseEventArgs e)
+		
+		protected virtual void OnItemMouseMove(ItemMouseEventArgs<I, S> e)
 		{
-			ItemApplyClick?.Invoke(this, e);
+			ItemMouseMove?.Invoke(this, e);
 		}
-
-		protected virtual void OnItemCancelClick(ItemMouseEventArgs e)
-		{
-			ItemCancelClick?.Invoke(this, e);
-		}
-
+						
 		#endregion
 
 		#region Mouse
 
-		private T GetListItem(Point location)
+		private I GetListItem(Point location)
 		{
 			for (int i = 0; i < Items.Count; i++)
 			{
@@ -156,89 +152,79 @@ namespace ControlLibrary.Controls.ListControls
 			return default;
 		}
 
+		private S GetListItemNote(I item, Point location)
+		{
+			for (int i = 0; i < item.Count; i++)
+			{
+				if (item.GetSibItemRectangle(i).Contains(location))
+				{
+					return (S)item[i];
+				}
+			}
+			return default;
+		}
+
 		protected override void OnMouseDown(MouseEventArgs e)
 		{
-			T item = GetListItem(e.Location);
+			I item = GetListItem(e.Location);
 			if (item != null)
 			{
-				OnItemMouseDown(new ItemMouseEventArgs(item, e));
-			}			
+				S subitem = GetListItemNote(item, e.Location);
+				OnItemMouseDown(new ItemMouseEventArgs<I, S>(item, subitem, null, e));
+			}
 			base.OnMouseDown(e);
 		}
 
 		protected override void OnMouseClick(MouseEventArgs e)
 		{
-			T item = GetListItem(e.Location);
+			I item = GetListItem(e.Location);
 			if (item != null)
 			{
-				OnItemMouseClick(new ItemMouseEventArgs(item, e));
-				if (item.ApplyButton.Contains(e.Location))
-				{
-					OnItemApplyClick(new ItemMouseEventArgs(item, e));
-				}
-				else if (item.CancelButton.Contains(e.Location))
-				{
-					OnItemCancelClick(new ItemMouseEventArgs(item, e));
-				}
+				S subitem = GetListItemNote(item, e.Location);
+				OnItemMouseClick(new ItemMouseEventArgs<I, S>(item, subitem, null, e));
 			}
 			base.OnMouseClick(e);
 		}
 
 		protected override void OnMouseDoubleClick(MouseEventArgs e)
 		{
-			T item = GetListItem(e.Location);
+			I item = GetListItem(e.Location);
 			if (item != null)
 			{
-				OnItemMouseDoubleClick(new ItemMouseEventArgs(item, e));
+				S subitem = GetListItemNote(item, e.Location);
+				OnItemMouseDoubleClick(new ItemMouseEventArgs<I, S>(item, subitem, null, e));
 			}
 			base.OnMouseDoubleClick(e);
 		}
-		
+
 		protected override void OnMouseUp(MouseEventArgs e)
 		{
-			T item = GetListItem(e.Location);
+			I item = GetListItem(e.Location);
 			if (item != null)
 			{
-				OnItemMouseUp(new ItemMouseEventArgs(item, e));
+				S subitem = GetListItemNote(item, e.Location);
+				OnItemMouseUp(new ItemMouseEventArgs<I, S>(item, subitem, null, e));
 			}
 			base.OnMouseUp(e);
 		}
-
-
+		
 		protected override void OnMouseMove(MouseEventArgs e)
 		{
-			T item = GetListItem(e.Location);
+			I item = GetListItem(e.Location);
 			if (item != null)
 			{
-				if (item.ApplyButton.Contains(e.Location) 
-					|| item.CancelButton.Contains(e.Location))
-				{
-					Cursor = Cursors.Hand;
-				}
-				else
-				{
-					Cursor= Cursors.Default;
-				}
+				S subitem = GetListItemNote(item, e.Location);
+				OnItemMouseMove(new ItemMouseEventArgs<I, S>(item, subitem, null, e));
 			}
 			base.OnMouseMove(e);
 		}
-
+		
 		#endregion
-
-		public class ItemMouseEventArgs : MouseEventArgs
-		{
-			public ItemMouseEventArgs(T item, MouseEventArgs arg) : base(arg.Button, arg.Clicks, arg.X, arg.Y, arg.Delta)
-			{
-				Item = item;
-			}
-
-			public T Item { get; }
-		}
 
 		public ListControl()
 		{
 			oldSize = Size.Empty;
-			ratingStarColor = SystemColors.Info;
+			context = BufferedGraphicsManager.Current;
 			InitializeComponent();
 		}
 
@@ -266,32 +252,38 @@ namespace ControlLibrary.Controls.ListControls
 
 		private void ListControl_ClientSizeChanged(object sender, EventArgs e)
 		{
-			base.RefreshItems();
+			context.MaximumBuffer = new Size(ClientSize.Width + 1, ClientSize.Height + 1);
+			if (grafx != null)
+			{
+				grafx.Dispose();
+				grafx = null;
+			}
+			grafx = context.Allocate(this.CreateGraphics(), new Rectangle(0, 0, ClientSize.Width, ClientSize.Height));
 		}
 
 		[ReadOnly(true)]
-		public new DrawMode DrawMode { get => base.DrawMode; }
+		public new DrawMode DrawMode => base.DrawMode;
 
 		[ReadOnly(true)]
-		public new bool ScrollAlwaysVisible { get => base.ScrollAlwaysVisible;}
+		public new bool ScrollAlwaysVisible => base.ScrollAlwaysVisible;
 
 		[ReadOnly(true)]
-		public new int ItemHeight { get => base.ItemHeight; }
+		public new int ItemHeight => base.ItemHeight;		
+	}
 
-		public Color RatingStarColor
+	public class ItemMouseEventArgs<I, S> : MouseEventArgs where I : IListItem, new() where S : IListItemNote
+	{
+		public ItemMouseEventArgs(I item, S subItem, object argument, MouseEventArgs evntArgs) : base(evntArgs.Button, evntArgs.Clicks, evntArgs.X, evntArgs.Y, evntArgs.Delta)
 		{
-			get
-			{
-				return ratingStarColor;
-			}
-			set
-			{
-				if (ratingStarColor != value)
-				{
-					ratingStarColor = value;
-					base.RefreshItems();
-				}
-			}
-		}		
+			Item = item;
+			SubItem = subItem;
+			Argument = argument;
+		}
+
+		public I Item { get; }
+
+		public S SubItem { get; }
+
+		public object Argument { get; }
 	}
 }

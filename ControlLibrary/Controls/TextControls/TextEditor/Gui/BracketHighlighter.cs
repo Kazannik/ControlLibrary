@@ -17,31 +17,19 @@ namespace ControlLibrary.Controls.TextControl.TextEditor
 
 	public class BracketHighlightingSheme
 	{
-		char opentag;
-		char closingtag;
+		private char opentag;
+		private char closingtag;
 
 		public char OpenTag
 		{
-			get
-			{
-				return opentag;
-			}
-			set
-			{
-				opentag = value;
-			}
+			get => opentag;
+			set => opentag = value;
 		}
 
 		public char ClosingTag
 		{
-			get
-			{
-				return closingtag;
-			}
-			set
-			{
-				closingtag = value;
-			}
+			get => closingtag;
+			set => closingtag = value;
 		}
 
 		public BracketHighlightingSheme(char opentag, char closingtag)
@@ -52,15 +40,7 @@ namespace ControlLibrary.Controls.TextControl.TextEditor
 
 		public Highlight GetHighlight(IDocument document, int offset)
 		{
-			int searchOffset;
-			if (document.TextEditorProperties.BracketMatchingStyle == BracketMatchingStyle.After)
-			{
-				searchOffset = offset;
-			}
-			else
-			{
-				searchOffset = offset + 1;
-			}
+			int searchOffset = document.TextEditorProperties.BracketMatchingStyle == BracketMatchingStyle.After ? offset : offset + 1;
 			char word = document.GetCharAt(Math.Max(0, Math.Min(document.TextLength - 1, searchOffset)));
 
 			TextLocation endP = document.OffsetToPosition(searchOffset);

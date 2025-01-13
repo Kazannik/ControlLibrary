@@ -9,20 +9,14 @@ namespace ControlLibrary.Controls.TextControl.TextEditor.Util
 	/// </summary>
 	public class LookupTable
 	{
-		Node root = new Node(null, null);
-		bool casesensitive;
-		int length;
+		private Node root = new Node(null, null);
+		private bool casesensitive;
+		private int length;
 
 		/// <value>
 		/// The number of elements in the table
 		/// </value>
-		public int Count
-		{
-			get
-			{
-				return length;
-			}
-		}
+		public int Count => length;
 
 		/// <summary>
 		/// Get the object, which was inserted under the keyword (line, at offset, with length length),
@@ -137,7 +131,7 @@ namespace ControlLibrary.Controls.TextControl.TextEditor.Util
 			this.casesensitive = casesensitive;
 		}
 
-		class Node
+		private class Node
 		{
 			public Node(object color, string word)
 			{
@@ -152,13 +146,7 @@ namespace ControlLibrary.Controls.TextControl.TextEditor.Util
 			// because we don't have to store the array for leaf nodes.
 			public Node this[int index]
 			{
-				get
-				{
-					if (children != null)
-						return children[index];
-					else
-						return null;
-				}
+				get => children != null ? children[index] : null;
 				set
 				{
 					if (children == null)

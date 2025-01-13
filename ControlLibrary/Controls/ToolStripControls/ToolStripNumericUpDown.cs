@@ -18,17 +18,14 @@ namespace ControlLibrary.Controls.ToolStripControls
 			NumericUpDownControl.ValueChanged += new EventHandler(NumericUpDown_ValueChanged);
 		}
 
-		public NumericUpDown NumericUpDownControl
-		{
-			get { return (NumericUpDown)Control; }
-		}
+		public NumericUpDown NumericUpDownControl => (NumericUpDown)Control;
 
 		#region ValueChanged
 
 		public decimal Value
 		{
-			get { return NumericUpDownControl.Value; }
-			set { NumericUpDownControl.Value = value; }
+			get => NumericUpDownControl.Value;
+			set => NumericUpDownControl.Value = value;
 		}
 
 		public event EventHandler ValueChanged;

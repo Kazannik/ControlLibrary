@@ -66,9 +66,8 @@ namespace ControlLibrary.Controls.TextControl.TextEditor.Document
 				{
 					foreach (XmlNode node in environment.ChildNodes)
 					{
-						if (node is XmlElement)
+						if (node is XmlElement el)
 						{
-							XmlElement el = (XmlElement)node;
 							if (el.Name == "Custom")
 							{
 								highlighter.SetColorFor(el.GetAttribute("name"), el.HasAttribute("bgcolor") ? new HighlightBackground(el) : new HighlightColor(el));

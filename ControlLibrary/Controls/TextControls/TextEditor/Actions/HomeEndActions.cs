@@ -16,28 +16,14 @@ namespace ControlLibrary.Controls.TextControl.TextEditor.Actions
 
 				if (TextUtilities.IsEmptyLine(textArea.Document, newPos.Y))
 				{
-					if (newPos.X != 0)
-					{
-						newPos.X = 0;
-					}
-					else
-					{
-						newPos.X = curLine.Length;
-					}
+					newPos.X = newPos.X != 0 ? 0 : curLine.Length;
 				}
 				else
 				{
 					int firstCharOffset = TextUtilities.GetFirstNonWSChar(textArea.Document, curLine.Offset);
 					int firstCharColumn = firstCharOffset - curLine.Offset;
 
-					if (newPos.X == firstCharColumn)
-					{
-						newPos.X = 0;
-					}
-					else
-					{
-						newPos.X = firstCharColumn;
-					}
+					newPos.X = newPos.X == firstCharColumn ? 0 : firstCharColumn;
 				}
 				List<FoldMarker> foldings = textArea.Document.FoldingManager.GetFoldingsFromPosition(newPos.Y, newPos.X);
 				jumpedIntoFolding = false;
@@ -94,7 +80,6 @@ namespace ControlLibrary.Controls.TextControl.TextEditor.Actions
 		}
 	}
 
-
 	public class MoveToStart : AbstractEditAction
 	{
 		public override void Execute(TextArea textArea)
@@ -106,7 +91,6 @@ namespace ControlLibrary.Controls.TextControl.TextEditor.Actions
 			}
 		}
 	}
-
 
 	public class MoveToEnd : AbstractEditAction
 	{

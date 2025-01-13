@@ -5,7 +5,7 @@ namespace ControlLibrary.Controls.TextControl.TextEditor.Util
 	/// <summary>
 	/// Central location for logging calls in the text editor.
 	/// </summary>
-	static class LoggingService
+	internal static class LoggingService
 	{
 		public static void Debug(string text)
 		{

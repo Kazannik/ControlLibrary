@@ -66,7 +66,7 @@ namespace ControlLibrary.Controls.TextControl.TextEditor.Gui.InsightWindow
 				+ control.ActiveTextAreaControl.TextArea.TextView.DrawingPosition.Y;
 
 			int xpos = control.ActiveTextAreaControl.TextArea.TextView.GetDrawingXPos(caretPos.Y, caretPos.X);
-			int ypos = (control.ActiveTextAreaControl.Document.GetVisibleLine(caretPos.Y) + 1) * control.ActiveTextAreaControl.TextArea.TextView.FontHeight
+			int ypos = ((control.ActiveTextAreaControl.Document.GetVisibleLine(caretPos.Y) + 1) * control.ActiveTextAreaControl.TextArea.TextView.FontHeight)
 				- control.ActiveTextAreaControl.TextArea.VirtualTop.Y;
 			int rulerHeight = control.TextEditorProperties.ShowHorizontalRuler ? control.ActiveTextAreaControl.TextArea.TextView.FontHeight : 0;
 
@@ -100,7 +100,7 @@ namespace ControlLibrary.Controls.TextControl.TextEditor.Gui.InsightWindow
 
 		#endregion
 
-		MouseWheelHandler mouseWheelHandler = new MouseWheelHandler();
+		private MouseWheelHandler mouseWheelHandler = new MouseWheelHandler();
 
 		public void HandleMouseWheel(MouseEventArgs e)
 		{
@@ -160,31 +160,15 @@ namespace ControlLibrary.Controls.TextControl.TextEditor.Gui.InsightWindow
 		#endregion
 
 		#region InsightDataProvider handling
-		Stack<InsightDataProviderStackElement> insightDataProviderStack = new Stack<InsightDataProviderStackElement>();
+		private Stack<InsightDataProviderStackElement> insightDataProviderStack = new Stack<InsightDataProviderStackElement>();
 
-		int CurrentData
+		private int CurrentData
 		{
-			get
-			{
-				return insightDataProviderStack.Peek().currentData;
-			}
-			set
-			{
-				insightDataProviderStack.Peek().currentData = value;
-			}
+			get => insightDataProviderStack.Peek().currentData;
+			set => insightDataProviderStack.Peek().currentData = value;
 		}
 
-		IInsightDataProvider DataProvider
-		{
-			get
-			{
-				if (insightDataProviderStack.Count == 0)
-				{
-					return null;
-				}
-				return insightDataProviderStack.Peek().dataProvider;
-			}
-		}
+		private IInsightDataProvider DataProvider => insightDataProviderStack.Count == 0 ? null : insightDataProviderStack.Peek().dataProvider;
 
 		public void AddInsightDataProvider(IInsightDataProvider provider, string fileName)
 		{
@@ -195,7 +179,7 @@ namespace ControlLibrary.Controls.TextControl.TextEditor.Gui.InsightWindow
 			}
 		}
 
-		void CloseCurrentDataProvider()
+		private void CloseCurrentDataProvider()
 		{
 			insightDataProviderStack.Pop();
 			if (insightDataProviderStack.Count == 0)
@@ -208,7 +192,7 @@ namespace ControlLibrary.Controls.TextControl.TextEditor.Gui.InsightWindow
 			}
 		}
 
-		class InsightDataProviderStackElement
+		private class InsightDataProviderStackElement
 		{
 			public int currentData;
 			public IInsightDataProvider dataProvider;

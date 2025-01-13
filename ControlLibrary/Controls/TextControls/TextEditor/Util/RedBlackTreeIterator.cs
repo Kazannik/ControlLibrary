@@ -12,29 +12,11 @@ namespace ControlLibrary.Controls.TextControl.TextEditor.Util
 			this.node = node;
 		}
 
-		public bool IsValid
-		{
-			get { return node != null; }
-		}
+		public bool IsValid => node != null;
 
-		public T Current
-		{
-			get
-			{
-				if (node != null)
-					return node.val;
-				else
-					throw new InvalidOperationException();
-			}
-		}
+		public T Current => node != null ? node.val : throw new InvalidOperationException();
 
-		object System.Collections.IEnumerator.Current
-		{
-			get
-			{
-				return this.Current;
-			}
-		}
+		object System.Collections.IEnumerator.Current => this.Current;
 
 		void IDisposable.Dispose()
 		{

@@ -6,32 +6,19 @@ namespace ControlLibrary.Controls.TextControl.TextEditor.Document
 	{
 		public static readonly ColumnRange NoColumn = new ColumnRange(-2, -2);
 		public static readonly ColumnRange WholeColumn = new ColumnRange(-1, -1);
-
-		int startColumn;
-		int endColumn;
+		private int startColumn;
+		private int endColumn;
 
 		public int StartColumn
 		{
-			get
-			{
-				return startColumn;
-			}
-			set
-			{
-				startColumn = value;
-			}
+			get => startColumn;
+			set => startColumn = value;
 		}
 
 		public int EndColumn
 		{
-			get
-			{
-				return endColumn;
-			}
-			set
-			{
-				endColumn = value;
-			}
+			get => endColumn;
+			set => endColumn = value;
 		}
 
 		public ColumnRange(int startColumn, int endColumn)
@@ -48,13 +35,10 @@ namespace ControlLibrary.Controls.TextControl.TextEditor.Document
 
 		public override bool Equals(object obj)
 		{
-			if (obj is ColumnRange)
-			{
-				return ((ColumnRange)obj).startColumn == startColumn &&
-					   ((ColumnRange)obj).endColumn == endColumn;
-
-			}
-			return false;
+			return obj is ColumnRange
+				? ((ColumnRange)obj).startColumn == startColumn &&
+					   ((ColumnRange)obj).endColumn == endColumn
+				: false;
 		}
 
 		public override string ToString()

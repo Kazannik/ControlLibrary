@@ -18,9 +18,9 @@ namespace ControlLibrary.Controls.TextControl.TextEditor
 	[ToolboxItem(false)]
 	public abstract class TextEditorControlBase : UserControl
 	{
-		string currentFileName = null;
-		int updateLevel = 0;
-		IDocument document;
+		private string currentFileName = null;
+		private int updateLevel = 0;
+		private IDocument document;
 
 		/// <summary>
 		/// This hashtable contains all editor keys, where
@@ -33,10 +33,7 @@ namespace ControlLibrary.Controls.TextControl.TextEditor
 		[DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
 		public ITextEditorProperties TextEditorProperties
 		{
-			get
-			{
-				return document.TextEditorProperties;
-			}
+			get => document.TextEditorProperties;
 			set
 			{
 				document.TextEditorProperties = value;
@@ -44,7 +41,7 @@ namespace ControlLibrary.Controls.TextControl.TextEditor
 			}
 		}
 
-		Encoding encoding;
+		private Encoding encoding;
 
 		/// <value>
 		/// Current file's character encoding
@@ -53,16 +50,8 @@ namespace ControlLibrary.Controls.TextControl.TextEditor
 		[DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
 		public Encoding Encoding
 		{
-			get
-			{
-				if (encoding == null)
-					return TextEditorProperties.Encoding;
-				return encoding;
-			}
-			set
-			{
-				encoding = value;
-			}
+			get => encoding ?? TextEditorProperties.Encoding;
+			set => encoding = value;
 		}
 
 		/// <value>
@@ -72,10 +61,7 @@ namespace ControlLibrary.Controls.TextControl.TextEditor
 		[ReadOnly(true)]
 		public string FileName
 		{
-			get
-			{
-				return currentFileName;
-			}
+			get => currentFileName;
 			set
 			{
 				if (currentFileName != value)
@@ -93,25 +79,20 @@ namespace ControlLibrary.Controls.TextControl.TextEditor
 		[DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
 		public IDocument Document
 		{
-			get
-			{
-				return document;
-			}
+			get => document;
 			set
 			{
-				if (value == null)
-					throw new ArgumentNullException("value");
 				if (document != null)
 				{
 					document.DocumentChanged -= OnDocumentChanged;
 				}
-				document = value;
+				document = value ?? throw new ArgumentNullException("value");
 				document.UndoStack.TextEditorControl = this;
 				document.DocumentChanged += OnDocumentChanged;
 			}
 		}
 
-		void OnDocumentChanged(object sender, EventArgs e)
+		private void OnDocumentChanged(object sender, EventArgs e)
 		{
 			OnTextChanged(e);
 		}
@@ -121,24 +102,18 @@ namespace ControlLibrary.Controls.TextControl.TextEditor
 		[Editor("System.ComponentModel.Design.MultilineStringEditor, System.Design, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a", typeof(System.Drawing.Design.UITypeEditor))]
 		public override string Text
 		{
-			get
-			{
-				return Document.TextContent;
-			}
-			set
-			{
-				Document.TextContent = value;
-			}
+			get => Document.TextContent;
+			set => Document.TextContent = value;
 		}
 
 		[EditorBrowsable(EditorBrowsableState.Always), Browsable(true)]
 		public new event EventHandler TextChanged
 		{
-			add { base.TextChanged += value; }
-			remove { base.TextChanged -= value; }
+			add => base.TextChanged += value;
+			remove => base.TextChanged -= value;
 		}
 
-		static Font ParseFont(string font)
+		private static Font ParseFont(string font)
 		{
 			string[] descr = font.Split(new char[] { ',', '=' });
 			return new Font(descr[1], Single.Parse(descr[3]));
@@ -150,14 +125,8 @@ namespace ControlLibrary.Controls.TextControl.TextEditor
 		[Browsable(false)]
 		public bool IsReadOnly
 		{
-			get
-			{
-				return Document.ReadOnly;
-			}
-			set
-			{
-				Document.ReadOnly = value;
-			}
+			get => Document.ReadOnly;
+			set => Document.ReadOnly = value;
 		}
 
 		/// <value>
@@ -165,25 +134,13 @@ namespace ControlLibrary.Controls.TextControl.TextEditor
 		/// it updates it status no redraw operation occurs.
 		/// </value>
 		[Browsable(false)]
-		public bool IsInUpdate
-		{
-			get
-			{
-				return updateLevel > 0;
-			}
-		}
+		public bool IsInUpdate => updateLevel > 0;
 
 		/// <value>
 		/// supposedly this is the way to do it according to .NET docs,
 		/// as opposed to setting the size in the constructor
 		/// </value>
-		protected override Size DefaultSize
-		{
-			get
-			{
-				return new Size(100, 100);
-			}
-		}
+		protected override Size DefaultSize => new Size(100, 100);
 
 		#region Document Properties
 		/// <value>
@@ -194,10 +151,7 @@ namespace ControlLibrary.Controls.TextControl.TextEditor
 		[Description("If true spaces are shown in the textarea")]
 		public bool ShowSpaces
 		{
-			get
-			{
-				return document.TextEditorProperties.ShowSpaces;
-			}
+			get => document.TextEditorProperties.ShowSpaces;
 			set
 			{
 				document.TextEditorProperties.ShowSpaces = value;
@@ -213,10 +167,7 @@ namespace ControlLibrary.Controls.TextControl.TextEditor
 		[Description("Specifies the quality of text rendering (whether to use hinting and/or anti-aliasing).")]
 		public TextRenderingHint TextRenderingHint
 		{
-			get
-			{
-				return document.TextEditorProperties.TextRenderingHint;
-			}
+			get => document.TextEditorProperties.TextRenderingHint;
 			set
 			{
 				document.TextEditorProperties.TextRenderingHint = value;
@@ -232,10 +183,7 @@ namespace ControlLibrary.Controls.TextControl.TextEditor
 		[Description("If true tabs are shown in the textarea")]
 		public bool ShowTabs
 		{
-			get
-			{
-				return document.TextEditorProperties.ShowTabs;
-			}
+			get => document.TextEditorProperties.ShowTabs;
 			set
 			{
 				document.TextEditorProperties.ShowTabs = value;
@@ -251,10 +199,7 @@ namespace ControlLibrary.Controls.TextControl.TextEditor
 		[Description("If true EOL markers are shown in the textarea")]
 		public bool ShowEOLMarkers
 		{
-			get
-			{
-				return document.TextEditorProperties.ShowEOLMarker;
-			}
+			get => document.TextEditorProperties.ShowEOLMarker;
 			set
 			{
 				document.TextEditorProperties.ShowEOLMarker = value;
@@ -270,10 +215,7 @@ namespace ControlLibrary.Controls.TextControl.TextEditor
 		[Description("If true the horizontal ruler is shown in the textarea")]
 		public bool ShowHRuler
 		{
-			get
-			{
-				return document.TextEditorProperties.ShowHorizontalRuler;
-			}
+			get => document.TextEditorProperties.ShowHorizontalRuler;
 			set
 			{
 				document.TextEditorProperties.ShowHorizontalRuler = value;
@@ -289,10 +231,7 @@ namespace ControlLibrary.Controls.TextControl.TextEditor
 		[Description("If true the vertical ruler is shown in the textarea")]
 		public bool ShowVRuler
 		{
-			get
-			{
-				return document.TextEditorProperties.ShowVerticalRuler;
-			}
+			get => document.TextEditorProperties.ShowVerticalRuler;
 			set
 			{
 				document.TextEditorProperties.ShowVerticalRuler = value;
@@ -308,10 +247,7 @@ namespace ControlLibrary.Controls.TextControl.TextEditor
 		[Description("The row in which the vertical ruler is displayed")]
 		public int VRulerRow
 		{
-			get
-			{
-				return document.TextEditorProperties.VerticalRulerRow;
-			}
+			get => document.TextEditorProperties.VerticalRulerRow;
 			set
 			{
 				document.TextEditorProperties.VerticalRulerRow = value;
@@ -327,10 +263,7 @@ namespace ControlLibrary.Controls.TextControl.TextEditor
 		[Description("If true line numbers are shown in the textarea")]
 		public bool ShowLineNumbers
 		{
-			get
-			{
-				return document.TextEditorProperties.ShowLineNumbers;
-			}
+			get => document.TextEditorProperties.ShowLineNumbers;
 			set
 			{
 				document.TextEditorProperties.ShowLineNumbers = value;
@@ -346,10 +279,7 @@ namespace ControlLibrary.Controls.TextControl.TextEditor
 		[Description("If true invalid lines are marked in the textarea")]
 		public bool ShowInvalidLines
 		{
-			get
-			{
-				return document.TextEditorProperties.ShowInvalidLines;
-			}
+			get => document.TextEditorProperties.ShowInvalidLines;
 			set
 			{
 				document.TextEditorProperties.ShowInvalidLines = value;
@@ -365,10 +295,7 @@ namespace ControlLibrary.Controls.TextControl.TextEditor
 		[Description("If true folding is enabled in the textarea")]
 		public bool EnableFolding
 		{
-			get
-			{
-				return document.TextEditorProperties.EnableFolding;
-			}
+			get => document.TextEditorProperties.EnableFolding;
 			set
 			{
 				document.TextEditorProperties.EnableFolding = value;
@@ -381,10 +308,7 @@ namespace ControlLibrary.Controls.TextControl.TextEditor
 		[Description("If true matching brackets are highlighted")]
 		public bool ShowMatchingBracket
 		{
-			get
-			{
-				return document.TextEditorProperties.ShowMatchingBracket;
-			}
+			get => document.TextEditorProperties.ShowMatchingBracket;
 			set
 			{
 				document.TextEditorProperties.ShowMatchingBracket = value;
@@ -397,10 +321,7 @@ namespace ControlLibrary.Controls.TextControl.TextEditor
 		[Description("If true the icon bar is displayed")]
 		public bool IsIconBarVisible
 		{
-			get
-			{
-				return document.TextEditorProperties.IsIconBarVisible;
-			}
+			get => document.TextEditorProperties.IsIconBarVisible;
 			set
 			{
 				document.TextEditorProperties.IsIconBarVisible = value;
@@ -416,10 +337,7 @@ namespace ControlLibrary.Controls.TextControl.TextEditor
 		[Description("The width in spaces of a tab character")]
 		public int TabIndent
 		{
-			get
-			{
-				return document.TextEditorProperties.TabIndent;
-			}
+			get => document.TextEditorProperties.TabIndent;
 			set
 			{
 				document.TextEditorProperties.TabIndent = value;
@@ -435,10 +353,7 @@ namespace ControlLibrary.Controls.TextControl.TextEditor
 		[Description("The line viewer style")]
 		public LineViewerStyle LineViewerStyle
 		{
-			get
-			{
-				return document.TextEditorProperties.LineViewerStyle;
-			}
+			get => document.TextEditorProperties.LineViewerStyle;
 			set
 			{
 				document.TextEditorProperties.LineViewerStyle = value;
@@ -454,10 +369,7 @@ namespace ControlLibrary.Controls.TextControl.TextEditor
 		[Description("The indent style")]
 		public IndentStyle IndentStyle
 		{
-			get
-			{
-				return document.TextEditorProperties.IndentStyle;
-			}
+			get => document.TextEditorProperties.IndentStyle;
 			set
 			{
 				document.TextEditorProperties.IndentStyle = value;
@@ -473,10 +385,7 @@ namespace ControlLibrary.Controls.TextControl.TextEditor
 		[Description("Converts tabs to spaces while typing")]
 		public bool ConvertTabsToSpaces
 		{
-			get
-			{
-				return document.TextEditorProperties.ConvertTabsToSpaces;
-			}
+			get => document.TextEditorProperties.ConvertTabsToSpaces;
 			set
 			{
 				document.TextEditorProperties.ConvertTabsToSpaces = value;
@@ -492,10 +401,7 @@ namespace ControlLibrary.Controls.TextControl.TextEditor
 		[Description("Hide the mouse cursor while typing")]
 		public bool HideMouseCursor
 		{
-			get
-			{
-				return document.TextEditorProperties.HideMouseCursor;
-			}
+			get => document.TextEditorProperties.HideMouseCursor;
 			set
 			{
 				document.TextEditorProperties.HideMouseCursor = value;
@@ -511,10 +417,7 @@ namespace ControlLibrary.Controls.TextControl.TextEditor
 		[Description("Allows the caret to be placed beyond the end of line")]
 		public bool AllowCaretBeyondEOL
 		{
-			get
-			{
-				return document.TextEditorProperties.AllowCaretBeyondEOL;
-			}
+			get => document.TextEditorProperties.AllowCaretBeyondEOL;
 			set
 			{
 				document.TextEditorProperties.AllowCaretBeyondEOL = value;
@@ -529,10 +432,7 @@ namespace ControlLibrary.Controls.TextControl.TextEditor
 		[Description("Specifies if the bracket matching should match the bracket before or after the caret.")]
 		public BracketMatchingStyle BracketMatchingStyle
 		{
-			get
-			{
-				return document.TextEditorProperties.BracketMatchingStyle;
-			}
+			get => document.TextEditorProperties.BracketMatchingStyle;
 			set
 			{
 				document.TextEditorProperties.BracketMatchingStyle = value;
@@ -550,10 +450,7 @@ namespace ControlLibrary.Controls.TextControl.TextEditor
 		[Description("The base font of the text area. No bold or italic fonts can be used because bold/italic is reserved for highlighting purposes.")]
 		public override Font Font
 		{
-			get
-			{
-				return document.TextEditorProperties.Font;
-			}
+			get => document.TextEditorProperties.Font;
 			set
 			{
 				document.TextEditorProperties.Font = value;
@@ -596,14 +493,10 @@ namespace ControlLibrary.Controls.TextControl.TextEditor
 
 		internal IEditAction GetEditAction(Keys keyData)
 		{
-			if (!IsEditAction(keyData))
-			{
-				return null;
-			}
-			return (IEditAction)editactions[keyData];
+			return !IsEditAction(keyData) ? null : (IEditAction)editactions[keyData];
 		}
 
-		void GenerateDefaultActions()
+		private void GenerateDefaultActions()
 		{
 			editactions[Keys.Left] = new CaretLeft();
 			editactions[Keys.Left | Keys.Shift] = new ShiftCaretLeft();
@@ -844,10 +737,7 @@ namespace ControlLibrary.Controls.TextControl.TextEditor
 
 		protected virtual void OnFileNameChanged(EventArgs e)
 		{
-			if (FileNameChanged != null)
-			{
-				FileNameChanged(this, e);
-			}
+			FileNameChanged?.Invoke(this, e);
 		}
 
 		public event EventHandler FileNameChanged;

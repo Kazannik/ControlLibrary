@@ -4,7 +4,7 @@ using System.Globalization;
 
 namespace ControlLibrary.Structures
 {
-	public class Rating : IComparable<Rating>
+	public readonly struct Rating : IComparable<Rating>
 	{
 		private const int EMPTY_VALUE = 0;
 		private const int MIN_VALUE = -5;
@@ -28,27 +28,27 @@ namespace ControlLibrary.Structures
 			Validate(value: value);
 			Value = value;
 		}
-		
+
 		public static Rating Create(int value)
 		{
 			return new Rating(value: value);
 		}
-				
+
 		public int Value { get; }
 
-		public bool IsEmpty()
+		public bool IsEmpty 
 		{
-			return Value == EMPTY_VALUE;
+			get { return Value == EMPTY_VALUE; }
 		}
 
-		public bool IsMin()
+		public bool IsMin
 		{
-			return Value == MIN_VALUE;
+			get { return Value == MIN_VALUE; }
 		}
 
-		public bool IsMax()
+		public bool IsMax
 		{
-			return Value == MAX_VALUE;
+			get { return Value == MAX_VALUE; }
 		}
 
 		private static void Validate(int value)
@@ -63,7 +63,6 @@ namespace ControlLibrary.Structures
 		{
 			return Value.ToString();
 		}
-
 
 		public int GetPercent(int index, int count)
 		{
@@ -95,7 +94,7 @@ namespace ControlLibrary.Structures
 
 		public override int GetHashCode()
 		{
-			return unchecked(87 * Value.GetHashCode() ^ Value.GetHashCode());
+			return unchecked((87 * Value.GetHashCode()) ^ Value.GetHashCode());
 		}
 
 		public static Rating operator +(Rating a, Rating b)
@@ -122,7 +121,7 @@ namespace ControlLibrary.Structures
 		{
 			return Compare(x, y) > 0;
 		}
-		
+
 		public static bool operator <(Rating x, Rating y)
 		{
 			return Compare(x, y) < 0;
@@ -132,7 +131,7 @@ namespace ControlLibrary.Structures
 		{
 			return Compare(x, y) >= 0;
 		}
-		
+
 		public static bool operator <=(Rating x, Rating y)
 		{
 			return Compare(x, y) <= 0;
@@ -162,7 +161,7 @@ namespace ControlLibrary.Structures
 		{
 			return Compare(x, y) > 0;
 		}
-		
+
 		public static bool operator <(Rating x, int y)
 		{
 			return Compare(x, y) < 0;
@@ -172,7 +171,7 @@ namespace ControlLibrary.Structures
 		{
 			return Compare(x, y) >= 0;
 		}
-		
+
 		public static bool operator <=(Rating x, int y)
 		{
 			return Compare(x, y) <= 0;
@@ -199,11 +198,10 @@ namespace ControlLibrary.Structures
 				catch (Exception)
 				{ return 0; }
 			}
-			else if (!Equals(x, null) & Equals(y, null))
-			{ return 1; }
-			else if (Equals(x, null) & !Equals(y, null))
-			{ return -1; }
-			else { return 0; }
+			else
+			{
+				return !Equals(x, null) & Equals(y, null) ? 1 : Equals(x, null) & !Equals(y, null) ? -1 : 0;
+			}
 		}
 
 		public static int Compare(Rating x, int y)
@@ -217,26 +215,10 @@ namespace ControlLibrary.Structures
 				catch (Exception)
 				{ return 0; }
 			}
-			else if (!Equals(x, null) & Equals(y, null))
-			{ return 1; }
-			else if (Equals(x, null) & !Equals(y, null))
-			{ return -1; }
-			else { return 0; }
-		}
-
-		public static bool IsEmpty(Rating rating)
-		{
-			return rating == null || rating.Value == EMPTY_VALUE;
-		}
-
-		public static bool IsMin(Rating rating)
-		{
-			return rating.Value == MIN_VALUE;
-		}
-
-		public static bool IsMax(Rating rating)
-		{
-			return rating.Value == MAX_VALUE;
+			else
+			{
+				return !Equals(x, null) & Equals(y, null) ? 1 : Equals(x, null) & !Equals(y, null) ? -1 : 0;
+			}
 		}
 		
 		public class RatingComparer : IComparer<Rating>
@@ -244,6 +226,34 @@ namespace ControlLibrary.Structures
 			public int Compare(Rating x, Rating y)
 			{
 				return Rating.Compare(x, y);
+			}
+		}
+	}
+
+	public static class RatingExtensions
+	{
+		public static void Max(ref this Rating rating)
+		{
+			rating = Rating.MaxValue;
+		}
+
+		public static void Min(ref this Rating rating)
+		{
+			rating = Rating.MinValue;
+		}
+
+		public static void Increment(ref this Rating rating)
+		{
+			if (!rating.IsMax) {
+				rating = Rating.Create(rating.Value + 1);				
+			}
+		}
+
+		public static void Decrement(ref this Rating rating)
+		{
+			if (!rating.IsMin)
+			{
+				rating = Rating.Create(rating.Value - 1);
 			}
 		}
 	}

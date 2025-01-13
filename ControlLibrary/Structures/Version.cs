@@ -5,15 +5,15 @@ namespace ControlLibrary.Structures
 {
 	public readonly struct Version : IComparable<Version>
 	{
-		private Version (int major, int minor)
+		/// <summary>
+		/// Представляет нулевое значение. Это поле доступно только для чтения.
+		/// </summary>
+		public static readonly Version Empty = new Version(0, 0);
+
+		private Version(int major, int minor)
 		{
 			Major = major;
 			Minor = minor;
-		}
-
-		public static Version Empty()
-		{
-			return new Version (0, 0);
 		}
 
 		public static Version Create(int major)
@@ -55,7 +55,7 @@ namespace ControlLibrary.Structures
 
 		public override int GetHashCode()
 		{
-			return unchecked(87 * Major.GetHashCode() ^ Minor.GetHashCode());
+			return unchecked((87 * Major.GetHashCode()) ^ Minor.GetHashCode());
 		}
 
 
@@ -87,11 +87,10 @@ namespace ControlLibrary.Structures
 				catch (Exception)
 				{ return 0; }
 			}
-			else if (!Equals(x, null) & Equals(y, null))
-			{ return 1; }
-			else if (Equals(x, null) & !Equals(y, null))
-			{ return -1; }
-			else { return 0; }
+			else
+			{
+				return !Equals(x, null) & Equals(y, null) ? 1 : Equals(x, null) & !Equals(y, null) ? -1 : 0;
+			}
 		}
 
 		public class VersionComparer : IComparer<Version>

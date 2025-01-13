@@ -3,16 +3,16 @@ using System.Drawing;
 
 namespace ControlLibrary.Controls.TextControl.TextEditor.Util
 {
-	class CountTipText : TipText
+	internal class CountTipText : TipText
 	{
-		float triHeight = 10;
-		float triWidth = 10;
+		private float triHeight = 10;
+		private float triWidth = 10;
 
 		public CountTipText(Graphics graphics, Font font, string text) : base(graphics, font, text)
 		{
 		}
 
-		void DrawTriangle(float x, float y, bool flipped)
+		private void DrawTriangle(float x, float y, bool flipped)
 		{
 			Brush brush = BrushRegistry.GetBrush(Color.FromArgb(192, 192, 192));
 			base.Graphics.FillRectangle(brush, new RectangleF(x, y, triHeight, triHeight));
@@ -23,7 +23,7 @@ namespace ControlLibrary.Controls.TextControl.TextEditor.Util
 			{
 				base.Graphics.FillPolygon(brush, new PointF[] {
 											  new PointF(x,                y + triHeight2 - triHeight4),
-											  new PointF(x + triWidth / 2, y + triHeight2 + triHeight4),
+											  new PointF(x + (triWidth / 2), y + triHeight2 + triHeight4),
 											  new PointF(x + triWidth,     y + triHeight2 - triHeight4),
 										  });
 
@@ -32,7 +32,7 @@ namespace ControlLibrary.Controls.TextControl.TextEditor.Util
 			{
 				base.Graphics.FillPolygon(brush, new PointF[] {
 											  new PointF(x,                y +  triHeight2 + triHeight4),
-											  new PointF(x + triWidth / 2, y +  triHeight2 - triHeight4),
+											  new PointF(x + (triWidth / 2), y +  triHeight2 - triHeight4),
 											  new PointF(x + triWidth,     y +  triHeight2 + triHeight4),
 										  });
 			}
@@ -48,12 +48,12 @@ namespace ControlLibrary.Controls.TextControl.TextEditor.Util
 				base.Draw(new PointF(location.X + triWidth + 4, location.Y));
 				DrawingRectangle1 = new Rectangle((int)location.X + 2,
 												  (int)location.Y + 2,
-												  (int)(triWidth),
-												  (int)(triHeight));
+												  (int)triWidth,
+												  (int)triHeight);
 				DrawingRectangle2 = new Rectangle((int)(location.X + base.AllocatedSize.Width - triWidth - 2),
 												  (int)location.Y + 2,
-												  (int)(triWidth),
-												  (int)(triHeight));
+												  (int)triWidth,
+												  (int)triHeight);
 				DrawTriangle(location.X + 2, location.Y + 2, false);
 				DrawTriangle(location.X + base.AllocatedSize.Width - triWidth - 2, location.Y + 2, true);
 			}
@@ -66,7 +66,7 @@ namespace ControlLibrary.Controls.TextControl.TextEditor.Util
 				SizeF tipSize = Graphics.MeasureString
 					(tipText, tipFont, MaximumSize,
 					 GetInternalStringFormat());
-				tipSize.Width += triWidth * 2 + 8;
+				tipSize.Width += (triWidth * 2) + 8;
 				SetRequiredSize(tipSize);
 			}
 			else
@@ -77,7 +77,7 @@ namespace ControlLibrary.Controls.TextControl.TextEditor.Util
 
 	}
 
-	class TipText : TipSection
+	internal class TipText : TipSection
 	{
 		protected StringAlignment horzAlign;
 		protected StringAlignment vertAlign;
@@ -139,7 +139,7 @@ namespace ControlLibrary.Controls.TextControl.TextEditor.Util
 			}
 		}
 
-		static StringFormat CreateTipStringFormat(StringAlignment horizontalAlignment, StringAlignment verticalAlignment)
+		private static StringFormat CreateTipStringFormat(StringAlignment horizontalAlignment, StringAlignment verticalAlignment)
 		{
 			StringFormat format = (StringFormat)StringFormat.GenericTypographic.Clone();
 			format.FormatFlags = StringFormatFlags.FitBlackBox | StringFormatFlags.MeasureTrailingSpaces;
@@ -158,22 +158,13 @@ namespace ControlLibrary.Controls.TextControl.TextEditor.Util
 
 		public Color Color
 		{
-			get
-			{
-				return tipColor;
-			}
-			set
-			{
-				tipColor = value;
-			}
+			get => tipColor;
+			set => tipColor = value;
 		}
 
 		public StringAlignment HorizontalAlignment
 		{
-			get
-			{
-				return horzAlign;
-			}
+			get => horzAlign;
 			set
 			{
 				horzAlign = value;
@@ -183,10 +174,7 @@ namespace ControlLibrary.Controls.TextControl.TextEditor.Util
 
 		public StringAlignment VerticalAlignment
 		{
-			get
-			{
-				return vertAlign;
-			}
+			get => vertAlign;
 			set
 			{
 				vertAlign = value;

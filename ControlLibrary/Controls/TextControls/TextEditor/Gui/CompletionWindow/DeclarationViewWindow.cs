@@ -18,15 +18,12 @@ namespace ControlLibrary.Controls.TextControl.TextEditor.Gui.CompletionWindow
 
 	public class DeclarationViewWindow : Form, IDeclarationViewWindow
 	{
-		string description = String.Empty;
-		bool fixedWidth;
+		private string description = String.Empty;
+		private bool fixedWidth;
 
 		public string Description
 		{
-			get
-			{
-				return description;
-			}
+			get => description;
 			set
 			{
 				description = value;
@@ -44,14 +41,8 @@ namespace ControlLibrary.Controls.TextControl.TextEditor.Gui.CompletionWindow
 
 		public bool FixedWidth
 		{
-			get
-			{
-				return fixedWidth;
-			}
-			set
-			{
-				fixedWidth = value;
-			}
+			get => fixedWidth;
+			set => fixedWidth = value;
 		}
 
 		public int GetRequiredLeftHandSideWidth(Point p)
@@ -90,13 +81,7 @@ namespace ControlLibrary.Controls.TextControl.TextEditor.Gui.CompletionWindow
 			}
 		}
 
-		protected override bool ShowWithoutActivation
-		{
-			get
-			{
-				return true;
-			}
-		}
+		protected override bool ShowWithoutActivation => true;
 
 		protected override void OnClick(EventArgs e)
 		{

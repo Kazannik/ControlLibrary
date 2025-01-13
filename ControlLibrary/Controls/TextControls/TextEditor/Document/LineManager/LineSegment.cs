@@ -8,10 +8,9 @@ namespace ControlLibrary.Controls.TextControl.TextEditor.Document
 	public sealed class LineSegment : ISegment
 	{
 		internal LineSegmentTree.Enumerator treeEntry;
-		int totalLength, delimiterLength;
-
-		List<TextWord> words;
-		SpanStack highlightSpanStack;
+		private int totalLength, delimiterLength;
+		private List<TextWord> words;
+		private SpanStack highlightSpanStack;
 
 		public TextWord GetWord(int column)
 		{
@@ -27,60 +26,42 @@ namespace ControlLibrary.Controls.TextControl.TextEditor.Document
 			return null;
 		}
 
-		public bool IsDeleted
-		{
-			get { return !treeEntry.IsValid; }
-		}
+		public bool IsDeleted => !treeEntry.IsValid;
 
-		public int LineNumber
-		{
-			get { return treeEntry.CurrentIndex; }
-		}
+		public int LineNumber => treeEntry.CurrentIndex;
 
-		public int Offset
-		{
-			get { return treeEntry.CurrentOffset; }
-		}
+		public int Offset => treeEntry.CurrentOffset;
 
-		public int Length
-		{
-			get { return totalLength - delimiterLength; }
-		}
+		public int Length => totalLength - delimiterLength;
 
 		int ISegment.Offset
 		{
-			get { return this.Offset; }
-			set { throw new NotSupportedException(); }
+			get => this.Offset;
+			set => throw new NotSupportedException();
 		}
 		int ISegment.Length
 		{
-			get { return this.Length; }
-			set { throw new NotSupportedException(); }
+			get => this.Length;
+			set => throw new NotSupportedException();
 		}
 
 		public int TotalLength
 		{
-			get { return totalLength; }
-			internal set { totalLength = value; }
+			get => totalLength;
+			internal set => totalLength = value;
 		}
 
 		public int DelimiterLength
 		{
-			get { return delimiterLength; }
-			internal set { delimiterLength = value; }
+			get => delimiterLength;
+			internal set => delimiterLength = value;
 		}
 
 		// highlighting information
 		public List<TextWord> Words
 		{
-			get
-			{
-				return words;
-			}
-			set
-			{
-				words = value;
-			}
+			get => words;
+			set => words = value;
 		}
 
 		public HighlightColor GetColorForPosition(int x)
@@ -102,14 +83,8 @@ namespace ControlLibrary.Controls.TextControl.TextEditor.Document
 
 		public SpanStack HighlightSpanStack
 		{
-			get
-			{
-				return highlightSpanStack;
-			}
-			set
-			{
-				highlightSpanStack = value;
-			}
+			get => highlightSpanStack;
+			set => highlightSpanStack = value;
 		}
 
 		/// <summary>
@@ -117,14 +92,13 @@ namespace ControlLibrary.Controls.TextControl.TextEditor.Document
 		/// </summary>
 		public override string ToString()
 		{
-			if (IsDeleted)
-				return "[LineSegment: (deleted) Length = " + Length + ", TotalLength = " + TotalLength + ", DelimiterLength = " + delimiterLength + "]";
-			else
-				return "[LineSegment: LineNumber=" + LineNumber + ", Offset = " + Offset + ", Length = " + Length + ", TotalLength = " + TotalLength + ", DelimiterLength = " + delimiterLength + "]";
+			return IsDeleted
+				? "[LineSegment: (deleted) Length = " + Length + ", TotalLength = " + TotalLength + ", DelimiterLength = " + delimiterLength + "]"
+				: "[LineSegment: LineNumber=" + LineNumber + ", Offset = " + Offset + ", Length = " + Length + ", TotalLength = " + TotalLength + ", DelimiterLength = " + delimiterLength + "]";
 		}
 
 		#region Anchor management
-		Util.WeakCollection<TextAnchor> anchors;
+		private Util.WeakCollection<TextAnchor> anchors;
 
 		public TextAnchor CreateAnchor(int column)
 		{
@@ -135,7 +109,7 @@ namespace ControlLibrary.Controls.TextControl.TextEditor.Document
 			return anchor;
 		}
 
-		void AddAnchor(TextAnchor anchor)
+		private void AddAnchor(TextAnchor anchor)
 		{
 			Debug.Assert(anchor.Line == this);
 

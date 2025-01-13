@@ -4,10 +4,10 @@ using System.Windows.Forms;
 
 namespace ControlLibrary.Controls.TextControl.TextEditor.Util
 {
-	static class TipPainter
+	internal static class TipPainter
 	{
-		const float HorizontalBorder = 2;
-		const float VerticalBorder = 1;
+		private const float HorizontalBorder = 2;
+		private const float VerticalBorder = 1;
 
 		//static StringFormat centerTipFormat = CreateTipStringFormat();
 
@@ -16,7 +16,7 @@ namespace ControlLibrary.Controls.TextControl.TextEditor.Util
 			return GetTipSize(control, graphics, new TipText(graphics, font, description));
 		}
 
-		static Rectangle GetWorkingArea(Control control)
+		private static Rectangle GetWorkingArea(Control control)
 		{
 			Form ownerForm = control.FindForm();
 			if (ownerForm.Owner != null)
@@ -36,8 +36,8 @@ namespace ControlLibrary.Controls.TextControl.TextEditor.Util
 
 			PointF screenLocation = control.PointToScreen(Point.Empty);
 
-			SizeF maxLayoutSize = new SizeF(workingArea.Right - screenLocation.X - HorizontalBorder * 2,
-											workingArea.Bottom - screenLocation.Y - VerticalBorder * 2);
+			SizeF maxLayoutSize = new SizeF(workingArea.Right - screenLocation.X - (HorizontalBorder * 2),
+											workingArea.Bottom - screenLocation.Y - (VerticalBorder * 2));
 
 			if (maxLayoutSize.Width > 0 && maxLayoutSize.Height > 0)
 			{
@@ -70,8 +70,8 @@ namespace ControlLibrary.Controls.TextControl.TextEditor.Util
 
 			PointF screenLocation = p;
 
-			SizeF maxLayoutSize = new SizeF(screenLocation.X - HorizontalBorder * 2,
-											workingArea.Bottom - screenLocation.Y - VerticalBorder * 2);
+			SizeF maxLayoutSize = new SizeF(screenLocation.X - (HorizontalBorder * 2),
+											workingArea.Bottom - screenLocation.Y - (VerticalBorder * 2));
 
 			if (maxLayoutSize.Width > 0 && maxLayoutSize.Height > 0)
 			{
@@ -104,8 +104,8 @@ namespace ControlLibrary.Controls.TextControl.TextEditor.Util
 
 			RectangleF workingArea = GetWorkingArea(control);
 
-			SizeF maxLayoutSize = new SizeF(workingArea.Right - screenLocation.X - HorizontalBorder * 2,
-											workingArea.Bottom - screenLocation.Y - VerticalBorder * 2);
+			SizeF maxLayoutSize = new SizeF(workingArea.Right - screenLocation.X - (HorizontalBorder * 2),
+											workingArea.Bottom - screenLocation.Y - (VerticalBorder * 2));
 
 			if (maxLayoutSize.Width > 0 && maxLayoutSize.Height > 0)
 			{
@@ -133,8 +133,8 @@ namespace ControlLibrary.Controls.TextControl.TextEditor.Util
 
 				RectangleF displayRectangle = new RectangleF
 					(HorizontalBorder, VerticalBorder,
-					 tipSizeF.Width - HorizontalBorder * 2,
-					 tipSizeF.Height - VerticalBorder * 2);
+					 tipSizeF.Width - (HorizontalBorder * 2),
+					 tipSizeF.Height - (VerticalBorder * 2));
 
 				// DrawRectangle draws from Left to Left + Width. A bug? :-/
 				graphics.DrawRectangle(SystemPens.WindowFrame,
@@ -153,8 +153,8 @@ namespace ControlLibrary.Controls.TextControl.TextEditor.Util
 
 			RectangleF workingArea = GetWorkingArea(control);
 
-			SizeF maxLayoutSize = new SizeF(screenLocation.X - HorizontalBorder * 2,
-											workingArea.Bottom - screenLocation.Y - VerticalBorder * 2);
+			SizeF maxLayoutSize = new SizeF(screenLocation.X - (HorizontalBorder * 2),
+											workingArea.Bottom - screenLocation.Y - (VerticalBorder * 2));
 
 			if (maxLayoutSize.Width > 0 && maxLayoutSize.Height > 0)
 			{
@@ -182,8 +182,8 @@ namespace ControlLibrary.Controls.TextControl.TextEditor.Util
 
 				RectangleF displayRectangle = new RectangleF
 					(HorizontalBorder, VerticalBorder,
-					 tipSizeF.Width - HorizontalBorder * 2,
-					 tipSizeF.Height - VerticalBorder * 2);
+					 tipSizeF.Width - (HorizontalBorder * 2),
+					 tipSizeF.Height - (VerticalBorder * 2));
 
 				// DrawRectangle draws from Left to Left + Width. A bug? :-/
 				graphics.DrawRectangle(SystemPens.WindowFrame,

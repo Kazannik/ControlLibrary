@@ -8,43 +8,25 @@ namespace ControlLibrary.Controls.TextControl.TextEditor.Document
 	/// </summary>
 	public class PrevMarker
 	{
-		string what;
-		HighlightColor color;
-		bool markMarker = false;
+		private string what;
+		private HighlightColor color;
+		private bool markMarker = false;
 
 		/// <value>
 		/// String value to indicate to mark previous token
 		/// </value>
-		public string What
-		{
-			get
-			{
-				return what;
-			}
-		}
+		public string What => what;
 
 		/// <value>
 		/// Color for marking previous token
 		/// </value>
-		public HighlightColor Color
-		{
-			get
-			{
-				return color;
-			}
-		}
+		public HighlightColor Color => color;
 
 		/// <value>
 		/// If true the indication text will be marked with the same color
 		/// too
 		/// </value>
-		public bool MarkMarker
-		{
-			get
-			{
-				return markMarker;
-			}
-		}
+		public bool MarkMarker => markMarker;
 
 		/// <summary>
 		/// Creates a new instance of <see cref="PrevMarker"/>

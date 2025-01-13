@@ -21,71 +21,33 @@ namespace ControlLibrary.Controls.TextControl.TextEditor.Document
 	/// </summary>
 	public sealed class TextAnchor
 	{
-		static Exception AnchorDeletedError()
+		private static Exception AnchorDeletedError()
 		{
 			return new InvalidOperationException("The text containing the anchor was deleted");
 		}
 
-		LineSegment lineSegment;
-		int columnNumber;
+		private LineSegment lineSegment;
+		private int columnNumber;
 
 		public LineSegment Line
 		{
-			get
-			{
-				if (lineSegment == null) throw AnchorDeletedError();
-				return lineSegment;
-			}
-			internal set
-			{
-				lineSegment = value;
-			}
+			get => lineSegment ?? throw AnchorDeletedError();
+			internal set => lineSegment = value;
 		}
 
-		public bool IsDeleted
-		{
-			get
-			{
-				return lineSegment == null;
-			}
-		}
+		public bool IsDeleted => lineSegment == null;
 
-		public int LineNumber
-		{
-			get
-			{
-				return this.Line.LineNumber;
-			}
-		}
+		public int LineNumber => this.Line.LineNumber;
 
 		public int ColumnNumber
 		{
-			get
-			{
-				if (lineSegment == null) throw AnchorDeletedError();
-				return columnNumber;
-			}
-			internal set
-			{
-				columnNumber = value;
-			}
+			get => lineSegment == null ? throw AnchorDeletedError() : columnNumber;
+			internal set => columnNumber = value;
 		}
 
-		public TextLocation Location
-		{
-			get
-			{
-				return new TextLocation(this.ColumnNumber, this.LineNumber);
-			}
-		}
+		public TextLocation Location => new TextLocation(this.ColumnNumber, this.LineNumber);
 
-		public int Offset
-		{
-			get
-			{
-				return this.Line.Offset + columnNumber;
-			}
-		}
+		public int Offset => this.Line.Offset + columnNumber;
 
 		/// <summary>
 		/// Controls how the anchor moves.
@@ -104,8 +66,7 @@ namespace ControlLibrary.Controls.TextControl.TextEditor.Document
 
 		internal void RaiseDeleted()
 		{
-			if (Deleted != null)
-				Deleted(this, EventArgs.Empty);
+			Deleted?.Invoke(this, EventArgs.Empty);
 		}
 
 		internal TextAnchor(LineSegment lineSegment, int columnNumber)
@@ -116,10 +77,7 @@ namespace ControlLibrary.Controls.TextControl.TextEditor.Document
 
 		public override string ToString()
 		{
-			if (this.IsDeleted)
-				return "[TextAnchor (deleted)]";
-			else
-				return "[TextAnchor " + this.Location.ToString() + "]";
+			return this.IsDeleted ? "[TextAnchor (deleted)]" : "[TextAnchor " + this.Location.ToString() + "]";
 		}
 	}
 }

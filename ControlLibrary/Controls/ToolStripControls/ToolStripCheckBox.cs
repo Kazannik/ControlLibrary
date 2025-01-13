@@ -19,17 +19,14 @@ namespace ControlLibrary.Controls.ToolStripControls
 			CheckBoxControl.CheckStateChanged += new EventHandler(CheckBox_CheckStateChanged);
 		}
 
-		public CheckBox CheckBoxControl
-		{
-			get { return (CheckBox)Control; }
-		}
+		public CheckBox CheckBoxControl => (CheckBox)Control;
 
 		#region CheckedChanged
 
 		public bool Checked
 		{
-			get { return CheckBoxControl.Checked; }
-			set { CheckBoxControl.Checked = value; }
+			get => CheckBoxControl.Checked;
+			set => CheckBoxControl.Checked = value;
 		}
 
 		public event EventHandler CheckedChanged;
@@ -55,8 +52,8 @@ namespace ControlLibrary.Controls.ToolStripControls
 
 		public CheckState CheckState
 		{
-			get { return CheckBoxControl.CheckState; }
-			set { CheckBoxControl.CheckState = value; }
+			get => CheckBoxControl.CheckState;
+			set => CheckBoxControl.CheckState = value;
 		}
 
 		public event EventHandler CheckStateChanged;

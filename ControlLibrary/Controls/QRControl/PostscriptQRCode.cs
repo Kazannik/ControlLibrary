@@ -61,7 +61,7 @@ namespace ControlLibrary.Controls.QRCoder
 					psFile += "nl\n";
 				for (int yi = offset; yi < offset + drawableModulesCount; yi++)
 				{
-					psFile += (QrCodeData.ModuleMatrix[xi][yi] ? "f " : "b ");
+					psFile += QrCodeData.ModuleMatrix[xi][yi] ? "f " : "b ";
 				}
 				psFile += "\n";
 			}

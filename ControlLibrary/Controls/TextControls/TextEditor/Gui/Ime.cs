@@ -30,10 +30,7 @@ namespace ControlLibrary.Controls.TextControl.TextEditor
 		private Font font = null;
 		public Font Font
 		{
-			get
-			{
-				return font;
-			}
+			get => font;
 			set
 			{
 				if (!value.Equals(font))
@@ -117,8 +114,8 @@ namespace ControlLibrary.Controls.TextControl.TextEditor
 			[MarshalAs(UnmanagedType.ByValTStr, SizeConst = 32)] public string lfFaceName = null;
 		}
 		private const int IMC_SETCOMPOSITIONFONT = 0x000a;
-		LOGFONT lf = null;
-		static bool disableIME;
+		private LOGFONT lf = null;
+		private static bool disableIME;
 
 		private void SetIMEWindowFont(Font f)
 		{
@@ -150,14 +147,18 @@ namespace ControlLibrary.Controls.TextControl.TextEditor
 		{
 			if (disableIME || hIMEWnd == IntPtr.Zero) return;
 
-			POINT p = new POINT();
-			p.x = x;
-			p.y = y;
+			POINT p = new POINT
+			{
+				x = x,
+				y = y
+			};
 
-			COMPOSITIONFORM lParam = new COMPOSITIONFORM();
-			lParam.dwStyle = CFS_POINT;
-			lParam.ptCurrentPos = p;
-			lParam.rcArea = new RECT();
+			COMPOSITIONFORM lParam = new COMPOSITIONFORM
+			{
+				dwStyle = CFS_POINT,
+				ptCurrentPos = p,
+				rcArea = new RECT()
+			};
 
 			try
 			{
@@ -174,7 +175,7 @@ namespace ControlLibrary.Controls.TextControl.TextEditor
 			}
 		}
 
-		void Handle(Exception ex)
+		private void Handle(Exception ex)
 		{
 			Console.WriteLine(ex);
 			if (!disableIME)

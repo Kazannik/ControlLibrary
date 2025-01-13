@@ -49,7 +49,8 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Controls\ListControls\DrawItemEventArgs.cs" />
+    <Compile Include="Controls\ListControls\IListItemNote.cs" />
+    <Compile Include="Controls\ListControls\ListItemNote.cs" />
     <Compile Include="Controls\PeriodControls\PeriodControl.cs">
       <SubType>Component</SubType>
     </Compile>
@@ -58,7 +59,6 @@
     </Compile>
     <Compile Include="Controls\ComboControls\ComboControl.cs" />
     <Compile Include="Controls\ComboControls\DataGridViewDateTimePickerCell.cs" />
-    <Compile Include="Controls\ListControls\DrawItemState.cs" />
     <Compile Include="Controls\ListControls\IListItem.cs" />
     <Compile Include="Controls\ListControls\ItemCollection.cs" />
     <Compile Include="Controls\ListControls\ListControl.cs" />
@@ -103,6 +103,11 @@
     <Compile Include="Controls\QRControl\QRCodeData.cs" />
     <Compile Include="Controls\QRControl\QRCodeGenerator.cs" />
     <Compile Include="Controls\QRControl\SvgQRCode.cs" />
+    <Compile Include="Properties\Resources.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>Resources.resx</DependentUpon>
+    </Compile>
     <Compile Include="Structures\Rating.cs" />
     <Compile Include="Structures\Version.cs" />
     <Compile Include="Structures\Period.cs" />
@@ -242,13 +247,16 @@
     <Compile Include="Controls\TextControls\TextEditor\Util\TipText.cs" />
     <Compile Include="Controls\TextControls\TextEditor\Util\WeakCollection.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Utils\Directories.cs" />
     <Compile Include="Utils\Drawing.cs" />
     <Compile Include="Utils\FileCopier.cs" />
     <Compile Include="Utils\Gdi32.cs" />
     <Compile Include="Utils\Shortcut.cs" />
     <Service Include="{94E38DFF-614B-4cbd-B67C-F211BB35CE8B}" />
   </ItemGroup>
-  <ItemGroup />
+  <ItemGroup>
+    <EmbeddedResource Include="Resources\arrow_r.cur" />
+  </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="Controls\PeriodControls\PeriodControl.resx">
       <DependentUpon>PeriodControl.cs</DependentUpon>
@@ -261,6 +269,10 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Controls\RatingControls\RatingControl.resx">
       <DependentUpon>RatingControl.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Properties\Resources.resx">
+      <Generator>ResXFileCodeGenerator</Generator>
+      <LastGenOutput>Resources.Designer.cs</LastGenOutput>
     </EmbeddedResource>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

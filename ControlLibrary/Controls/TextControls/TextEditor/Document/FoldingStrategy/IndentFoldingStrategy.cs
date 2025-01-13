@@ -20,7 +20,7 @@ namespace ControlLibrary.Controls.TextControl.TextEditor.Document
 			return l;
 		}
 
-		int GetLevel(IDocument document, int offset)
+		private int GetLevel(IDocument document, int offset)
 		{
 			int level = 0;
 			int spaces = 0;

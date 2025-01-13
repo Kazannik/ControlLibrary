@@ -22,8 +22,8 @@ namespace ControlLibrary.Controls.PriodControls
 
 		public Period Value
 		{
-			get { return PopupMenu_PeriodBox.Value; }
-			set { PopupMenu_PeriodBox.Value = value; }
+			get => PopupMenu_PeriodBox.Value;
+			set => PopupMenu_PeriodBox.Value = value;
 		}
 
 		private void PopupMenu_PeriodBox_ValueChanged(object sender, PeriodEventArgs e)

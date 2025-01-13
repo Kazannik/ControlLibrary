@@ -6,13 +6,12 @@ namespace ControlLibrary.Controls.TextControl.TextEditor.Util
 	/// <summary>
 	/// Accumulates mouse wheel deltas and reports the actual number of lines to scroll.
 	/// </summary>
-	class MouseWheelHandler
+	internal class MouseWheelHandler
 	{
 		// CODE DUPLICATION: See SharpDevelop.Widgets.MouseWheelHandler
 
-		const int WHEEL_DELTA = 120;
-
-		int mouseWheelDelta;
+		private const int WHEEL_DELTA = 120;
+		private int mouseWheelDelta;
 
 		public int GetScrollAmount(MouseEventArgs e)
 		{

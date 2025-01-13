@@ -10,7 +10,7 @@ namespace ControlLibrary.Controls.TextControl.TextEditor
 	[ToolboxItem(false)]
 	public class HRuler : Control
 	{
-		TextArea textArea;
+		private TextArea textArea;
 
 		public HRuler(TextArea textArea)
 		{
@@ -23,10 +23,10 @@ namespace ControlLibrary.Controls.TextControl.TextEditor
 			int num = 0;
 			for (float x = textArea.TextView.DrawingPosition.Left; x < textArea.TextView.DrawingPosition.Right; x += textArea.TextView.WideSpaceWidth)
 			{
-				int offset = (Height * 2) / 3;
+				int offset = Height * 2 / 3;
 				if (num % 5 == 0)
 				{
-					offset = (Height * 4) / 5;
+					offset = Height * 4 / 5;
 				}
 
 				if (num % 10 == 0)

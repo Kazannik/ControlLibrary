@@ -16,10 +16,7 @@ namespace ControlLibrary.Controls
 			InitializeComponent();
 		}
 
-		public ColorTheme this[int index]
-		{
-			get { return themes[index]; }
-		}
+		public ColorTheme this[int index] => themes[index];
 
 		public ColorTheme Default { get; }
 

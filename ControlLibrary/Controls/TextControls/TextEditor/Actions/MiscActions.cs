@@ -22,7 +22,7 @@ namespace ControlLibrary.Controls.TextControl.TextEditor.Actions
 				if (textArea != null)
 				{
 					int column = textArea.TextView.GetVisualColumn(textArea.Caret.Line, textArea.Caret.Column);
-					indent.Append(new String(' ', tabIndent - column % tabIndent));
+					indent.Append(new String(' ', tabIndent - (column % tabIndent)));
 				}
 				else
 				{
@@ -36,7 +36,7 @@ namespace ControlLibrary.Controls.TextControl.TextEditor.Actions
 			return indent.ToString();
 		}
 
-		void InsertTabs(IDocument document, ISelection selection, int y1, int y2)
+		private void InsertTabs(IDocument document, ISelection selection, int y1, int y2)
 		{
 			string indentationString = GetIndentationString(document);
 			for (int i = y2; i >= y1; --i)
@@ -56,7 +56,7 @@ namespace ControlLibrary.Controls.TextControl.TextEditor.Actions
 			}
 		}
 
-		void InsertTabAtCaretPosition(TextArea textArea)
+		private void InsertTabAtCaretPosition(TextArea textArea)
 		{
 			switch (textArea.Caret.CaretMode)
 			{
@@ -117,7 +117,7 @@ namespace ControlLibrary.Controls.TextControl.TextEditor.Actions
 
 	public class ShiftTab : AbstractEditAction
 	{
-		void RemoveTabs(IDocument document, ISelection selection, int y1, int y2)
+		private void RemoveTabs(IDocument document, ISelection selection, int y1, int y2)
 		{
 			document.UndoStack.StartUndoGroup();
 			for (int i = y2; i >= y1; --i)
@@ -223,14 +223,7 @@ namespace ControlLibrary.Controls.TextControl.TextEditor.Actions
 				int tabIndent = textArea.Document.TextEditorProperties.IndentationSize;
 				int currentColumn = textArea.Caret.Column;
 				int remainder = currentColumn % tabIndent;
-				if (remainder == 0)
-				{
-					textArea.Caret.DesiredColumn = Math.Max(0, currentColumn - tabIndent);
-				}
-				else
-				{
-					textArea.Caret.DesiredColumn = Math.Max(0, currentColumn - remainder);
-				}
+				textArea.Caret.DesiredColumn = remainder == 0 ? Math.Max(0, currentColumn - tabIndent) : Math.Max(0, currentColumn - remainder);
 				textArea.SetCaretToDesiredColumn();
 			}
 		}
@@ -263,10 +256,10 @@ namespace ControlLibrary.Controls.TextControl.TextEditor.Actions
 
 	public class ToggleLineComment : AbstractEditAction
 	{
-		int firstLine;
-		int lastLine;
+		private int firstLine;
+		private int lastLine;
 
-		void RemoveCommentAt(IDocument document, string comment, ISelection selection, int y1, int y2)
+		private void RemoveCommentAt(IDocument document, string comment, ISelection selection, int y1, int y2)
 		{
 			firstLine = y1;
 			lastLine = y2;
@@ -288,7 +281,7 @@ namespace ControlLibrary.Controls.TextControl.TextEditor.Actions
 			}
 		}
 
-		void SetCommentAt(IDocument document, string comment, ISelection selection, int y1, int y2)
+		private void SetCommentAt(IDocument document, string comment, ISelection selection, int y1, int y2)
 		{
 			firstLine = y1;
 			lastLine = y2;
@@ -307,7 +300,7 @@ namespace ControlLibrary.Controls.TextControl.TextEditor.Actions
 			}
 		}
 
-		bool ShouldComment(IDocument document, string comment, ISelection selection, int startLine, int endLine)
+		private bool ShouldComment(IDocument document, string comment, ISelection selection, int startLine, int endLine)
 		{
 			for (int i = endLine; i >= startLine; --i)
 			{
@@ -478,17 +471,11 @@ namespace ControlLibrary.Controls.TextControl.TextEditor.Actions
 
 			// Find start of comment in selected text.
 
-			int commentEndOffset;
+			int commentEndOffset = commentStartOffset >= 0
+				? selectedText.IndexOf(commentEnd, commentStartOffset + commentStart.Length - selectionStartOffset)
+				: selectedText.IndexOf(commentEnd);
 			// Find end of comment in selected text.
 
-			if (commentStartOffset >= 0)
-			{
-				commentEndOffset = selectedText.IndexOf(commentEnd, commentStartOffset + commentStart.Length - selectionStartOffset);
-			}
-			else
-			{
-				commentEndOffset = selectedText.IndexOf(commentEnd);
-			}
 
 			if (commentEndOffset >= 0)
 			{
@@ -536,22 +523,18 @@ namespace ControlLibrary.Controls.TextControl.TextEditor.Actions
 				}
 			}
 
-			if (commentStartOffset != -1 && commentEndOffset != -1)
-			{
-				return new BlockCommentRegion(commentStart, commentEnd, commentStartOffset, commentEndOffset);
-			}
-
-			return null;
+			return commentStartOffset != -1 && commentEndOffset != -1
+				? new BlockCommentRegion(commentStart, commentEnd, commentStartOffset, commentEndOffset)
+				: null;
 		}
 
-
-		void SetCommentAt(IDocument document, int offsetStart, int offsetEnd, string commentStart, string commentEnd)
+		private void SetCommentAt(IDocument document, int offsetStart, int offsetEnd, string commentStart, string commentEnd)
 		{
 			document.Insert(offsetEnd, commentEnd);
 			document.Insert(offsetStart, commentStart);
 		}
 
-		void RemoveComment(IDocument document, BlockCommentRegion commentRegion)
+		private void RemoveComment(IDocument document, BlockCommentRegion commentRegion)
 		{
 			document.Remove(commentRegion.EndOffset, commentRegion.CommentEnd.Length);
 			document.Remove(commentRegion.StartOffset, commentRegion.CommentStart.Length);
@@ -576,37 +559,13 @@ namespace ControlLibrary.Controls.TextControl.TextEditor.Actions
 			this.endOffset = endOffset;
 		}
 
-		public string CommentStart
-		{
-			get
-			{
-				return commentStart;
-			}
-		}
+		public string CommentStart => commentStart;
 
-		public string CommentEnd
-		{
-			get
-			{
-				return commentEnd;
-			}
-		}
+		public string CommentEnd => commentEnd;
 
-		public int StartOffset
-		{
-			get
-			{
-				return startOffset;
-			}
-		}
+		public int StartOffset => startOffset;
 
-		public int EndOffset
-		{
-			get
-			{
-				return endOffset;
-			}
-		}
+		public int EndOffset => endOffset;
 
 		public override int GetHashCode()
 		{
@@ -623,10 +582,10 @@ namespace ControlLibrary.Controls.TextControl.TextEditor.Actions
 
 		public override bool Equals(object obj)
 		{
-			if (!(obj is BlockCommentRegion other)) return false;
-			return commentStart == other.commentStart 
-				&& commentEnd == other.commentEnd 
-				&& startOffset == other.startOffset 
+			return obj is BlockCommentRegion other
+				&& commentStart == other.commentStart
+				&& commentEnd == other.commentEnd
+				&& startOffset == other.startOffset
 				&& endOffset == other.endOffset;
 		}
 	}
@@ -991,7 +950,7 @@ namespace ControlLibrary.Controls.TextControl.TextEditor.Actions
 			int lineNr = textArea.Caret.Line;
 			LineSegment line = textArea.Document.GetLineSegment(lineNr);
 
-			int numRemove = (line.Offset + line.Length) - textArea.Caret.Offset;
+			int numRemove = line.Offset + line.Length - textArea.Caret.Offset;
 			if (numRemove > 0 && !textArea.IsReadOnly(textArea.Caret.Offset, numRemove))
 			{
 				textArea.Document.Remove(textArea.Caret.Offset, numRemove);
@@ -1010,28 +969,13 @@ namespace ControlLibrary.Controls.TextControl.TextEditor.Actions
 			{
 				TextLocation p1 = new TextLocation(highlight.CloseBrace.X + 1, highlight.CloseBrace.Y);
 				TextLocation p2 = new TextLocation(highlight.OpenBrace.X + 1, highlight.OpenBrace.Y);
-				if (p1 == textArea.Caret.Position)
-				{
-					if (textArea.Document.TextEditorProperties.BracketMatchingStyle == BracketMatchingStyle.After)
-					{
-						textArea.Caret.Position = p2;
-					}
-					else
-					{
-						textArea.Caret.Position = new TextLocation(p2.X - 1, p2.Y);
-					}
-				}
-				else
-				{
-					if (textArea.Document.TextEditorProperties.BracketMatchingStyle == BracketMatchingStyle.After)
-					{
-						textArea.Caret.Position = p1;
-					}
-					else
-					{
-						textArea.Caret.Position = new TextLocation(p1.X - 1, p1.Y);
-					}
-				}
+				textArea.Caret.Position = p1 == textArea.Caret.Position
+					? textArea.Document.TextEditorProperties.BracketMatchingStyle == BracketMatchingStyle.After
+						? p2
+						: new TextLocation(p2.X - 1, p2.Y)
+					: textArea.Document.TextEditorProperties.BracketMatchingStyle == BracketMatchingStyle.After
+						? p1
+						: new TextLocation(p1.X - 1, p1.Y);
 				textArea.SetDesiredColumn();
 			}
 		}

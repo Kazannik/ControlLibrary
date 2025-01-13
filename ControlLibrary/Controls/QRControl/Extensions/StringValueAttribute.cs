@@ -7,7 +7,6 @@ namespace ControlLibrary.Controls.QRCoder.Extensions
 	/// </summary>
 	public class StringValueAttribute : Attribute
 	{
-
 		#region Properties
 
 		/// <summary>
@@ -36,9 +35,6 @@ namespace ControlLibrary.Controls.QRCoder.Extensions
 		/// <returns></returns>
 		public static string GetStringValue(this Enum value)
 		{
-
-			//var fieldInfo = value.GetType().GetRuntimeField(value.ToString());
-
 			var fieldInfo = value.GetType().GetField(value.ToString());
 
 			var attr = fieldInfo.GetCustomAttributes(typeof(StringValueAttribute), false) as StringValueAttribute[];

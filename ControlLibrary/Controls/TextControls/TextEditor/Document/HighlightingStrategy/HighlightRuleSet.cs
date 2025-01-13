@@ -7,96 +7,39 @@ namespace ControlLibrary.Controls.TextControl.TextEditor.Document
 {
 	public class HighlightRuleSet
 	{
-		LookupTable keyWords;
-		ArrayList spans = new ArrayList();
-		LookupTable prevMarkers;
-		LookupTable nextMarkers;
-		char escapeCharacter;
+		private LookupTable keyWords;
+		private ArrayList spans = new ArrayList();
+		private LookupTable prevMarkers;
+		private LookupTable nextMarkers;
+		private char escapeCharacter;
+		private bool ignoreCase = false;
+		private string name = null;
+		private bool[] delimiters = new bool[256];
+		private string reference = null;
 
-		bool ignoreCase = false;
-		string name = null;
-
-		bool[] delimiters = new bool[256];
-
-		string reference = null;
-
-		public ArrayList Spans
-		{
-			get
-			{
-				return spans;
-			}
-		}
+		public ArrayList Spans => spans;
 
 		internal IHighlightingStrategyUsingRuleSets Highlighter;
 
-		public LookupTable KeyWords
-		{
-			get
-			{
-				return keyWords;
-			}
-		}
+		public LookupTable KeyWords => keyWords;
 
-		public LookupTable PrevMarkers
-		{
-			get
-			{
-				return prevMarkers;
-			}
-		}
+		public LookupTable PrevMarkers => prevMarkers;
 
-		public LookupTable NextMarkers
-		{
-			get
-			{
-				return nextMarkers;
-			}
-		}
+		public LookupTable NextMarkers => nextMarkers;
 
-		public bool[] Delimiters
-		{
-			get
-			{
-				return delimiters;
-			}
-		}
+		public bool[] Delimiters => delimiters;
 
-		public char EscapeCharacter
-		{
-			get
-			{
-				return escapeCharacter;
-			}
-		}
+		public char EscapeCharacter => escapeCharacter;
 
-		public bool IgnoreCase
-		{
-			get
-			{
-				return ignoreCase;
-			}
-		}
+		public bool IgnoreCase => ignoreCase;
 
 		public string Name
 		{
-			get
-			{
-				return name;
-			}
-			set
-			{
-				name = value;
-			}
+			get => name;
+			set => name = value;
 		}
 
-		public string Reference
-		{
-			get
-			{
-				return reference;
-			}
-		}
+		public string Reference => reference;
 
 		public HighlightRuleSet()
 		{

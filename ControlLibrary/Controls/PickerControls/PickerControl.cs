@@ -29,10 +29,7 @@ namespace ControlLibrary.Controls.PickerControls
 			controlHost.Height = DropDownHeight;
 		}
 
-		public T PopupForm
-		{
-			get { return (T)controlHost.Control; }
-		}
+		public T PopupForm => (T)controlHost.Control;
 
 		private void ShowDropDown()
 		{

@@ -12,88 +12,49 @@ namespace ControlLibrary.Controls.TextControl.TextEditor.Document
 	/// </summary>
 	public class HighlightColor
 	{
-		Color color;
-		Color backgroundcolor = System.Drawing.Color.WhiteSmoke;
+		private Color color;
+		private Color backgroundcolor = System.Drawing.Color.WhiteSmoke;
+		private bool bold = false;
+		private bool italic = false;
+		private bool hasForeground = false;
+		private bool hasBackground = false;
 
-		bool bold = false;
-		bool italic = false;
-		bool hasForeground = false;
-		bool hasBackground = false;
+		public bool HasForeground => hasForeground;
 
-		public bool HasForeground
-		{
-			get
-			{
-				return hasForeground;
-			}
-		}
-
-		public bool HasBackground
-		{
-			get
-			{
-				return hasBackground;
-			}
-		}
+		public bool HasBackground => hasBackground;
 
 
 		/// <value>
 		/// If true the font will be displayed bold style
 		/// </value>
-		public bool Bold
-		{
-			get
-			{
-				return bold;
-			}
-		}
+		public bool Bold => bold;
 
 		/// <value>
 		/// If true the font will be displayed italic style
 		/// </value>
-		public bool Italic
-		{
-			get
-			{
-				return italic;
-			}
-		}
+		public bool Italic => italic;
 
 		/// <value>
 		/// The background color used
 		/// </value>
-		public Color BackgroundColor
-		{
-			get
-			{
-				return backgroundcolor;
-			}
-		}
+		public Color BackgroundColor => backgroundcolor;
 
 		/// <value>
 		/// The foreground color used
 		/// </value>
-		public Color Color
-		{
-			get
-			{
-				return color;
-			}
-		}
+		public Color Color => color;
 
 		/// <value>
 		/// The font used
 		/// </value>
 		public Font GetFont(FontContainer fontContainer)
 		{
-			if (Bold)
-			{
-				return Italic ? fontContainer.BoldItalicFont : fontContainer.BoldFont;
-			}
-			return Italic ? fontContainer.ItalicFont : fontContainer.RegularFont;
+			return Bold
+				? Italic ? fontContainer.BoldItalicFont : fontContainer.BoldFont
+				: Italic ? fontContainer.ItalicFont : fontContainer.RegularFont;
 		}
 
-		Color ParseColorString(string colorName)
+		private Color ParseColorString(string colorName)
 		{
 			string[] cNames = colorName.Split('*');
 			PropertyInfo myPropInfo = typeof(System.Drawing.SystemColors).GetProperty(cNames[0], BindingFlags.Public |
@@ -130,18 +91,11 @@ namespace ControlLibrary.Controls.TextControl.TextEditor.Document
 			if (el.Attributes["color"] != null)
 			{
 				string c = el.Attributes["color"].InnerText;
-				if (c[0] == '#')
-				{
-					color = ParseColor(c);
-				}
-				else if (c.StartsWith("SystemColors."))
-				{
-					color = ParseColorString(c.Substring("SystemColors.".Length));
-				}
-				else
-				{
-					color = (Color)(Color.GetType()).InvokeMember(c, BindingFlags.GetProperty, null, Color, new object[0]);
-				}
+				color = c[0] == '#'
+					? ParseColor(c)
+					: c.StartsWith("SystemColors.")
+						? ParseColorString(c.Substring("SystemColors.".Length))
+						: (Color)Color.GetType().InvokeMember(c, BindingFlags.GetProperty, null, Color, new object[0]);
 				hasForeground = true;
 			}
 			else
@@ -152,18 +106,11 @@ namespace ControlLibrary.Controls.TextControl.TextEditor.Document
 			if (el.Attributes["bgcolor"] != null)
 			{
 				string c = el.Attributes["bgcolor"].InnerText;
-				if (c[0] == '#')
-				{
-					backgroundcolor = ParseColor(c);
-				}
-				else if (c.StartsWith("SystemColors."))
-				{
-					backgroundcolor = ParseColorString(c.Substring("SystemColors.".Length));
-				}
-				else
-				{
-					backgroundcolor = (Color)(Color.GetType()).InvokeMember(c, BindingFlags.GetProperty, null, Color, new object[0]);
-				}
+				backgroundcolor = c[0] == '#'
+					? ParseColor(c)
+					: c.StartsWith("SystemColors.")
+						? ParseColorString(c.Substring("SystemColors.".Length))
+						: (Color)Color.GetType().InvokeMember(c, BindingFlags.GetProperty, null, Color, new object[0]);
 				hasBackground = true;
 			}
 		}
@@ -174,39 +121,18 @@ namespace ControlLibrary.Controls.TextControl.TextEditor.Document
 		public HighlightColor(XmlElement el, HighlightColor defaultColor)
 		{
 			Debug.Assert(el != null, "TextEditor.Document.SyntaxColor(XmlElement el) : el == null");
-			if (el.Attributes["bold"] != null)
-			{
-				bold = Boolean.Parse(el.Attributes["bold"].InnerText);
-			}
-			else
-			{
-				bold = defaultColor.Bold;
-			}
+			bold = el.Attributes["bold"] != null ? Boolean.Parse(el.Attributes["bold"].InnerText) : defaultColor.Bold;
 
-			if (el.Attributes["italic"] != null)
-			{
-				italic = Boolean.Parse(el.Attributes["italic"].InnerText);
-			}
-			else
-			{
-				italic = defaultColor.Italic;
-			}
+			italic = el.Attributes["italic"] != null ? Boolean.Parse(el.Attributes["italic"].InnerText) : defaultColor.Italic;
 
 			if (el.Attributes["color"] != null)
 			{
 				string c = el.Attributes["color"].InnerText;
-				if (c[0] == '#')
-				{
-					color = ParseColor(c);
-				}
-				else if (c.StartsWith("SystemColors."))
-				{
-					color = ParseColorString(c.Substring("SystemColors.".Length));
-				}
-				else
-				{
-					color = (Color)(Color.GetType()).InvokeMember(c, BindingFlags.GetProperty, null, Color, new object[0]);
-				}
+				color = c[0] == '#'
+					? ParseColor(c)
+					: c.StartsWith("SystemColors.")
+						? ParseColorString(c.Substring("SystemColors.".Length))
+						: (Color)Color.GetType().InvokeMember(c, BindingFlags.GetProperty, null, Color, new object[0]);
 				hasForeground = true;
 			}
 			else
@@ -217,18 +143,11 @@ namespace ControlLibrary.Controls.TextControl.TextEditor.Document
 			if (el.Attributes["bgcolor"] != null)
 			{
 				string c = el.Attributes["bgcolor"].InnerText;
-				if (c[0] == '#')
-				{
-					backgroundcolor = ParseColor(c);
-				}
-				else if (c.StartsWith("SystemColors."))
-				{
-					backgroundcolor = ParseColorString(c.Substring("SystemColors.".Length));
-				}
-				else
-				{
-					backgroundcolor = (Color)(Color.GetType()).InvokeMember(c, BindingFlags.GetProperty, null, Color, new object[0]);
-				}
+				backgroundcolor = c[0] == '#'
+					? ParseColor(c)
+					: c.StartsWith("SystemColors.")
+						? ParseColorString(c.Substring("SystemColors.".Length))
+						: (Color)Color.GetType().InvokeMember(c, BindingFlags.GetProperty, null, Color, new object[0]);
 				hasBackground = true;
 			}
 			else
@@ -290,7 +209,7 @@ namespace ControlLibrary.Controls.TextControl.TextEditor.Document
 			this.italic = italic;
 		}
 
-		static Color ParseColor(string c)
+		private static Color ParseColor(string c)
 		{
 			int a = 255;
 			int offset = 0;

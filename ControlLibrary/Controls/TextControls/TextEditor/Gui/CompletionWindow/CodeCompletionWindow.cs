@@ -8,20 +8,19 @@ namespace ControlLibrary.Controls.TextControl.TextEditor.Gui.CompletionWindow
 {
 	public class CodeCompletionWindow : AbstractCompletionWindow
 	{
-		ICompletionData[] completionData;
-		CodeCompletionListView codeCompletionListView;
-		VScrollBar vScrollBar = new VScrollBar();
-		ICompletionDataProvider dataProvider;
-		IDocument document;
-		bool showDeclarationWindow = true;
-		bool fixedListViewWidth = true;
-		const int ScrollbarWidth = 16;
-		const int MaxListLength = 10;
-
-		int startOffset;
-		int endOffset;
-		DeclarationViewWindow declarationViewWindow = null;
-		Rectangle workingScreen;
+		private ICompletionData[] completionData;
+		private CodeCompletionListView codeCompletionListView;
+		private VScrollBar vScrollBar = new VScrollBar();
+		private ICompletionDataProvider dataProvider;
+		private IDocument document;
+		private bool showDeclarationWindow = true;
+		private bool fixedListViewWidth = true;
+		private const int ScrollbarWidth = 16;
+		private const int MaxListLength = 10;
+		private int startOffset;
+		private int endOffset;
+		private DeclarationViewWindow declarationViewWindow = null;
+		private Rectangle workingScreen;
 
 		public static CodeCompletionWindow ShowCompletionWindow(Form parent, TextEditorBox control, string fileName, ICompletionDataProvider completionDataProvider, char firstChar)
 		{
@@ -35,13 +34,15 @@ namespace ControlLibrary.Controls.TextControl.TextEditor.Gui.CompletionWindow
 			{
 				return null;
 			}
-			CodeCompletionWindow codeCompletionWindow = new CodeCompletionWindow(completionDataProvider, completionData, parent, control, showDeclarationWindow, fixedListViewWidth);
-			codeCompletionWindow.CloseWhenCaretAtBeginning = firstChar == '\0';
+			CodeCompletionWindow codeCompletionWindow = new CodeCompletionWindow(completionDataProvider, completionData, parent, control, showDeclarationWindow, fixedListViewWidth)
+			{
+				CloseWhenCaretAtBeginning = firstChar == '\0'
+			};
 			codeCompletionWindow.ShowCompletionWindow();
 			return codeCompletionWindow;
 		}
 
-		CodeCompletionWindow(ICompletionDataProvider completionDataProvider, ICompletionData[] completionData, Form parentForm, TextEditorBox control, bool showDeclarationWindow, bool fixedListViewWidth) : base(parentForm, control)
+		private CodeCompletionWindow(ICompletionDataProvider completionDataProvider, ICompletionData[] completionData, Form parentForm, TextEditorBox control, bool showDeclarationWindow, bool fixedListViewWidth) : base(parentForm, control)
 		{
 			this.dataProvider = completionDataProvider;
 			this.completionData = completionData;
@@ -58,9 +59,11 @@ namespace ControlLibrary.Controls.TextControl.TextEditor.Gui.CompletionWindow
 				endOffset--;
 			}
 
-			codeCompletionListView = new CodeCompletionListView(completionData);
-			codeCompletionListView.ImageList = completionDataProvider.ImageList;
-			codeCompletionListView.Dock = DockStyle.Fill;
+			codeCompletionListView = new CodeCompletionListView(completionData)
+			{
+				ImageList = completionDataProvider.ImageList,
+				Dock = DockStyle.Fill
+			};
 			codeCompletionListView.SelectedItemChanged += new EventHandler(CodeCompletionListViewSelectedItemChanged);
 			codeCompletionListView.DoubleClick += new EventHandler(CodeCompletionListViewDoubleClick);
 			codeCompletionListView.Click += new EventHandler(CodeCompletionListViewClick);
@@ -104,9 +107,9 @@ namespace ControlLibrary.Controls.TextControl.TextEditor.Gui.CompletionWindow
 			document.DocumentAboutToBeChanged += DocumentAboutToBeChanged;
 		}
 
-		bool inScrollUpdate;
+		private bool inScrollUpdate;
 
-		void CodeCompletionListViewFirstItemChanged(object sender, EventArgs e)
+		private void CodeCompletionListViewFirstItemChanged(object sender, EventArgs e)
 		{
 			if (inScrollUpdate) return;
 			inScrollUpdate = true;
@@ -114,7 +117,7 @@ namespace ControlLibrary.Controls.TextControl.TextEditor.Gui.CompletionWindow
 			inScrollUpdate = false;
 		}
 
-		void VScrollBarValueChanged(object sender, EventArgs e)
+		private void VScrollBarValueChanged(object sender, EventArgs e)
 		{
 			if (inScrollUpdate) return;
 			inScrollUpdate = true;
@@ -124,7 +127,7 @@ namespace ControlLibrary.Controls.TextControl.TextEditor.Gui.CompletionWindow
 			inScrollUpdate = false;
 		}
 
-		void SetDeclarationViewLocation()
+		private void SetDeclarationViewLocation()
 		{
 			//  This method uses the side with more free space
 			int leftSpace = Bounds.Left - workingScreen.Left;
@@ -145,14 +148,9 @@ namespace ControlLibrary.Controls.TextControl.TextEditor.Gui.CompletionWindow
 			{
 				declarationViewWindow.Width = declarationViewWindow.GetRequiredLeftHandSideWidth(new Point(Bounds.Left, Bounds.Top));
 				declarationViewWindow.FixedWidth = true;
-				if (Bounds.Left < declarationViewWindow.Width)
-				{
-					pos = new Point(0, Bounds.Top);
-				}
-				else
-				{
-					pos = new Point(Bounds.Left - declarationViewWindow.Width, Bounds.Top);
-				}
+				pos = Bounds.Left < declarationViewWindow.Width
+					? new Point(0, Bounds.Top)
+					: new Point(Bounds.Left - declarationViewWindow.Width, Bounds.Top);
 				if (declarationViewWindow.Location != pos)
 				{
 					declarationViewWindow.Location = pos;
@@ -170,7 +168,7 @@ namespace ControlLibrary.Controls.TextControl.TextEditor.Gui.CompletionWindow
 			}
 		}
 
-		Util.MouseWheelHandler mouseWheelHandler = new Util.MouseWheelHandler();
+		private Util.MouseWheelHandler mouseWheelHandler = new Util.MouseWheelHandler();
 
 		public void HandleMouseWheel(MouseEventArgs e)
 		{
@@ -179,11 +177,11 @@ namespace ControlLibrary.Controls.TextControl.TextEditor.Gui.CompletionWindow
 				return;
 			if (control.TextEditorProperties.MouseWheelScrollDown)
 				scrollDistance = -scrollDistance;
-			int newValue = vScrollBar.Value + vScrollBar.SmallChange * scrollDistance;
+			int newValue = vScrollBar.Value + (vScrollBar.SmallChange * scrollDistance);
 			vScrollBar.Value = Math.Max(vScrollBar.Minimum, Math.Min(vScrollBar.Maximum - vScrollBar.LargeChange + 1, newValue));
 		}
 
-		void CodeCompletionListViewSelectedItemChanged(object sender, EventArgs e)
+		private void CodeCompletionListViewSelectedItemChanged(object sender, EventArgs e)
 		{
 			ICompletionData data = codeCompletionListView.SelectedCompletionData;
 			if (showDeclarationWindow && data != null && data.Description != null && data.Description.Length > 0)
@@ -216,7 +214,7 @@ namespace ControlLibrary.Controls.TextControl.TextEditor.Gui.CompletionWindow
 			}
 		}
 
-		void DocumentAboutToBeChanged(object sender, DocumentEventArgs e)
+		private void DocumentAboutToBeChanged(object sender, DocumentEventArgs e)
 		{
 			// => startOffset test required so that this startOffset/endOffset are not incremented again
 			//    for BeforeStartKey characters
@@ -296,12 +294,12 @@ namespace ControlLibrary.Controls.TextControl.TextEditor.Gui.CompletionWindow
 			return base.ProcessTextAreaKey(keyData);
 		}
 
-		void CodeCompletionListViewDoubleClick(object sender, EventArgs e)
+		private void CodeCompletionListViewDoubleClick(object sender, EventArgs e)
 		{
 			InsertSelectedItem('\0');
 		}
 
-		void CodeCompletionListViewClick(object sender, EventArgs e)
+		private void CodeCompletionListViewClick(object sender, EventArgs e)
 		{
 			control.ActiveTextAreaControl.TextArea.Focus();
 		}
@@ -325,7 +323,7 @@ namespace ControlLibrary.Controls.TextControl.TextEditor.Gui.CompletionWindow
 			base.Dispose(disposing);
 		}
 
-		bool InsertSelectedItem(char ch)
+		private bool InsertSelectedItem(char ch)
 		{
 			document.DocumentAboutToBeChanged -= DocumentAboutToBeChanged;
 			ICompletionData data = codeCompletionListView.SelectedCompletionData;
@@ -352,7 +350,7 @@ namespace ControlLibrary.Controls.TextControl.TextEditor.Gui.CompletionWindow
 			return result;
 		}
 
-		Size GetListViewSize()
+		private Size GetListViewSize()
 		{
 			int height = codeCompletionListView.ItemHeight * Math.Min(MaxListLength, completionData.Length);
 			int width = codeCompletionListView.ItemHeight * 10;
@@ -372,7 +370,7 @@ namespace ControlLibrary.Controls.TextControl.TextEditor.Gui.CompletionWindow
 		/// used to determine if the scrollbar is visible.</param>
 		/// <returns>The list view width to accommodate the longest completion
 		/// data text string; otherwise the default width.</returns>
-		int GetListViewWidth(int defaultWidth, int height)
+		private int GetListViewWidth(int defaultWidth, int height)
 		{
 			float width = defaultWidth;
 			using (Graphics graphics = codeCompletionListView.CreateGraphics())

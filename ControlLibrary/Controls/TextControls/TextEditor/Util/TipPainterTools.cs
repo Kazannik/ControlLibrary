@@ -3,9 +3,9 @@ using System.Windows.Forms;
 
 namespace ControlLibrary.Controls.TextControl.TextEditor.Util
 {
-	static class TipPainterTools
+	internal static class TipPainterTools
 	{
-		const int SpacerSize = 4;
+		private const int SpacerSize = 4;
 
 		public static Size GetLeftHandSideDrawingSizeHelpTipFromCombinedDescription(Control control,
 																					Graphics graphics,
@@ -301,7 +301,7 @@ namespace ControlLibrary.Controls.TextControl.TextEditor.Util
 			return Size.Empty;
 		}
 
-		static bool IsVisibleText(string text)
+		private static bool IsVisibleText(string text)
 		{
 			return text != null && text.Length > 0;
 		}

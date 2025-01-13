@@ -20,24 +20,12 @@ namespace ControlLibrary.Controls.TextControl.TextEditor
 	/// </summary>
 	public class TextAreaUpdate
 	{
-		TextLocation position;
-		TextAreaUpdateType type;
+		private TextLocation position;
+		private TextAreaUpdateType type;
 
-		public TextAreaUpdateType TextAreaUpdateType
-		{
-			get
-			{
-				return type;
-			}
-		}
+		public TextAreaUpdateType TextAreaUpdateType => type;
 
-		public TextLocation Position
-		{
-			get
-			{
-				return position;
-			}
-		}
+		public TextLocation Position => position;
 
 		/// <summary>
 		/// Creates a new instance of <see cref="TextAreaUpdate"/>

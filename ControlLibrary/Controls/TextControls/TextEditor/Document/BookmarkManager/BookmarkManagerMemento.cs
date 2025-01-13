@@ -9,21 +9,15 @@ namespace ControlLibrary.Controls.TextControl.TextEditor.Document
 	/// </summary>
 	public class BookmarkManagerMemento
 	{
-		List<int> bookmarks = new List<int>();
+		private List<int> bookmarks = new List<int>();
 
 		/// <value>
 		/// Contains all bookmarks as int values
 		/// </value>
 		public List<int> Bookmarks
 		{
-			get
-			{
-				return bookmarks;
-			}
-			set
-			{
-				bookmarks = value;
-			}
+			get => bookmarks;
+			set => bookmarks = value;
 		}
 
 		/// <summary>

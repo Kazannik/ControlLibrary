@@ -8,18 +8,12 @@ namespace ControlLibrary.Controls.TextControl.TextEditor.Document
 	/// </summary>
 	public class HighlightBackground : HighlightColor
 	{
-		Image backgroundImage;
+		private Image backgroundImage;
 
 		/// <value>
 		/// The image used as background
 		/// </value>
-		public Image BackgroundImage
-		{
-			get
-			{
-				return backgroundImage;
-			}
-		}
+		public Image BackgroundImage => backgroundImage;
 
 		/// <summary>
 		/// Creates a new instance of <see cref="HighlightBackground"/>

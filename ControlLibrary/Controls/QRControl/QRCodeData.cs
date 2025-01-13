@@ -1,13 +1,12 @@
+using ControlLibrary.Controls.QRCoder.Framework4._0Methods;
+using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.IO;
+using System.IO.Compression;
 
 namespace ControlLibrary.Controls.QRCoder
 {
-	using QRCoder.Framework4._0Methods;
-	using System;
-	using System.IO;
-	using System.IO.Compression;
-
 	public class QRCodeData : IDisposable
 	{
 		public List<BitArray> ModuleMatrix { get; set; }
@@ -61,7 +60,7 @@ namespace ControlLibrary.Controls.QRCoder
 			//Set QR code version
 			var sideLen = (int)bytes[4];
 			bytes.RemoveRange(0, 5);
-			Version = (sideLen - 21 - 8) / 4 + 1;
+			Version = ((sideLen - 21 - 8) / 4) + 1;
 
 			//Unpack
 			var modules = new Queue<bool>(8 * bytes.Count);
@@ -105,7 +104,7 @@ namespace ControlLibrary.Controls.QRCoder
 					dataQueue.Enqueue((bool)module ? 1 : 0);
 				}
 			}
-			for (int i = 0; i < 8 - (ModuleMatrix.Count * ModuleMatrix.Count) % 8; i++)
+			for (int i = 0; i < 8 - (ModuleMatrix.Count * ModuleMatrix.Count % 8); i++)
 			{
 				dataQueue.Enqueue(0);
 			}
@@ -152,7 +151,7 @@ namespace ControlLibrary.Controls.QRCoder
 
 		private static int ModulesPerSideFromVersion(int version)
 		{
-			return 21 + (version - 1) * 4;
+			return 21 + ((version - 1) * 4);
 		}
 
 		public void Dispose()

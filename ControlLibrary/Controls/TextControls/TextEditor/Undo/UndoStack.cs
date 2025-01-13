@@ -8,8 +8,8 @@ namespace ControlLibrary.Controls.TextControl.TextEditor.Undo
 	/// </summary>
 	public class UndoStack
 	{
-		Stack<IUndoableOperation> undostack = new Stack<IUndoableOperation>();
-		Stack<IUndoableOperation> redostack = new Stack<IUndoableOperation>();
+		private Stack<IUndoableOperation> undostack = new Stack<IUndoableOperation>();
+		private Stack<IUndoableOperation> redostack = new Stack<IUndoableOperation>();
 
 		public TextEditorControlBase TextEditorControl = null;
 
@@ -31,49 +31,25 @@ namespace ControlLibrary.Controls.TextControl.TextEditor.Undo
 		/// <summary>
 		/// Gets if there are actions on the undo stack.
 		/// </summary>
-		public bool CanUndo
-		{
-			get
-			{
-				return undostack.Count > 0;
-			}
-		}
+		public bool CanUndo => undostack.Count > 0;
 
 		/// <summary>
 		/// Gets if there are actions on the redo stack.
 		/// </summary>
-		public bool CanRedo
-		{
-			get
-			{
-				return redostack.Count > 0;
-			}
-		}
+		public bool CanRedo => redostack.Count > 0;
 
 		/// <summary>
 		/// Gets the number of actions on the undo stack.
 		/// </summary>
-		public int UndoItemCount
-		{
-			get
-			{
-				return undostack.Count;
-			}
-		}
+		public int UndoItemCount => undostack.Count;
 
 		/// <summary>
 		/// Gets the number of actions on the redo stack.
 		/// </summary>
-		public int RedoItemCount
-		{
-			get
-			{
-				return redostack.Count;
-			}
-		}
+		public int RedoItemCount => redostack.Count;
 
-		int undoGroupDepth;
-		int actionCountInUndoGroup;
+		private int undoGroupDepth;
+		private int actionCountInUndoGroup;
 
 		public void StartUndoGroup()
 		{
@@ -95,10 +71,7 @@ namespace ControlLibrary.Controls.TextControl.TextEditor.Undo
 			{
 				UndoQueue op = new UndoQueue(undostack, actionCountInUndoGroup);
 				undostack.Push(op);
-				if (OperationPushed != null)
-				{
-					OperationPushed(this, new OperationEventArgs(op));
-				}
+				OperationPushed?.Invoke(this, new OperationEventArgs(op));
 			}
 		}
 
@@ -190,27 +163,21 @@ namespace ControlLibrary.Controls.TextControl.TextEditor.Undo
 		/// </summary>
 		protected void OnActionUndone()
 		{
-			if (ActionUndone != null)
-			{
-				ActionUndone(null, null);
-			}
+			ActionUndone?.Invoke(null, null);
 		}
 
 		/// <summary>
 		/// </summary>
 		protected void OnActionRedone()
 		{
-			if (ActionRedone != null)
-			{
-				ActionRedone(null, null);
-			}
+			ActionRedone?.Invoke(null, null);
 		}
 
-		class UndoableSetCaretPosition : IUndoableOperation
+		private class UndoableSetCaretPosition : IUndoableOperation
 		{
-			UndoStack stack;
-			TextLocation pos;
-			TextLocation redoPos;
+			private UndoStack stack;
+			private TextLocation pos;
+			private TextLocation redoPos;
 
 			public UndoableSetCaretPosition(UndoStack stack, TextLocation pos)
 			{
@@ -240,15 +207,9 @@ namespace ControlLibrary.Controls.TextControl.TextEditor.Undo
 			this.op = op;
 		}
 
-		IUndoableOperation op;
+		private IUndoableOperation op;
 
-		public IUndoableOperation Operation
-		{
-			get
-			{
-				return op;
-			}
-		}
+		public IUndoableOperation Operation => op;
 	}
 
 	public delegate void OperationEventHandler(object sender, OperationEventArgs e);

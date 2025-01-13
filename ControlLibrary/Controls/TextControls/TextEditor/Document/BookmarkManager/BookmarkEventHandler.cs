@@ -11,13 +11,7 @@ namespace ControlLibrary.Controls.TextControl.TextEditor.Document
 	{
 		private readonly Bookmark bookmark;
 
-		public Bookmark Bookmark
-		{
-			get
-			{
-				return bookmark;
-			}
-		}
+		public Bookmark Bookmark => bookmark;
 
 		public BookmarkEventArgs(Bookmark bookmark)
 		{

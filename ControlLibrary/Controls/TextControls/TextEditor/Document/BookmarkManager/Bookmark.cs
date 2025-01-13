@@ -9,17 +9,14 @@ namespace ControlLibrary.Controls.TextControl.TextEditor.Document
 	/// </summary>
 	public class Bookmark
 	{
-		IDocument document;
-		TextAnchor anchor;
-		TextLocation location;
-		bool isEnabled = true;
+		private IDocument document;
+		private TextAnchor anchor;
+		private TextLocation location;
+		private bool isEnabled = true;
 
 		public IDocument Document
 		{
-			get
-			{
-				return document;
-			}
+			get => document;
 			set
 			{
 				if (document != value)
@@ -36,7 +33,7 @@ namespace ControlLibrary.Controls.TextControl.TextEditor.Document
 			}
 		}
 
-		void CreateAnchor()
+		private void CreateAnchor()
 		{
 			if (document != null)
 			{
@@ -48,7 +45,7 @@ namespace ControlLibrary.Controls.TextControl.TextEditor.Document
 			}
 		}
 
-		void AnchorDeleted(object sender, EventArgs e)
+		private void AnchorDeleted(object sender, EventArgs e)
 		{
 			document.BookmarkManager.RemoveMark(this);
 		}
@@ -57,20 +54,11 @@ namespace ControlLibrary.Controls.TextControl.TextEditor.Document
 		/// Gets the TextAnchor used for this bookmark.
 		/// Is null if the bookmark is not connected to a document.
 		/// </summary>
-		public TextAnchor Anchor
-		{
-			get { return anchor; }
-		}
+		public TextAnchor Anchor => anchor;
 
 		public TextLocation Location
 		{
-			get
-			{
-				if (anchor != null)
-					return anchor.Location;
-				else
-					return location;
-			}
+			get => anchor != null ? anchor.Location : location;
 			set
 			{
 				location = value;
@@ -87,10 +75,7 @@ namespace ControlLibrary.Controls.TextControl.TextEditor.Document
 
 		public bool IsEnabled
 		{
-			get
-			{
-				return isEnabled;
-			}
+			get => isEnabled;
 			set
 			{
 				if (isEnabled != value)
@@ -113,38 +98,14 @@ namespace ControlLibrary.Controls.TextControl.TextEditor.Document
 			IsEnabledChanged?.Invoke(this, e);
 		}
 
-		public int LineNumber
-		{
-			get
-			{
-				if (anchor != null)
-					return anchor.LineNumber;
-				else
-					return location.Line;
-			}
-		}
+		public int LineNumber => anchor != null ? anchor.LineNumber : location.Line;
 
-		public int ColumnNumber
-		{
-			get
-			{
-				if (anchor != null)
-					return anchor.ColumnNumber;
-				else
-					return location.Column;
-			}
-		}
+		public int ColumnNumber => anchor != null ? anchor.ColumnNumber : location.Column;
 
 		/// <summary>
 		/// Gets if the bookmark can be toggled off using the 'set/unset bookmark' command.
 		/// </summary>
-		public virtual bool CanToggle
-		{
-			get
-			{
-				return true;
-			}
-		}
+		public virtual bool CanToggle => true;
 
 		public Bookmark(IDocument document, TextLocation location) : this(document, location, true)
 		{

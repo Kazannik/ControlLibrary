@@ -12,13 +12,13 @@ namespace ControlLibrary.Controls.PriodControls
 			PeriodControl.Location = new Point(0, 0);
 			if (BorderStyle == BorderStyle.Fixed3D)
 			{
-				Height = PeriodControl.Height + SystemInformation.Border3DSize.Height * 2;
-				Width = PeriodControl.Width + SystemInformation.Border3DSize.Width * 2;
+				Height = PeriodControl.Height + (SystemInformation.Border3DSize.Height * 2);
+				Width = PeriodControl.Width + (SystemInformation.Border3DSize.Width * 2);
 			}
 			else if (BorderStyle == BorderStyle.FixedSingle)
 			{
-				Height = PeriodControl.Height + SystemInformation.BorderSize.Height * 2;
-				Width = PeriodControl.Width + SystemInformation.BorderSize.Width * 2;
+				Height = PeriodControl.Height + (SystemInformation.BorderSize.Height * 2);
+				Width = PeriodControl.Width + (SystemInformation.BorderSize.Width * 2);
 			}
 			else
 			{
@@ -33,13 +33,13 @@ namespace ControlLibrary.Controls.PriodControls
 			PeriodControl.Location = new Point(0, 0);
 			if (BorderStyle == BorderStyle.Fixed3D)
 			{
-				Height = PeriodControl.Height + SystemInformation.Border3DSize.Height * 2;
-				Width = PeriodControl.Width + SystemInformation.Border3DSize.Width * 2;
+				Height = PeriodControl.Height + (SystemInformation.Border3DSize.Height * 2);
+				Width = PeriodControl.Width + (SystemInformation.Border3DSize.Width * 2);
 			}
 			else if (BorderStyle == BorderStyle.FixedSingle)
 			{
-				Height = PeriodControl.Height + SystemInformation.BorderSize.Height * 2;
-				Width = PeriodControl.Width + SystemInformation.BorderSize.Width * 2;
+				Height = PeriodControl.Height + (SystemInformation.BorderSize.Height * 2);
+				Width = PeriodControl.Width + (SystemInformation.BorderSize.Width * 2);
 			}
 			else
 			{

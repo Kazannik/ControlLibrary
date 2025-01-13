@@ -9,54 +9,30 @@ namespace ControlLibrary.Controls.TextControl.TextEditor.Document
 	/// </summary>
 	public class FontContainer
 	{
-		Font defaultFont;
-		Font regularfont, boldfont, italicfont, bolditalicfont;
+		private Font defaultFont;
+		private Font regularfont, boldfont, italicfont, bolditalicfont;
 
 		/// <value>
 		/// The scaled, regular version of the base font
 		/// </value>
-		public Font RegularFont
-		{
-			get
-			{
-				return regularfont;
-			}
-		}
+		public Font RegularFont => regularfont;
 
 		/// <value>
 		/// The scaled, bold version of the base font
 		/// </value>
-		public Font BoldFont
-		{
-			get
-			{
-				return boldfont;
-			}
-		}
+		public Font BoldFont => boldfont;
 
 		/// <value>
 		/// The scaled, italic version of the base font
 		/// </value>
-		public Font ItalicFont
-		{
-			get
-			{
-				return italicfont;
-			}
-		}
+		public Font ItalicFont => italicfont;
 
 		/// <value>
 		/// The scaled, bold/italic version of the base font
 		/// </value>
-		public Font BoldItalicFont
-		{
-			get
-			{
-				return bolditalicfont;
-			}
-		}
+		public Font BoldItalicFont => bolditalicfont;
 
-		static float twipsPerPixelY;
+		private static float twipsPerPixelY;
 
 		public static float TwipsPerPixelY
 		{
@@ -81,10 +57,7 @@ namespace ControlLibrary.Controls.TextControl.TextEditor.Document
 		/// </value>
 		public Font DefaultFont
 		{
-			get
-			{
-				return defaultFont;
-			}
+			get => defaultFont;
 			set
 			{
 				// 1440 twips is one inch

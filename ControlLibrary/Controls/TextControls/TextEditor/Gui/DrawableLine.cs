@@ -10,12 +10,11 @@ namespace ControlLibrary.Controls.TextControl.TextEditor
 	/// </summary>
 	public class DrawableLine
 	{
-		static StringFormat sf = (StringFormat)System.Drawing.StringFormat.GenericTypographic.Clone();
-
-		List<SimpleTextWord> words = new List<SimpleTextWord>();
-		SizeF spaceSize;
-		Font monospacedFont;
-		Font boldMonospacedFont;
+		private static StringFormat sf = (StringFormat)System.Drawing.StringFormat.GenericTypographic.Clone();
+		private List<SimpleTextWord> words = new List<SimpleTextWord>();
+		private SizeF spaceSize;
+		private Font monospacedFont;
+		private Font boldMonospacedFont;
 
 		private class SimpleTextWord
 		{
@@ -32,8 +31,8 @@ namespace ControlLibrary.Controls.TextControl.TextEditor
 				this.Color = Color;
 			}
 
-			internal readonly static SimpleTextWord Space = new SimpleTextWord(TextWordType.Space, " ", false, Color.Black);
-			internal readonly static SimpleTextWord Tab = new SimpleTextWord(TextWordType.Tab, "\t", false, Color.Black);
+			internal static readonly SimpleTextWord Space = new SimpleTextWord(TextWordType.Space, " ", false, Color.Black);
+			internal static readonly SimpleTextWord Tab = new SimpleTextWord(TextWordType.Tab, "\t", false, Color.Black);
 		}
 
 		public DrawableLine(IDocument document, LineSegment line, Font monospacedFont, Font boldMonospacedFont)

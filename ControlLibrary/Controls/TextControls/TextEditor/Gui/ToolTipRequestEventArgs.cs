@@ -6,44 +6,20 @@ namespace ControlLibrary.Controls.TextControl.TextEditor
 
 	public class ToolTipRequestEventArgs
 	{
-		Point mousePosition;
-		TextLocation logicalPosition;
-		bool inDocument;
+		private Point mousePosition;
+		private TextLocation logicalPosition;
+		private bool inDocument;
 
-		public Point MousePosition
-		{
-			get
-			{
-				return mousePosition;
-			}
-		}
+		public Point MousePosition => mousePosition;
 
-		public TextLocation LogicalPosition
-		{
-			get
-			{
-				return logicalPosition;
-			}
-		}
+		public TextLocation LogicalPosition => logicalPosition;
 
-		public bool InDocument
-		{
-			get
-			{
-				return inDocument;
-			}
-		}
+		public bool InDocument => inDocument;
 
 		/// <summary>
 		/// Gets if some client handling the event has already shown a tool tip.
 		/// </summary>
-		public bool ToolTipShown
-		{
-			get
-			{
-				return toolTipText != null;
-			}
-		}
+		public bool ToolTipShown => toolTipText != null;
 
 		internal string toolTipText;
 

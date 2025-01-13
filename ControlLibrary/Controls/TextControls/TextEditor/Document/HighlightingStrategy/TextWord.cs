@@ -17,12 +17,11 @@ namespace ControlLibrary.Controls.TextControl.TextEditor.Document
 	/// </summary>
 	public class TextWord
 	{
-		HighlightColor color;
-		LineSegment line;
-		IDocument document;
-
-		int offset;
-		int length;
+		private HighlightColor color;
+		private LineSegment line;
+		private IDocument document;
+		private int offset;
+		private int length;
 
 		public sealed class SpaceTextWord : TextWord
 		{
@@ -42,20 +41,8 @@ namespace ControlLibrary.Controls.TextControl.TextEditor.Document
 				return null;
 			}
 
-			public override TextWordType Type
-			{
-				get
-				{
-					return TextWordType.Space;
-				}
-			}
-			public override bool IsWhiteSpace
-			{
-				get
-				{
-					return true;
-				}
-			}
+			public override TextWordType Type => TextWordType.Space;
+			public override bool IsWhiteSpace => true;
 		}
 
 		public sealed class TabTextWord : TextWord
@@ -75,58 +62,21 @@ namespace ControlLibrary.Controls.TextControl.TextEditor.Document
 				return null;
 			}
 
-			public override TextWordType Type
-			{
-				get
-				{
-					return TextWordType.Tab;
-				}
-			}
-			public override bool IsWhiteSpace
-			{
-				get
-				{
-					return true;
-				}
-			}
+			public override TextWordType Type => TextWordType.Tab;
+			public override bool IsWhiteSpace => true;
 		}
 
-		static TextWord spaceWord = new SpaceTextWord();
-		static TextWord tabWord = new TabTextWord();
+		private static TextWord spaceWord = new SpaceTextWord();
+		private static TextWord tabWord = new TabTextWord();
+		private bool hasDefaultColor;
 
-		bool hasDefaultColor;
+		public static TextWord Space => spaceWord;
 
-		public static TextWord Space
-		{
-			get
-			{
-				return spaceWord;
-			}
-		}
+		public static TextWord Tab => tabWord;
 
-		public static TextWord Tab
-		{
-			get
-			{
-				return tabWord;
-			}
-		}
+		public int Offset => offset;
 
-		public int Offset
-		{
-			get
-			{
-				return offset;
-			}
-		}
-
-		public int Length
-		{
-			get
-			{
-				return length;
-			}
-		}
+		public int Length => length;
 
 		/// <summary>
 		/// Splits the <paramref name="word"/> into two parts: the part before <paramref name="pos"/> is assigned to
@@ -147,78 +97,26 @@ namespace ControlLibrary.Controls.TextControl.TextEditor.Document
 			return after;
 		}
 
-		public bool HasDefaultColor
-		{
-			get
-			{
-				return hasDefaultColor;
-			}
-		}
+		public bool HasDefaultColor => hasDefaultColor;
 
-		public virtual TextWordType Type
-		{
-			get
-			{
-				return TextWordType.Word;
-			}
-		}
+		public virtual TextWordType Type => TextWordType.Word;
 
-		public string Word
-		{
-			get
-			{
-				if (document == null)
-				{
-					return String.Empty;
-				}
-				return document.GetText(line.Offset + offset, length);
-			}
-		}
+		public string Word => document == null ? string.Empty : document.GetText(line.Offset + offset, length);
 
 		public virtual Font GetFont(FontContainer fontContainer)
 		{
 			return color.GetFont(fontContainer);
 		}
 
-		public Color Color
-		{
-			get
-			{
-				if (color == null)
-					return Color.Black;
-				else
-					return color.Color;
-			}
-		}
+		public Color Color => color == null ? Color.Black : color.Color;
 
-		public bool Bold
-		{
-			get
-			{
-				if (color == null)
-					return false;
-				else
-					return color.Bold;
-			}
-		}
+		public bool Bold => color == null ? false : color.Bold;
 
-		public bool Italic
-		{
-			get
-			{
-				if (color == null)
-					return false;
-				else
-					return color.Italic;
-			}
-		}
+		public bool Italic => color == null ? false : color.Italic;
 
 		public HighlightColor SyntaxColor
 		{
-			get
-			{
-				return color;
-			}
+			get => color;
 			set
 			{
 				Debug.Assert(value != null);
@@ -226,13 +124,7 @@ namespace ControlLibrary.Controls.TextControl.TextEditor.Document
 			}
 		}
 
-		public virtual bool IsWhiteSpace
-		{
-			get
-			{
-				return false;
-			}
-		}
+		public virtual bool IsWhiteSpace => false;
 
 		protected TextWord()
 		{

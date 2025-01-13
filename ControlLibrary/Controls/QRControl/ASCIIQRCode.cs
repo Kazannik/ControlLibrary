@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Text;
 using static ControlLibrary.Controls.QRCoder.QRCodeGenerator;
 
+
 namespace ControlLibrary.Controls.QRCoder
 {
 	public class AsciiQRCode : AbstractQRCode, IDisposable
@@ -42,7 +43,7 @@ namespace ControlLibrary.Controls.QRCoder
 			//We need to adjust the repeatPerModule based on number of characters in darkColorString
 			//(we assume whiteSpaceString has the same number of characters)
 			//to keep the QR code as square as possible.
-			var quietZonesModifier = (drawQuietZones ? 0 : 8);
+			var quietZonesModifier = drawQuietZones ? 0 : 8;
 			var quietZonesOffset = (int)(quietZonesModifier * 0.5);
 			var adjustmentValueForNumberOfCharacters = darkColorString.Length / 2 != 1 ? darkColorString.Length / 2 : 0;
 			var verticalNumberOfRepeats = repeatPerModule + adjustmentValueForNumberOfCharacters;
@@ -52,7 +53,7 @@ namespace ControlLibrary.Controls.QRCoder
 				var lineBuilder = new StringBuilder();
 				for (var x = 0; x < QrCodeData.ModuleMatrix.Count - quietZonesModifier; x++)
 				{
-					var module = QrCodeData.ModuleMatrix[x + quietZonesOffset][((y + verticalNumberOfRepeats) / verticalNumberOfRepeats - 1) + quietZonesOffset];
+					var module = QrCodeData.ModuleMatrix[x + quietZonesOffset][((y + verticalNumberOfRepeats) / verticalNumberOfRepeats) - 1 + quietZonesOffset];
 					for (var i = 0; i < repeatPerModule; i++)
 					{
 						lineBuilder.Append(module ? darkColorString : whiteSpaceString);

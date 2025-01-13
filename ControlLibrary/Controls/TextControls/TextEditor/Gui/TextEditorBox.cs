@@ -15,11 +15,10 @@ namespace ControlLibrary.Controls.TextControl.TextEditor
 	public class TextEditorBox : TextEditorControlBase
 	{
 		protected Panel textAreaPanel = new Panel();
-		TextAreaControl primaryTextArea;
-		Splitter textAreaSplitter = null;
-		TextAreaControl secondaryTextArea = null;
-
-		PrintDocument printDocument = null;
+		private TextAreaControl primaryTextArea;
+		private Splitter textAreaSplitter = null;
+		private TextAreaControl secondaryTextArea = null;
+		private PrintDocument printDocument = null;
 
 		[Browsable(false)]
 		public PrintDocument PrintDocument
@@ -36,15 +35,9 @@ namespace ControlLibrary.Controls.TextControl.TextEditor
 			}
 		}
 
-		TextAreaControl activeTextAreaControl;
+		private TextAreaControl activeTextAreaControl;
 
-		public override TextAreaControl ActiveTextAreaControl
-		{
-			get
-			{
-				return activeTextAreaControl;
-			}
-		}
+		public override TextAreaControl ActiveTextAreaControl => activeTextAreaControl;
 
 		protected void SetActiveTextAreaControl(TextAreaControl value)
 		{
@@ -52,10 +45,7 @@ namespace ControlLibrary.Controls.TextControl.TextEditor
 			{
 				activeTextAreaControl = value;
 
-				if (ActiveTextAreaControlChanged != null)
-				{
-					ActiveTextAreaControlChanged(this, EventArgs.Empty);
-				}
+				ActiveTextAreaControlChanged?.Invoke(this, EventArgs.Empty);
 			}
 		}
 
@@ -67,7 +57,7 @@ namespace ControlLibrary.Controls.TextControl.TextEditor
 
 			textAreaPanel.Dock = DockStyle.Fill;
 
-			Document = (new DocumentFactory()).CreateDocument();
+			Document = new DocumentFactory().CreateDocument();
 			Document.HighlightingStrategy = HighlightingStrategyFactory.CreateHighlightingStrategy();
 
 			primaryTextArea = new TextAreaControl(this);
@@ -102,19 +92,23 @@ namespace ControlLibrary.Controls.TextControl.TextEditor
 		{
 			if (secondaryTextArea == null)
 			{
-				secondaryTextArea = new TextAreaControl(this);
-				secondaryTextArea.Dock = DockStyle.Bottom;
-				secondaryTextArea.Height = Height / 2;
+				secondaryTextArea = new TextAreaControl(this)
+				{
+					Dock = DockStyle.Bottom,
+					Height = Height / 2
+				};
 
 				secondaryTextArea.TextArea.GotFocus += delegate
 				{
 					SetActiveTextAreaControl(secondaryTextArea);
 				};
 
-				textAreaSplitter = new Splitter();
-				textAreaSplitter.BorderStyle = BorderStyle.FixedSingle;
-				textAreaSplitter.Height = 8;
-				textAreaSplitter.Dock = DockStyle.Bottom;
+				textAreaSplitter = new Splitter
+				{
+					BorderStyle = BorderStyle.FixedSingle,
+					Height = 8,
+					Dock = DockStyle.Bottom
+				};
 				textAreaPanel.Controls.Add(textAreaSplitter);
 				textAreaPanel.Controls.Add(secondaryTextArea);
 				InitializeTextAreaControl(secondaryTextArea);
@@ -135,22 +129,10 @@ namespace ControlLibrary.Controls.TextControl.TextEditor
 		}
 
 		[Browsable(false)]
-		public bool EnableUndo
-		{
-			get
-			{
-				return Document.UndoStack.CanUndo;
-			}
-		}
+		public bool EnableUndo => Document.UndoStack.CanUndo;
 
 		[Browsable(false)]
-		public bool EnableRedo
-		{
-			get
-			{
-				return Document.UndoStack.CanRedo;
-			}
-		}
+		public bool EnableRedo => Document.UndoStack.CanRedo;
 
 		public void Undo()
 		{
@@ -242,7 +224,7 @@ namespace ControlLibrary.Controls.TextControl.TextEditor
 			}
 		}
 
-		void CommitUpdateRequested(object sender, EventArgs e)
+		private void CommitUpdateRequested(object sender, EventArgs e)
 		{
 			if (IsInUpdate)
 			{
@@ -299,11 +281,11 @@ namespace ControlLibrary.Controls.TextControl.TextEditor
 		#endregion
 
 		#region Printing routines
-		int curLineNr = 0;
-		float curTabIndent = 0;
-		StringFormat printingStringFormat;
+		private int curLineNr = 0;
+		private float curTabIndent = 0;
+		private StringFormat printingStringFormat;
 
-		void BeginPrint(object sender, PrintEventArgs ev)
+		private void BeginPrint(object sender, PrintEventArgs ev)
 		{
 			curLineNr = 0;
 			printingStringFormat = (StringFormat)System.Drawing.StringFormat.GenericTypographic.Clone();
@@ -318,7 +300,7 @@ namespace ControlLibrary.Controls.TextControl.TextEditor
 			printingStringFormat.SetTabStops(0, tabStops);
 		}
 
-		void Advance(ref float x, ref float y, float maxWidth, float size, float fontHeight)
+		private void Advance(ref float x, ref float y, float maxWidth, float size, float fontHeight)
 		{
 			if (x + size < maxWidth)
 			{
@@ -332,7 +314,7 @@ namespace ControlLibrary.Controls.TextControl.TextEditor
 		}
 
 		// btw. I hate source code duplication ... but this time I don't care !!!!
-		float MeasurePrintingHeight(Graphics g, LineSegment line, float maxWidth)
+		private float MeasurePrintingHeight(Graphics g, LineSegment line, float maxWidth)
 		{
 			float xPos = 0;
 			float yPos = 0;
@@ -369,7 +351,7 @@ namespace ControlLibrary.Controls.TextControl.TextEditor
 			return yPos + fontHeight;
 		}
 
-		void DrawLine(Graphics g, LineSegment line, float yPos, RectangleF margin)
+		private void DrawLine(Graphics g, LineSegment line, float yPos, RectangleF margin)
 		{
 			float xPos = 0;
 			float fontHeight = Font.GetHeight(g);
@@ -406,7 +388,7 @@ namespace ControlLibrary.Controls.TextControl.TextEditor
 			}
 		}
 
-		void PrintPage(object sender, PrintPageEventArgs ev)
+		private void PrintPage(object sender, PrintPageEventArgs ev)
 		{
 			Graphics g = ev.Graphics;
 			float yPos = ev.MarginBounds.Top;

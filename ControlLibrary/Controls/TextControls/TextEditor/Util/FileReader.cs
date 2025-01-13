@@ -60,18 +60,11 @@ namespace ControlLibrary.Controls.TextControl.TextEditor.Util
 			}
 			else
 			{
-				if (defaultEncoding != null)
-				{
-					return new StreamReader(fs, defaultEncoding);
-				}
-				else
-				{
-					return new StreamReader(fs);
-				}
+				return defaultEncoding != null ? new StreamReader(fs, defaultEncoding) : new StreamReader(fs);
 			}
 		}
 
-		static StreamReader AutoDetect(Stream fs, byte firstByte, byte secondByte, Encoding defaultEncoding)
+		private static StreamReader AutoDetect(Stream fs, byte firstByte, byte secondByte, Encoding defaultEncoding)
 		{
 			int max = (int)Math.Min(fs.Length, 500000); // look at max. 500 KB
 			const int ASCII = 0;
@@ -83,18 +76,7 @@ namespace ControlLibrary.Controls.TextControl.TextEditor.Util
 			byte b;
 			for (int i = 0; i < max; i++)
 			{
-				if (i == 0)
-				{
-					b = firstByte;
-				}
-				else if (i == 1)
-				{
-					b = secondByte;
-				}
-				else
-				{
-					b = (byte)fs.ReadByte();
-				}
+				b = i == 0 ? firstByte : i == 1 ? secondByte : (byte)fs.ReadByte();
 				if (b < 0x80)
 				{
 					// normal ASCII character

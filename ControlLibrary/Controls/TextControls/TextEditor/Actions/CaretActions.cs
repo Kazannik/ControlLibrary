@@ -92,7 +92,7 @@ namespace ControlLibrary.Controls.TextControl.TextEditor.Actions
 			if (visualLine > 0)
 			{
 				Point pos = new Point(textArea.TextView.GetDrawingXPos(lineNr, position.X),
-									  textArea.TextView.DrawingPosition.Y + (visualLine - 1) * textArea.TextView.FontHeight - textArea.TextView.TextArea.VirtualTop.Y);
+									  textArea.TextView.DrawingPosition.Y + ((visualLine - 1) * textArea.TextView.FontHeight) - textArea.TextView.TextArea.VirtualTop.Y);
 				textArea.Caret.Position = textArea.TextView.GetLogicalPosition(pos);
 				textArea.SetCaretToDesiredColumn();
 			}
@@ -113,7 +113,7 @@ namespace ControlLibrary.Controls.TextControl.TextEditor.Actions
 			{
 				Point pos = new Point(textArea.TextView.GetDrawingXPos(lineNr, position.X),
 									  textArea.TextView.DrawingPosition.Y
-									  + (visualLine + 1) * textArea.TextView.FontHeight
+									  + ((visualLine + 1) * textArea.TextView.FontHeight)
 									  - textArea.TextView.TextArea.VirtualTop.Y);
 				textArea.Caret.Position = textArea.TextView.GetLogicalPosition(pos);
 				textArea.SetCaretToDesiredColumn();
@@ -147,14 +147,9 @@ namespace ControlLibrary.Controls.TextControl.TextEditor.Actions
 			{
 				if (marker.IsFolded)
 				{
-					if (oldPos.X == marker.StartColumn && oldPos.Y == marker.StartLine)
-					{
-						newPos = new TextLocation(marker.EndColumn, marker.EndLine);
-					}
-					else
-					{
-						newPos = new TextLocation(marker.StartColumn, marker.StartLine);
-					}
+					newPos = oldPos.X == marker.StartColumn && oldPos.Y == marker.StartLine
+						? new TextLocation(marker.EndColumn, marker.EndLine)
+						: new TextLocation(marker.StartColumn, marker.StartLine);
 					break;
 				}
 			}
@@ -187,22 +182,15 @@ namespace ControlLibrary.Controls.TextControl.TextEditor.Actions
 				{
 					if (marker.IsFolded)
 					{
-						if (oldPos.X == marker.EndColumn && oldPos.Y == marker.EndLine)
-						{
-							newPos = new TextLocation(marker.StartColumn, marker.StartLine);
-						}
-						else
-						{
-							newPos = new TextLocation(marker.EndColumn, marker.EndLine);
-						}
+						newPos = oldPos.X == marker.EndColumn && oldPos.Y == marker.EndLine
+							? new TextLocation(marker.StartColumn, marker.StartLine)
+							: new TextLocation(marker.EndColumn, marker.EndLine);
 						break;
 					}
 				}
 				textArea.Caret.Position = newPos;
 				textArea.SetDesiredColumn();
 			}
-
-
 		}
 	}
 

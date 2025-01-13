@@ -12,87 +12,33 @@ namespace ControlLibrary.Controls.TextControl.TextEditor
 	[ToolboxItem(false)]
 	public class TextAreaControl : Panel
 	{
-		TextEditorBox motherTextEditorControl;
+		private TextEditorBox motherTextEditorControl;
+		private HRuler hRuler = null;
+		private VScrollBar vScrollBar = new VScrollBar();
+		private HScrollBar hScrollBar = new HScrollBar();
+		private TextArea textArea;
+		private bool doHandleMousewheel = true;
+		private bool disposed;
 
-		HRuler hRuler = null;
+		public TextArea TextArea => textArea;
 
-		VScrollBar vScrollBar = new VScrollBar();
-		HScrollBar hScrollBar = new HScrollBar();
-		TextArea textArea;
-		bool doHandleMousewheel = true;
-		bool disposed;
+		public SelectionManager SelectionManager => textArea.SelectionManager;
 
-		public TextArea TextArea
-		{
-			get
-			{
-				return textArea;
-			}
-		}
-
-		public SelectionManager SelectionManager
-		{
-			get
-			{
-				return textArea.SelectionManager;
-			}
-		}
-
-		public Caret Caret
-		{
-			get
-			{
-				return textArea.Caret;
-			}
-		}
+		public Caret Caret => textArea.Caret;
 
 		[Browsable(false)]
-		public IDocument Document
-		{
-			get
-			{
-				if (motherTextEditorControl != null)
-					return motherTextEditorControl.Document;
-				return null;
-			}
-		}
+		public IDocument Document => motherTextEditorControl != null ? motherTextEditorControl.Document : null;
 
-		public ITextEditorProperties TextEditorProperties
-		{
-			get
-			{
-				if (motherTextEditorControl != null)
-					return motherTextEditorControl.TextEditorProperties;
-				return null;
-			}
-		}
+		public ITextEditorProperties TextEditorProperties => motherTextEditorControl != null ? motherTextEditorControl.TextEditorProperties : null;
 
-		public VScrollBar VScrollBar
-		{
-			get
-			{
-				return vScrollBar;
-			}
-		}
+		public VScrollBar VScrollBar => vScrollBar;
 
-		public HScrollBar HScrollBar
-		{
-			get
-			{
-				return hScrollBar;
-			}
-		}
+		public HScrollBar HScrollBar => hScrollBar;
 
 		public bool DoHandleMousewheel
 		{
-			get
-			{
-				return doHandleMousewheel;
-			}
-			set
-			{
-				doHandleMousewheel = value;
-			}
+			get => doHandleMousewheel;
+			set => doHandleMousewheel = value;
 		}
 
 		public TextAreaControl(TextEditorBox motherTextEditorControl)
@@ -145,7 +91,7 @@ namespace ControlLibrary.Controls.TextControl.TextEditor
 			base.Dispose(disposing);
 		}
 
-		void DocumentTextContentChanged(object sender, EventArgs e)
+		private void DocumentTextContentChanged(object sender, EventArgs e)
 		{
 			// after the text content is changed abruptly, we need to validate the
 			// caret position - otherwise the caret position is invalid for a short amount
@@ -189,10 +135,10 @@ namespace ControlLibrary.Controls.TextControl.TextEditor
 											  SystemInformation.VerticalScrollBarArrowHeight);
 		}
 
-		bool adjustScrollBarsOnNextUpdate;
-		Point scrollToPosOnNextUpdate;
+		private bool adjustScrollBarsOnNextUpdate;
+		private Point scrollToPosOnNextUpdate;
 
-		void AdjustScrollBarsOnDocumentChange(object sender, DocumentEventArgs e)
+		private void AdjustScrollBarsOnDocumentChange(object sender, DocumentEventArgs e)
 		{
 			if (motherTextEditorControl.IsInUpdate == false)
 			{
@@ -205,7 +151,7 @@ namespace ControlLibrary.Controls.TextControl.TextEditor
 			}
 		}
 
-		void DocumentUpdateCommitted(object sender, EventArgs e)
+		private void DocumentUpdateCommitted(object sender, EventArgs e)
 		{
 			if (motherTextEditorControl.IsInUpdate == false)
 			{
@@ -224,14 +170,14 @@ namespace ControlLibrary.Controls.TextControl.TextEditor
 			}
 		}
 
-		int[] lineLengthCache;
-		const int LineLengthCacheAdditionalSize = 100;
+		private int[] lineLengthCache;
+		private const int LineLengthCacheAdditionalSize = 100;
 
-		void AdjustScrollBarsClearCache()
+		private void AdjustScrollBarsClearCache()
 		{
 			if (lineLengthCache != null)
 			{
-				if (lineLengthCache.Length < this.Document.TotalNumberOfLines + 2 * LineLengthCacheAdditionalSize)
+				if (lineLengthCache.Length < this.Document.TotalNumberOfLines + (2 * LineLengthCacheAdditionalSize))
 				{
 					lineLengthCache = null;
 				}
@@ -278,7 +224,7 @@ namespace ControlLibrary.Controls.TextControl.TextEditor
 				}
 			}
 			hScrollBar.Minimum = 0;
-			hScrollBar.Maximum = (Math.Max(max + 20, textArea.TextView.VisibleColumnCount - 1));
+			hScrollBar.Maximum = Math.Max(max + 20, textArea.TextView.VisibleColumnCount - 1);
 
 			vScrollBar.LargeChange = Math.Max(0, textArea.TextView.DrawingPosition.Height);
 			vScrollBar.SmallChange = Math.Max(0, textArea.TextView.FontHeight);
@@ -318,20 +264,20 @@ namespace ControlLibrary.Controls.TextControl.TextEditor
 			AdjustScrollBars();
 		}
 
-		void VScrollBarValueChanged(object sender, EventArgs e)
+		private void VScrollBarValueChanged(object sender, EventArgs e)
 		{
 			textArea.VirtualTop = new Point(textArea.VirtualTop.X, vScrollBar.Value);
 			textArea.Invalidate();
 			AdjustScrollBars();
 		}
 
-		void HScrollBarValueChanged(object sender, EventArgs e)
+		private void HScrollBarValueChanged(object sender, EventArgs e)
 		{
 			textArea.VirtualTop = new Point(hScrollBar.Value * textArea.TextView.WideSpaceWidth, textArea.VirtualTop.Y);
 			textArea.Invalidate();
 		}
 
-		Util.MouseWheelHandler mouseWheelHandler = new Util.MouseWheelHandler();
+		private Util.MouseWheelHandler mouseWheelHandler = new Util.MouseWheelHandler();
 
 		public void HandleMouseWheel(MouseEventArgs e)
 		{
@@ -340,22 +286,17 @@ namespace ControlLibrary.Controls.TextControl.TextEditor
 				return;
 			if ((Control.ModifierKeys & Keys.Control) != 0 && TextEditorProperties.MouseWheelTextZoom)
 			{
-				if (scrollDistance > 0)
-				{
-					motherTextEditorControl.Font = new Font(motherTextEditorControl.Font.Name,
-															motherTextEditorControl.Font.Size + 1);
-				}
-				else
-				{
-					motherTextEditorControl.Font = new Font(motherTextEditorControl.Font.Name,
+				motherTextEditorControl.Font = scrollDistance > 0
+					? new Font(motherTextEditorControl.Font.Name,
+															motherTextEditorControl.Font.Size + 1)
+					: new Font(motherTextEditorControl.Font.Name,
 															Math.Max(6, motherTextEditorControl.Font.Size - 1));
-				}
 			}
 			else
 			{
 				if (TextEditorProperties.MouseWheelScrollDown)
 					scrollDistance = -scrollDistance;
-				int newValue = vScrollBar.Value + vScrollBar.SmallChange * scrollDistance;
+				int newValue = vScrollBar.Value + (vScrollBar.SmallChange * scrollDistance);
 				vScrollBar.Value = Math.Max(vScrollBar.Minimum, Math.Min(vScrollBar.Maximum - vScrollBar.LargeChange + 1, newValue));
 			}
 		}
@@ -401,19 +342,19 @@ namespace ControlLibrary.Controls.TextControl.TextEditor
 			{
 				if (pos < curCharMin)
 				{
-					hScrollBar.Value = (int)(Math.Max(0, pos - scrollMarginHeight));
+					hScrollBar.Value = (int)Math.Max(0, pos - scrollMarginHeight);
 				}
 				else
 				{
 					if (pos > curCharMax)
 					{
-						hScrollBar.Value = (int)Math.Max(0, Math.Min(hScrollBar.Maximum, (pos - textArea.TextView.VisibleColumnCount + scrollMarginHeight)));
+						hScrollBar.Value = (int)Math.Max(0, Math.Min(hScrollBar.Maximum, pos - textArea.TextView.VisibleColumnCount + scrollMarginHeight));
 					}
 				}
 			}
 		}
 
-		int scrollMarginHeight = 3;
+		private int scrollMarginHeight = 3;
 
 		/// <summary>
 		/// Ensure that <paramref name="line"/> is visible.
@@ -438,15 +379,10 @@ namespace ControlLibrary.Controls.TextControl.TextEditor
 				int curLineMax = curLineMin + this.textArea.TextView.VisibleLineCount;
 				if (line + scrollMarginHeight - 1 > curLineMax)
 				{
-					if (this.textArea.TextView.VisibleLineCount == 1)
-					{
-						this.vScrollBar.Value = Math.Max(0, Math.Min(this.vScrollBar.Maximum, (line - scrollMarginHeight - 1) * textArea.TextView.FontHeight));
-					}
-					else
-					{
-						this.vScrollBar.Value = Math.Min(this.vScrollBar.Maximum,
+					this.vScrollBar.Value = this.textArea.TextView.VisibleLineCount == 1
+						? Math.Max(0, Math.Min(this.vScrollBar.Maximum, (line - scrollMarginHeight - 1) * textArea.TextView.FontHeight))
+						: Math.Min(this.vScrollBar.Maximum,
 														 (line - this.textArea.TextView.VisibleLineCount + scrollMarginHeight - 1) * textArea.TextView.FontHeight);
-					}
 					VScrollBarValueChanged(this, EventArgs.Empty);
 				}
 			}

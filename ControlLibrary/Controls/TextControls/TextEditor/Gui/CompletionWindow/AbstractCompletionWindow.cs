@@ -11,8 +11,8 @@ namespace ControlLibrary.Controls.TextControl.TextEditor.Gui.CompletionWindow
 	{
 		protected TextEditorBox control;
 		protected Size drawingSize;
-		Rectangle workingScreen;
-		Form parentForm;
+		private Rectangle workingScreen;
+		private Form parentForm;
 
 		protected AbstractCompletionWindow(Form parentForm, TextEditorBox control)
 		{
@@ -37,7 +37,7 @@ namespace ControlLibrary.Controls.TextControl.TextEditor.Gui.CompletionWindow
 			int xpos = textArea.TextView.GetDrawingXPos(caretPos.Y, caretPos.X);
 			int rulerHeight = textArea.TextEditorProperties.ShowHorizontalRuler ? textArea.TextView.FontHeight : 0;
 			Point pos = new Point(textArea.TextView.DrawingPosition.X + xpos,
-								  textArea.TextView.DrawingPosition.Y + (textArea.Document.GetVisibleLine(caretPos.Y)) * textArea.TextView.FontHeight
+								  textArea.TextView.DrawingPosition.Y + (textArea.Document.GetVisibleLine(caretPos.Y) * textArea.TextView.FontHeight)
 								  - textArea.TextView.TextArea.VirtualTop.Y + textArea.TextView.FontHeight + rulerHeight);
 
 			Point location = control.ActiveTextAreaControl.PointToScreen(pos);
@@ -81,7 +81,7 @@ namespace ControlLibrary.Controls.TextControl.TextEditor.Gui.CompletionWindow
 			}
 		}
 
-		static int shadowStatus;
+		private static int shadowStatus;
 
 		/// <summary>
 		/// Adds a shadow to the create params if it is supported by the operating system.
@@ -95,7 +95,7 @@ namespace ControlLibrary.Controls.TextControl.TextEditor.Gui.CompletionWindow
 				if (Environment.OSVersion.Platform == PlatformID.Win32NT)
 				{
 					Version ver = Environment.OSVersion.Version;
-					if (ver.Major > 5 || ver.Major == 5 && ver.Minor >= 1)
+					if (ver.Major > 5 || (ver.Major == 5 && ver.Minor >= 1))
 					{
 						shadowStatus = 1;
 					}
@@ -107,13 +107,7 @@ namespace ControlLibrary.Controls.TextControl.TextEditor.Gui.CompletionWindow
 			}
 		}
 
-		protected override bool ShowWithoutActivation
-		{
-			get
-			{
-				return true;
-			}
-		}
+		protected override bool ShowWithoutActivation => true;
 
 		protected void ShowCompletionWindow()
 		{
@@ -141,7 +135,7 @@ namespace ControlLibrary.Controls.TextControl.TextEditor.Gui.CompletionWindow
 			}
 		}
 
-		void ParentFormLocationChanged(object sender, EventArgs e)
+		private void ParentFormLocationChanged(object sender, EventArgs e)
 		{
 			SetLocation();
 		}

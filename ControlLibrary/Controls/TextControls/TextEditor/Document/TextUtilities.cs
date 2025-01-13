@@ -4,7 +4,6 @@ using System.Text;
 
 namespace ControlLibrary.Controls.TextControl.TextEditor.Document
 {
-
 	public sealed class TextUtilities
 	{
 		/// <remarks>
@@ -55,11 +54,7 @@ namespace ControlLibrary.Controls.TextControl.TextEditor.Document
 
 		public static bool IsLetterDigitOrUnderscore(char c)
 		{
-			if (!Char.IsLetterOrDigit(c))
-			{
-				return c == '_';
-			}
-			return true;
+			return !Char.IsLetterOrDigit(c) ? c == '_' : true;
 		}
 
 		public enum CharacterType
@@ -175,11 +170,9 @@ namespace ControlLibrary.Controls.TextControl.TextEditor.Document
 
 		public static CharacterType GetCharacterType(char c)
 		{
-			if (IsLetterDigitOrUnderscore(c))
-				return CharacterType.LetterDigitOrUnderscore;
-			if (Char.IsWhiteSpace(c))
-				return CharacterType.WhiteSpace;
-			return CharacterType.Other;
+			return IsLetterDigitOrUnderscore(c)
+				? CharacterType.LetterDigitOrUnderscore
+				: Char.IsWhiteSpace(c) ? CharacterType.WhiteSpace : CharacterType.Other;
 		}
 
 		public static int GetFirstNonWSChar(IDocument document, int offset)
@@ -310,7 +303,7 @@ namespace ControlLibrary.Controls.TextControl.TextEditor.Document
 			return true;
 		}
 
-		static bool IsWordPart(char ch)
+		private static bool IsWordPart(char ch)
 		{
 			return IsLetterDigitOrUnderscore(ch) || ch == '.';
 		}

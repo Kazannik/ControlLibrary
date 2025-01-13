@@ -15,43 +15,19 @@ namespace ControlLibrary.Controls.TextControl.TextEditor.Document
 	/// </summary>
 	public class TextMarker : AbstractSegment
 	{
-		TextMarkerType textMarkerType;
-		Color color;
-		Color foreColor;
-		string toolTip = null;
-		bool overrideForeColor = false;
+		private TextMarkerType textMarkerType;
+		private Color color;
+		private Color foreColor;
+		private string toolTip = null;
+		private bool overrideForeColor = false;
 
-		public TextMarkerType TextMarkerType
-		{
-			get
-			{
-				return textMarkerType;
-			}
-		}
+		public TextMarkerType TextMarkerType => textMarkerType;
 
-		public Color Color
-		{
-			get
-			{
-				return color;
-			}
-		}
+		public Color Color => color;
 
-		public Color ForeColor
-		{
-			get
-			{
-				return foreColor;
-			}
-		}
+		public Color ForeColor => foreColor;
 
-		public bool OverrideForeColor
-		{
-			get
-			{
-				return overrideForeColor;
-			}
-		}
+		public bool OverrideForeColor => overrideForeColor;
 
 		/// <summary>
 		/// Marks the text segment as read-only.
@@ -60,26 +36,14 @@ namespace ControlLibrary.Controls.TextControl.TextEditor.Document
 
 		public string ToolTip
 		{
-			get
-			{
-				return toolTip;
-			}
-			set
-			{
-				toolTip = value;
-			}
+			get => toolTip;
+			set => toolTip = value;
 		}
 
 		/// <summary>
 		/// Gets the last offset that is inside the marker region.
 		/// </summary>
-		public int EndOffset
-		{
-			get
-			{
-				return Offset + Length - 1;
-			}
-		}
+		public int EndOffset => Offset + Length - 1;
 
 		public TextMarker(int offset, int length, TextMarkerType textMarkerType) : this(offset, length, textMarkerType, Color.Red)
 		{

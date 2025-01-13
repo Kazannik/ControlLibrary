@@ -21,7 +21,7 @@ namespace ControlLibrary.Controls.TextControl.TextEditor.Document
 			}
 		}
 
-		StackNode top = null;
+		private StackNode top = null;
 
 		public Span Pop()
 		{
@@ -40,18 +40,14 @@ namespace ControlLibrary.Controls.TextControl.TextEditor.Document
 			top = new StackNode(top, s);
 		}
 
-		public bool IsEmpty
-		{
-			get
-			{
-				return top == null;
-			}
-		}
+		public bool IsEmpty => top == null;
 
 		public SpanStack Clone()
 		{
-			SpanStack n = new SpanStack();
-			n.top = this.top;
+			SpanStack n = new SpanStack
+			{
+				top = this.top
+			};
 			return n;
 		}
 		object ICloneable.Clone()
@@ -74,28 +70,16 @@ namespace ControlLibrary.Controls.TextControl.TextEditor.Document
 
 		public struct Enumerator : IEnumerator<Span>
 		{
-			StackNode c;
+			private StackNode c;
 
 			internal Enumerator(StackNode node)
 			{
 				c = node;
 			}
 
-			public Span Current
-			{
-				get
-				{
-					return c.Data;
-				}
-			}
+			public Span Current => c.Data;
 
-			object System.Collections.IEnumerator.Current
-			{
-				get
-				{
-					return c.Data;
-				}
-			}
+			object System.Collections.IEnumerator.Current => c.Data;
 
 			public void Dispose()
 			{

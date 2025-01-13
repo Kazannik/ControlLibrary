@@ -17,7 +17,7 @@ namespace ControlLibrary.Utils
 		#endregion
 
 		[StructLayout(LayoutKind.Sequential)]
-		public struct BLENDFUNCTION
+		public readonly struct BLENDFUNCTION
 		{
 			private readonly byte BlendOp;
 			private readonly byte BlendFlags;
@@ -163,16 +163,18 @@ namespace ControlLibrary.Utils
 
 					// copy each pixel manually and premultiply the color values
 					for (int x = 0; x < dibsection.dsBmih.biWidth; x++)
+					{
 						for (int y = 0; y < dibsection.dsBmih.biHeight; y++)
 						{
-							int offset = y * dibsection.dsBmih.biWidth + x;
+							int offset = (y * dibsection.dsBmih.biWidth) + x;
 							if (pBits[offset].rgbReserved > 0 && (pBits[offset].rgbBlue > pBits[offset].rgbReserved || pBits[offset].rgbGreen > pBits[offset].rgbReserved || pBits[offset].rgbRed > pBits[offset].rgbReserved))
 							{
-								pBits[offset].rgbBlue = (byte)((((int)pBits[offset].rgbBlue * (int)pBits[offset].rgbReserved + 1) * 257) >> 16);
-								pBits[offset].rgbGreen = (byte)((((int)pBits[offset].rgbGreen * (int)pBits[offset].rgbReserved + 1) * 257) >> 16);
-								pBits[offset].rgbRed = (byte)((((int)pBits[offset].rgbRed * (int)pBits[offset].rgbReserved + 1) * 257) >> 16);
+								pBits[offset].rgbBlue = (byte)(((((int)pBits[offset].rgbBlue * (int)pBits[offset].rgbReserved) + 1) * 257) >> 16);
+								pBits[offset].rgbGreen = (byte)(((((int)pBits[offset].rgbGreen * (int)pBits[offset].rgbReserved) + 1) * 257) >> 16);
+								pBits[offset].rgbRed = (byte)(((((int)pBits[offset].rgbRed * (int)pBits[offset].rgbReserved) + 1) * 257) >> 16);
 							}
 						}
+					}
 				}
 			}
 		}
@@ -187,10 +189,10 @@ namespace ControlLibrary.Utils
 			unsafe
 			{
 				RGBQUAD* pBits = (RGBQUAD*)(void*)dibsection.dsBm.bmBits;
-				for (int x = 0; x < dibsection.dsBmih.biWidth; x++)
+				for (int x = 0; x < dibsection.dsBmih.biWidth; x++) {
 					for (int y = 0; y < dibsection.dsBmih.biHeight; y++)
 					{
-						int offset = y * dibsection.dsBmih.biWidth + x;
+						int offset = (y * dibsection.dsBmih.biWidth) + x;
 						if (pBits[offset].rgbReserved != 0)
 						{
 							bitmap.SetPixel(x, y, Color.FromArgb(pBits[offset].rgbReserved, pBits[offset].rgbRed, pBits[offset].rgbGreen, pBits[offset].rgbBlue));
@@ -200,6 +202,7 @@ namespace ControlLibrary.Utils
 							bitmap.SetPixel(x, y, Color.FromArgb(255, pBits[offset].rgbRed, pBits[offset].rgbGreen, pBits[offset].rgbBlue));
 						}
 					}
+				}
 			}
 			return bitmap;
 		}
@@ -285,7 +288,7 @@ namespace ControlLibrary.Utils
 					gp.AddArc(r.X + r.Width - d, r.Y, d, d, 270, 90);
 					gp.AddArc(r.X + r.Width - d, r.Y + r.Height - d, d, d, 0, 90);
 					gp.AddArc(r.X, r.Y + r.Height - d, d, d, 90, 90);
-					gp.AddLine(r.X, r.Y + r.Height - d, r.X, r.Y + d / 2);
+					gp.AddLine(r.X, r.Y + r.Height - d, r.X, r.Y + (d / 2));
 
 					g.FillPath(backgroundColor, gp);
 					g.DrawPath(Pens.Gray, gp);

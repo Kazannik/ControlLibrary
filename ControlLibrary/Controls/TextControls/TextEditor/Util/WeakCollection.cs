@@ -19,7 +19,7 @@ namespace ControlLibrary.Controls.TextControl.TextEditor.Util
 	/// </summary>
 	public class WeakCollection<T> : IEnumerable<T> where T : class
 	{
-		readonly List<WeakReference> innerList = new List<WeakReference>();
+		private readonly List<WeakReference> innerList = new List<WeakReference>();
 
 		/// <summary>
 		/// Adds an element to the collection. Runtime: O(n).
@@ -89,16 +89,16 @@ namespace ControlLibrary.Controls.TextControl.TextEditor.Util
 			return false;
 		}
 
-		void RemoveAt(int i)
+		private void RemoveAt(int i)
 		{
 			int lastIndex = innerList.Count - 1;
 			innerList[i] = innerList[lastIndex];
 			innerList.RemoveAt(lastIndex);
 		}
 
-		bool hasEnumerator;
+		private bool hasEnumerator;
 
-		void CheckNoEnumerator()
+		private void CheckNoEnumerator()
 		{
 			if (hasEnumerator)
 				throw new InvalidOperationException("The WeakCollection is already being enumerated, it cannot be modified at the same time. Ensure you dispose the first enumerator before modifying the WeakCollection.");

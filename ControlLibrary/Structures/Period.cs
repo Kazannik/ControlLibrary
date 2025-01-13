@@ -6,6 +6,22 @@ namespace ControlLibrary.Structures
 {
 	public readonly struct Period : IComparable<Period>, IComparable<DateTime>
 	{
+		/// <summary>
+		/// Представляет нулевое значение. Это поле доступно только для чтения.
+		/// </summary>
+		public static readonly Period Empty = Create(year: 0, month: 0);
+
+		/// <summary>
+		/// Представляет максимальное значение. Это поле доступно только для чтения.
+		/// </summary>
+		public static readonly Period MaxValue = Create(year: 2199, month: 12);
+
+		/// <summary>
+		/// Представляет минимальное значение. Это поле доступно только для чтения.
+		/// </summary>
+		public static readonly Period MinValue = Create(year: 1900, month: 0);
+
+
 		private static readonly DateTimeFormatInfo FormatInfo = CultureInfo.CurrentCulture.DateTimeFormat;
 
 		private Period(int year, int month)
@@ -44,16 +60,6 @@ namespace ControlLibrary.Structures
 			return Create(DateTime.Now);
 		}
 
-		public static Period MaxValue
-		{
-			get { return Create(year: 2199, month: 12); }
-		}
-
-		public static Period MinValue
-		{
-			get { return Create(year: 1900, month: 0); }
-		}
-
 		public static bool ParseTry(string s, out Period result)
 		{
 			if (string.IsNullOrWhiteSpace(s) || s.Length != 6)
@@ -79,69 +85,29 @@ namespace ControlLibrary.Structures
 
 		public static Period Parse(string s)
 		{
-			if (string.IsNullOrWhiteSpace(s))
-				throw new ArgumentNullException("Строка не может быть пустой, либо содержать только пробельные символы");
-			else if (s.Length != 6)
-				throw new ArgumentException("Число знаков в строке должно равняться 6");
-			else if (!ParseTry(s, out Period result))
-			{
-				throw new ArgumentException("Строка не соотвествует формату");
-			}
-			else
-			{
-				return result;
-			}
+			return string.IsNullOrWhiteSpace(s)
+				? throw new ArgumentNullException("Строка не может быть пустой, либо содержать только пробельные символы")
+				: s.Length != 6
+				? throw new ArgumentException("Число знаков в строке должно равняться 6")
+				: !ParseTry(s, out Period result) ? throw new ArgumentException("Строка не соотвествует формату") : result;
 		}
 
 		public int Month { get; }
 
 		public int Year { get; }
 
-		public Period ZeroMonth
-		{
-			get { return new Period(year: Year, month: 0); }
-		}
+		public Period ZeroMonth => new Period(year: Year, month: 0);
 
-		public Period FirstMonth
-		{
-			get { return new Period(year: Year, month: 1); }
-		}
+		public Period FirstMonth => new Period(year: Year, month: 1);
 
-		public Period LastMonth
-		{
-			get { return new Period(year: Year, month: 12); }
-		}
+		public Period LastMonth => new Period(year: Year, month: 12);
 
-		public Period PreviouseMonth
-		{
-			get
-			{
-				if (Month <= 1)
-					return new Period(year: Year - 1, month: 12);
-				else
-					return new Period(year: Year, month: Month - 1);
-			}
-		}
-		public Period NextMonth
-		{
-			get
-			{
-				if (Month == 12)
-					return new Period(year: Year + 1, month: 1);
-				else
-					return new Period(year: Year, month: Month + 1);
-			}
-		}
+		public Period PreviouseMonth => Month <= 1 ? new Period(year: Year - 1, month: 12) : new Period(year: Year, month: Month - 1);
+		public Period NextMonth => Month == 12 ? new Period(year: Year + 1, month: 1) : new Period(year: Year, month: Month + 1);
 
-		public Period PreviouseYear
-		{
-			get { return new Period(year: Year - 1, month: Month); }
-		}
+		public Period PreviouseYear => new Period(year: Year - 1, month: Month);
 
-		public Period NextYear
-		{
-			get { return new Period(year: Year + 1, month: Month); }
-		}
+		public Period NextYear => new Period(year: Year + 1, month: Month);
 
 		public string ToShortDateString()
 		{
@@ -156,14 +122,7 @@ namespace ControlLibrary.Structures
 
 		public DateTime ToDate()
 		{
-			if (Month > 0)
-			{
-				return new DateTime(year: Year, month: Month, day: 1);
-			}
-			else
-			{
-				return new DateTime(year: Year, month: 1, day: 1);
-			}
+			return Month > 0 ? new DateTime(year: Year, month: Month, day: 1) : new DateTime(year: Year, month: 1, day: 1);
 		}
 
 		public new string ToString()
@@ -206,12 +165,12 @@ namespace ControlLibrary.Structures
 
 		public override int GetHashCode()
 		{
-			return unchecked(87 * Year.GetHashCode() ^ Month.GetHashCode());
+			return unchecked((87 * Year.GetHashCode()) ^ Month.GetHashCode());
 		}
 
 		public static Period operator +(Period a, Period b)
 		{
-			decimal sum = a.Year * 12 + a.Month + b.Year * 12 + b.Month;
+			decimal sum = (a.Year * 12) + a.Month + (b.Year * 12) + b.Month;
 			decimal year = Math.Truncate(sum / 12);
 			decimal month = sum - (year * 12);
 			return new Period(year: (int)year, month: (int)month);
@@ -219,7 +178,7 @@ namespace ControlLibrary.Structures
 
 		public static Period operator -(Period a, Period b)
 		{
-			decimal sum = a.Year * 12 + a.Month - b.Year * 12 - b.Month;
+			decimal sum = (a.Year * 12) + a.Month - (b.Year * 12) - b.Month;
 			decimal year = Math.Truncate(sum / 12);
 			decimal month = sum - (year * 12);
 			return new Period(year: (int)year, month: (int)month);
@@ -227,7 +186,7 @@ namespace ControlLibrary.Structures
 
 		public static Period operator +(Period t, int m)
 		{
-			decimal sum = t.Year * 12 + t.Month + m;
+			decimal sum = (t.Year * 12) + t.Month + m;
 			decimal year = Math.Truncate(sum / 12);
 			decimal month = sum - (year * 12);
 			return new Period(year: (int)year, month: (int)month);
@@ -235,7 +194,7 @@ namespace ControlLibrary.Structures
 
 		public static Period operator -(Period t, int m)
 		{
-			decimal sum = t.Year * 12 + t.Month - m;
+			decimal sum = (t.Year * 12) + t.Month - m;
 			decimal year = Math.Truncate(sum / 12);
 			decimal month = sum - (year * 12);
 			return new Period(year: (int)year, month: (int)month);
@@ -320,11 +279,10 @@ namespace ControlLibrary.Structures
 				catch (Exception)
 				{ return 0; }
 			}
-			else if (!Equals(x, null) & Equals(y, null))
-			{ return 1; }
-			else if (Equals(x, null) & !Equals(y, null))
-			{ return -1; }
-			else { return 0; }
+			else
+			{
+				return !Equals(x, null) & Equals(y, null) ? 1 : Equals(x, null) & !Equals(y, null) ? -1 : 0;
+			}
 		}
 
 		public static int Compare(Period x, DateTime y)
@@ -340,11 +298,10 @@ namespace ControlLibrary.Structures
 				catch (Exception)
 				{ return 0; }
 			}
-			else if (!Equals(x, null) & Equals(y, null))
-			{ return 1; }
-			else if (Equals(x, null) & !Equals(y, null))
-			{ return -1; }
-			else { return 0; }
+			else
+			{
+				return !Equals(x, null) & Equals(y, null) ? 1 : Equals(x, null) & !Equals(y, null) ? -1 : 0;
+			}
 		}
 
 		public class PeriodComparer : IComparer<Period>
@@ -354,6 +311,15 @@ namespace ControlLibrary.Structures
 				return Period.Compare(x, y);
 			}
 		}
+	}
+
+
+	public static class PeriodExtensions
+	{
+		public static void FirstMonth(ref this Period period)
+		{
+			period = period.FirstMonth;
+		} 
 	}
 
 	public class PeriodEventArgs : EventArgs

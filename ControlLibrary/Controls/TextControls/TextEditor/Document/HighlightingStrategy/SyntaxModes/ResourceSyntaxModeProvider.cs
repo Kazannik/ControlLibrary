@@ -7,28 +7,15 @@ namespace ControlLibrary.Controls.TextControl.TextEditor.Document
 {
 	public class ResourceSyntaxModeProvider : ISyntaxModeFileProvider
 	{
-		List<SyntaxMode> syntaxModes = null;
+		private List<SyntaxMode> syntaxModes = null;
 
-		public ICollection<SyntaxMode> SyntaxModes
-		{
-			get
-			{
-				return syntaxModes;
-			}
-		}
+		public ICollection<SyntaxMode> SyntaxModes => syntaxModes;
 
 		public ResourceSyntaxModeProvider()
 		{
 			Assembly assembly = typeof(SyntaxMode).Assembly;
 			Stream syntaxModeStream = assembly.GetManifestResourceStream("TextEditor.Resources.SyntaxModes.xml");
-			if (syntaxModeStream != null)
-			{
-				syntaxModes = SyntaxMode.GetSyntaxModes(syntaxModeStream);
-			}
-			else
-			{
-				syntaxModes = new List<SyntaxMode>();
-			}
+			syntaxModes = syntaxModeStream != null ? SyntaxMode.GetSyntaxModes(syntaxModeStream) : new List<SyntaxMode>();
 		}
 
 		public XmlTextReader GetSyntaxModeFile(SyntaxMode syntaxMode)

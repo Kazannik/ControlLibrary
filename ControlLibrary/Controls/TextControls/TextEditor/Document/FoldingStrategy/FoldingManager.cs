@@ -7,29 +7,17 @@ namespace ControlLibrary.Controls.TextControl.TextEditor.Document
 {
 	public class FoldingManager
 	{
-		List<FoldMarker> foldMarker = new List<FoldMarker>();
-		List<FoldMarker> foldMarkerByEnd = new List<FoldMarker>();
-		IFoldingStrategy foldingStrategy = null;
-		IDocument document;
+		private List<FoldMarker> foldMarker = new List<FoldMarker>();
+		private List<FoldMarker> foldMarkerByEnd = new List<FoldMarker>();
+		private IFoldingStrategy foldingStrategy = null;
+		private IDocument document;
 
-		public IList<FoldMarker> FoldMarker
-		{
-			get
-			{
-				return foldMarker.AsReadOnly();
-			}
-		}
+		public IList<FoldMarker> FoldMarker => foldMarker.AsReadOnly();
 
 		public IFoldingStrategy FoldingStrategy
 		{
-			get
-			{
-				return foldingStrategy;
-			}
-			set
-			{
-				foldingStrategy = value;
-			}
+			get => foldingStrategy;
+			set => foldingStrategy = value;
 		}
 
 		internal FoldingManager(IDocument document, LineManager lineTracker)
@@ -55,7 +43,7 @@ namespace ControlLibrary.Controls.TextControl.TextEditor.Document
 			//			foldMarker.Sort();
 		}
 
-		void DocumentChanged(object sender, DocumentEventArgs e)
+		private void DocumentChanged(object sender, DocumentEventArgs e)
 		{
 			int oldCount = foldMarker.Count;
 			document.UpdateSegmentListOnDocumentChange(foldMarker, e);
@@ -84,37 +72,27 @@ namespace ControlLibrary.Controls.TextControl.TextEditor.Document
 			return foldings;
 		}
 
-		class StartComparer : IComparer<FoldMarker>
+		private class StartComparer : IComparer<FoldMarker>
 		{
-			public readonly static StartComparer Instance = new StartComparer();
+			public static readonly StartComparer Instance = new StartComparer();
 
 			public int Compare(FoldMarker x, FoldMarker y)
 			{
-				if (x.StartLine < y.StartLine)
-					return -1;
-				else if (x.StartLine == y.StartLine)
-					return x.StartColumn.CompareTo(y.StartColumn);
-				else
-					return 1;
+				return x.StartLine < y.StartLine ? -1 : x.StartLine == y.StartLine ? x.StartColumn.CompareTo(y.StartColumn) : 1;
 			}
 		}
 
-		class EndComparer : IComparer<FoldMarker>
+		private class EndComparer : IComparer<FoldMarker>
 		{
-			public readonly static EndComparer Instance = new EndComparer();
+			public static readonly EndComparer Instance = new EndComparer();
 
 			public int Compare(FoldMarker x, FoldMarker y)
 			{
-				if (x.EndLine < y.EndLine)
-					return -1;
-				else if (x.EndLine == y.EndLine)
-					return x.EndColumn.CompareTo(y.EndColumn);
-				else
-					return 1;
+				return x.EndLine < y.EndLine ? -1 : x.EndLine == y.EndLine ? x.EndColumn.CompareTo(y.EndColumn) : 1;
 			}
 		}
 
-		List<FoldMarker> GetFoldingsByStartAfterColumn(int lineNumber, int column, bool forceFolded)
+		private List<FoldMarker> GetFoldingsByStartAfterColumn(int lineNumber, int column, bool forceFolded)
 		{
 			List<FoldMarker> foldings = new List<FoldMarker>();
 
@@ -154,7 +132,7 @@ namespace ControlLibrary.Controls.TextControl.TextEditor.Document
 			return GetFoldingsByStartAfterColumn(lineNumber, column, true);
 		}
 
-		List<FoldMarker> GetFoldingsByEndAfterColumn(int lineNumber, int column, bool forceFolded)
+		private List<FoldMarker> GetFoldingsByEndAfterColumn(int lineNumber, int column, bool forceFolded)
 		{
 			List<FoldMarker> foldings = new List<FoldMarker>();
 
@@ -238,7 +216,7 @@ namespace ControlLibrary.Controls.TextControl.TextEditor.Document
 				Point end = new Point(0, 0);
 				foreach (FoldMarker fm in foldMarker)
 				{
-					if (fm.IsFolded && (fm.StartLine > end.Y || fm.StartLine == end.Y && fm.StartColumn >= end.X))
+					if (fm.IsFolded && (fm.StartLine > end.Y || (fm.StartLine == end.Y && fm.StartColumn >= end.X)))
 					{
 						foldings.Add(fm);
 						end = new Point(fm.EndColumn, fm.EndLine);
@@ -359,10 +337,7 @@ namespace ControlLibrary.Controls.TextControl.TextEditor.Document
 
 		public void NotifyFoldingsChanged(EventArgs e)
 		{
-			if (FoldingsChanged != null)
-			{
-				FoldingsChanged(this, e);
-			}
+			FoldingsChanged?.Invoke(this, e);
 		}
 
 

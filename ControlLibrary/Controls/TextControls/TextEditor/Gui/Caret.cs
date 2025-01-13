@@ -28,17 +28,16 @@ namespace ControlLibrary.Controls.TextControl.TextEditor
 
 	public class Caret : System.IDisposable
 	{
-		int line = 0;
-		int column = 0;
-		int desiredXPos = 0;
-		CaretMode caretMode;
-
-		static bool caretCreated = false;
-		bool hidden = true;
-		TextArea textArea;
-		Point currentPos = new Point(-1, -1);
-		Ime ime = null;
-		CaretImplementation caretImplementation;
+		private int line = 0;
+		private int column = 0;
+		private int desiredXPos = 0;
+		private CaretMode caretMode;
+		private static bool caretCreated = false;
+		private bool hidden = true;
+		private TextArea textArea;
+		private Point currentPos = new Point(-1, -1);
+		private Ime ime = null;
+		private CaretImplementation caretImplementation;
 
 		/// <value>
 		/// The 'prefered' xPos in which the caret moves, when it is moved
@@ -46,14 +45,8 @@ namespace ControlLibrary.Controls.TextControl.TextEditor
 		/// </value>
 		public int DesiredColumn
 		{
-			get
-			{
-				return desiredXPos;
-			}
-			set
-			{
-				desiredXPos = value;
-			}
+			get => desiredXPos;
+			set => desiredXPos = value;
 		}
 
 		/// <value>
@@ -61,10 +54,7 @@ namespace ControlLibrary.Controls.TextControl.TextEditor
 		/// </value>
 		public CaretMode CaretMode
 		{
-			get
-			{
-				return caretMode;
-			}
+			get => caretMode;
 			set
 			{
 				caretMode = value;
@@ -74,10 +64,7 @@ namespace ControlLibrary.Controls.TextControl.TextEditor
 
 		public int Line
 		{
-			get
-			{
-				return line;
-			}
+			get => line;
 			set
 			{
 				line = value;
@@ -89,10 +76,7 @@ namespace ControlLibrary.Controls.TextControl.TextEditor
 
 		public int Column
 		{
-			get
-			{
-				return column;
-			}
+			get => column;
 			set
 			{
 				column = value;
@@ -104,10 +88,7 @@ namespace ControlLibrary.Controls.TextControl.TextEditor
 
 		public TextLocation Position
 		{
-			get
-			{
-				return new TextLocation(column, line);
-			}
+			get => new TextLocation(column, line);
 			set
 			{
 				line = value.Y;
@@ -118,23 +99,14 @@ namespace ControlLibrary.Controls.TextControl.TextEditor
 			}
 		}
 
-		public int Offset
-		{
-			get
-			{
-				return textArea.Document.PositionToOffset(Position);
-			}
-		}
+		public int Offset => textArea.Document.PositionToOffset(Position);
 
 		public Caret(TextArea textArea)
 		{
 			this.textArea = textArea;
 			textArea.GotFocus += new EventHandler(GotFocus);
 			textArea.LostFocus += new EventHandler(LostFocus);
-			if (Environment.OSVersion.Platform == PlatformID.Unix)
-				caretImplementation = new ManagedCaret(this);
-			else
-				caretImplementation = new Win32Caret(this);
+			caretImplementation = Environment.OSVersion.Platform == PlatformID.Unix ? new ManagedCaret(this) : (CaretImplementation)new Win32Caret(this);
 		}
 
 		public void Dispose()
@@ -174,7 +146,7 @@ namespace ControlLibrary.Controls.TextControl.TextEditor
 			}
 		}
 
-		void CreateCaret()
+		private void CreateCaret()
 		{
 			while (!caretCreated)
 			{
@@ -207,7 +179,7 @@ namespace ControlLibrary.Controls.TextControl.TextEditor
 			}
 		}
 
-		void DisposeCaret()
+		private void DisposeCaret()
 		{
 			if (caretCreated)
 			{
@@ -217,7 +189,7 @@ namespace ControlLibrary.Controls.TextControl.TextEditor
 			}
 		}
 
-		void GotFocus(object sender, EventArgs e)
+		private void GotFocus(object sender, EventArgs e)
 		{
 			Log("GotFocus, IsInUpdate=" + textArea.MotherTextEditorControl.IsInUpdate);
 			hidden = false;
@@ -228,7 +200,7 @@ namespace ControlLibrary.Controls.TextControl.TextEditor
 			}
 		}
 
-		void LostFocus(object sender, EventArgs e)
+		private void LostFocus(object sender, EventArgs e)
 		{
 			Log("LostFocus");
 			hidden = true;
@@ -242,12 +214,13 @@ namespace ControlLibrary.Controls.TextControl.TextEditor
 				int xpos = textArea.TextView.GetDrawingXPos(this.line, this.column);
 				return new Point(textArea.TextView.DrawingPosition.X + xpos,
 								 textArea.TextView.DrawingPosition.Y
-								 + (textArea.Document.GetVisibleLine(this.line)) * textArea.TextView.FontHeight
+								 + (textArea.Document.GetVisibleLine(this.line) * textArea.TextView.FontHeight)
 								 - textArea.TextView.TextArea.VirtualTop.Y);
 			}
 		}
-		int oldLine = -1;
-		bool outstandingUpdate;
+
+		private int oldLine = -1;
+		private bool outstandingUpdate;
 
 		internal void OnEndUpdate()
 		{
@@ -255,7 +228,7 @@ namespace ControlLibrary.Controls.TextControl.TextEditor
 				UpdateCaretPosition();
 		}
 
-		void PaintCaretLine(Graphics g)
+		private void PaintCaretLine(Graphics g)
 		{
 			if (!textArea.Document.TextEditorProperties.CaretLine)
 				return;
@@ -343,7 +316,7 @@ namespace ControlLibrary.Controls.TextControl.TextEditor
 		}
 
 		[Conditional("DEBUG")]
-		static void Log(string text)
+		private static void Log(string text)
 		{
 			//Console.WriteLine(text);
 		}
@@ -355,7 +328,7 @@ namespace ControlLibrary.Controls.TextControl.TextEditor
 			PaintCaretLine(g);
 		}
 
-		abstract class CaretImplementation : IDisposable
+		private abstract class CaretImplementation : IDisposable
 		{
 			public bool RequireRedrawOnPositionChange;
 
@@ -372,14 +345,14 @@ namespace ControlLibrary.Controls.TextControl.TextEditor
 			}
 		}
 
-		class ManagedCaret : CaretImplementation
+		private class ManagedCaret : CaretImplementation
 		{
-			System.Windows.Forms.Timer timer = new System.Windows.Forms.Timer { Interval = 300 };
-			bool visible;
-			bool blink = true;
-			int x, y, width, height;
-			TextArea textArea;
-			Caret parentCaret;
+			private System.Windows.Forms.Timer timer = new System.Windows.Forms.Timer { Interval = 300 };
+			private bool visible;
+			private bool blink = true;
+			private int x, y, width, height;
+			private TextArea textArea;
+			private Caret parentCaret;
 
 			public ManagedCaret(Caret caret)
 			{
@@ -389,7 +362,7 @@ namespace ControlLibrary.Controls.TextControl.TextEditor
 				timer.Tick += CaretTimerTick;
 			}
 
-			void CaretTimerTick(object sender, EventArgs e)
+			private void CaretTimerTick(object sender, EventArgs e)
 			{
 				blink = !blink;
 				if (visible)
@@ -435,24 +408,24 @@ namespace ControlLibrary.Controls.TextControl.TextEditor
 			}
 		}
 
-		class Win32Caret : CaretImplementation
+		private class Win32Caret : CaretImplementation
 		{
 			[DllImport("User32.dll")]
-			static extern bool CreateCaret(IntPtr hWnd, int hBitmap, int nWidth, int nHeight);
+			private static extern bool CreateCaret(IntPtr hWnd, int hBitmap, int nWidth, int nHeight);
 
 			[DllImport("User32.dll")]
-			static extern bool SetCaretPos(int x, int y);
+			private static extern bool SetCaretPos(int x, int y);
 
 			[DllImport("User32.dll")]
-			static extern bool DestroyCaret();
+			private static extern bool DestroyCaret();
 
 			[DllImport("User32.dll")]
-			static extern bool ShowCaret(IntPtr hWnd);
+			private static extern bool ShowCaret(IntPtr hWnd);
 
 			[DllImport("User32.dll")]
-			static extern bool HideCaret(IntPtr hWnd);
+			private static extern bool HideCaret(IntPtr hWnd);
 
-			TextArea textArea;
+			private TextArea textArea;
 
 			public Win32Caret(Caret caret)
 			{
@@ -485,9 +458,9 @@ namespace ControlLibrary.Controls.TextControl.TextEditor
 		}
 		#endregion
 
-		bool firePositionChangedAfterUpdateEnd;
+		private bool firePositionChangedAfterUpdateEnd;
 
-		void FirePositionChangedAfterUpdateEnd(object sender, EventArgs e)
+		private void FirePositionChangedAfterUpdateEnd(object sender, EventArgs e)
 		{
 			OnPositionChanged(EventArgs.Empty);
 		}
@@ -522,19 +495,13 @@ namespace ControlLibrary.Controls.TextControl.TextEditor
 				textArea.Document.FoldingManager.NotifyFoldingsChanged(EventArgs.Empty);
 			}
 
-			if (PositionChanged != null)
-			{
-				PositionChanged(this, e);
-			}
+			PositionChanged?.Invoke(this, e);
 			textArea.ScrollToCaret();
 		}
 
 		protected virtual void OnCaretModeChanged(EventArgs e)
 		{
-			if (CaretModeChanged != null)
-			{
-				CaretModeChanged(this, e);
-			}
+			CaretModeChanged?.Invoke(this, e);
 			caretImplementation.Hide();
 			caretImplementation.Destroy();
 			caretCreated = false;

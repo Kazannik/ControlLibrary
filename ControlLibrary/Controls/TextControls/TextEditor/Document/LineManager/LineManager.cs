@@ -6,33 +6,17 @@ namespace ControlLibrary.Controls.TextControl.TextEditor.Document
 {
 	internal sealed class LineManager
 	{
-		LineSegmentTree lineCollection = new LineSegmentTree();
+		private LineSegmentTree lineCollection = new LineSegmentTree();
+		private IDocument document;
+		private IHighlightingStrategy highlightingStrategy;
 
-		IDocument document;
-		IHighlightingStrategy highlightingStrategy;
+		public IList<LineSegment> LineSegmentCollection => lineCollection;
 
-		public IList<LineSegment> LineSegmentCollection
-		{
-			get
-			{
-				return lineCollection;
-			}
-		}
-
-		public int TotalNumberOfLines
-		{
-			get
-			{
-				return lineCollection.Count;
-			}
-		}
+		public int TotalNumberOfLines => lineCollection.Count;
 
 		public IHighlightingStrategy HighlightingStrategy
 		{
-			get
-			{
-				return highlightingStrategy;
-			}
+			get => highlightingStrategy;
 			set
 			{
 				if (highlightingStrategy != value)
@@ -111,7 +95,7 @@ namespace ControlLibrary.Controls.TextControl.TextEditor.Document
 			}
 		}
 
-		void RemoveInternal(ref DeferredEventList deferredEventList, int offset, int length)
+		private void RemoveInternal(ref DeferredEventList deferredEventList, int offset, int length)
 		{
 			Debug.Assert(length >= 0);
 			if (length == 0) return;
@@ -158,7 +142,7 @@ namespace ControlLibrary.Controls.TextControl.TextEditor.Document
 			} while (segmentToRemove != endSegment);
 		}
 
-		void InsertInternal(int offset, string text)
+		private void InsertInternal(int offset, string text)
 		{
 			LineSegment segment = lineCollection.GetByOffset(offset);
 			DelimiterSegment ds = NextDelimiter(text, 0);
@@ -196,7 +180,7 @@ namespace ControlLibrary.Controls.TextControl.TextEditor.Document
 			}
 		}
 
-		void SetSegmentLength(LineSegment segment, int newTotalLength)
+		private void SetSegmentLength(LineSegment segment, int newTotalLength)
 		{
 			int delta = newTotalLength - segment.TotalLength;
 			if (delta != 0)
@@ -206,7 +190,7 @@ namespace ControlLibrary.Controls.TextControl.TextEditor.Document
 			}
 		}
 
-		void RunHighlighter(int firstLine, int lineCount)
+		private void RunHighlighter(int firstLine, int lineCount)
 		{
 			if (highlightingStrategy != null)
 			{
@@ -290,11 +274,7 @@ namespace ControlLibrary.Controls.TextControl.TextEditor.Document
 
 		public int GetLastLogicalLine(int visibleLineNumber)
 		{
-			if (!document.TextEditorProperties.EnableFolding)
-			{
-				return visibleLineNumber;
-			}
-			return GetFirstLogicalLine(visibleLineNumber + 1) - 1;
+			return !document.TextEditorProperties.EnableFolding ? visibleLineNumber : GetFirstLogicalLine(visibleLineNumber + 1) - 1;
 		}
 
 		// TODO : speedup the next/prev visible line search
@@ -343,9 +323,9 @@ namespace ControlLibrary.Controls.TextControl.TextEditor.Document
 		}
 
 		// use always the same DelimiterSegment object for the NextDelimiter
-		DelimiterSegment delimiterSegment = new DelimiterSegment();
+		private DelimiterSegment delimiterSegment = new DelimiterSegment();
 
-		DelimiterSegment NextDelimiter(string text, int offset)
+		private DelimiterSegment NextDelimiter(string text, int offset)
 		{
 			for (int i = offset; i < text.Length; i++)
 			{
@@ -374,35 +354,26 @@ namespace ControlLibrary.Controls.TextControl.TextEditor.Document
 			return null;
 		}
 
-		void OnLineCountChanged(LineCountChangeEventArgs e)
+		private void OnLineCountChanged(LineCountChangeEventArgs e)
 		{
-			if (LineCountChanged != null)
-			{
-				LineCountChanged(this, e);
-			}
+			LineCountChanged?.Invoke(this, e);
 		}
 
-		void OnLineLengthChanged(LineLengthChangeEventArgs e)
+		private void OnLineLengthChanged(LineLengthChangeEventArgs e)
 		{
-			if (LineLengthChanged != null)
-			{
-				LineLengthChanged(this, e);
-			}
+			LineLengthChanged?.Invoke(this, e);
 		}
 
-		void OnLineDeleted(LineEventArgs e)
+		private void OnLineDeleted(LineEventArgs e)
 		{
-			if (LineDeleted != null)
-			{
-				LineDeleted(this, e);
-			}
+			LineDeleted?.Invoke(this, e);
 		}
 
 		public event EventHandler<LineLengthChangeEventArgs> LineLengthChanged;
 		public event EventHandler<LineCountChangeEventArgs> LineCountChanged;
 		public event EventHandler<LineEventArgs> LineDeleted;
 
-		sealed class DelimiterSegment
+		private sealed class DelimiterSegment
 		{
 			internal int Offset;
 			internal int Length;

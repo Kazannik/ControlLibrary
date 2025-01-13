@@ -7,44 +7,26 @@ namespace ControlLibrary.Controls.TextControl.TextEditor.Document
 {
 	public class SyntaxMode
 	{
-		string fileName;
-		string name;
-		string[] extensions;
+		private string fileName;
+		private string name;
+		private string[] extensions;
 
 		public string FileName
 		{
-			get
-			{
-				return fileName;
-			}
-			set
-			{
-				fileName = value;
-			}
+			get => fileName;
+			set => fileName = value;
 		}
 
 		public string Name
 		{
-			get
-			{
-				return name;
-			}
-			set
-			{
-				name = value;
-			}
+			get => name;
+			set => name = value;
 		}
 
 		public string[] Extensions
 		{
-			get
-			{
-				return extensions;
-			}
-			set
-			{
-				extensions = value;
-			}
+			get => extensions;
+			set => extensions = value;
 		}
 
 		public SyntaxMode(string fileName, string name, string extensions)

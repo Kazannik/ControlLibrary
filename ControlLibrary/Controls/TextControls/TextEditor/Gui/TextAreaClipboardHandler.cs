@@ -9,23 +9,11 @@ namespace ControlLibrary.Controls.TextControl.TextEditor
 {
 	public class TextAreaClipboardHandler
 	{
-		TextArea textArea;
+		private TextArea textArea;
 
-		public bool EnableCut
-		{
-			get
-			{
-				return textArea.EnableCutOrPaste; //textArea.SelectionManager.HasSomethingSelected;
-			}
-		}
+		public bool EnableCut => textArea.EnableCutOrPaste; //textArea.SelectionManager.HasSomethingSelected;
 
-		public bool EnableCopy
-		{
-			get
-			{
-				return true; //textArea.SelectionManager.HasSomethingSelected;
-			}
-		}
+		public bool EnableCopy => true; //textArea.SelectionManager.HasSomethingSelected;
 
 		public delegate bool ClipboardContainsTextDelegate();
 
@@ -66,21 +54,9 @@ namespace ControlLibrary.Controls.TextControl.TextEditor
 			}
 		}
 
-		public bool EnableDelete
-		{
-			get
-			{
-				return textArea.SelectionManager.HasSomethingSelected && !textArea.SelectionManager.SelectionIsReadonly;
-			}
-		}
+		public bool EnableDelete => textArea.SelectionManager.HasSomethingSelected && !textArea.SelectionManager.SelectionIsReadonly;
 
-		public bool EnableSelectAll
-		{
-			get
-			{
-				return true;
-			}
-		}
+		public bool EnableSelectAll => true;
 
 		public TextAreaClipboardHandler(TextArea textArea)
 		{
@@ -88,14 +64,14 @@ namespace ControlLibrary.Controls.TextControl.TextEditor
 			textArea.SelectionManager.SelectionChanged += new EventHandler(DocumentSelectionChanged);
 		}
 
-		void DocumentSelectionChanged(object sender, EventArgs e)
+		private void DocumentSelectionChanged(object sender, EventArgs e)
 		{
 			//			((DefaultWorkbench)WorkbenchSingleton.Workbench).UpdateToolbars();
 		}
 
-		const string LineSelectedType = "MSDEVLineSelect";  // This is the type VS 2003 and 2005 use for flagging a whole line copy
+		private const string LineSelectedType = "MSDEVLineSelect";  // This is the type VS 2003 and 2005 use for flagging a whole line copy
 
-		bool CopyTextToClipboard(string stringToCopy, bool asLine)
+		private bool CopyTextToClipboard(string stringToCopy, bool asLine)
 		{
 			if (stringToCopy.Length > 0)
 			{
@@ -124,9 +100,9 @@ namespace ControlLibrary.Controls.TextControl.TextEditor
 		}
 
 		// Code duplication: TextAreaClipboardHandler.cs also has SafeSetClipboard
-		[ThreadStatic] static int SafeSetClipboardDataVersion;
+		[ThreadStatic] private static int SafeSetClipboardDataVersion;
 
-		static void SafeSetClipboard(object dataObject)
+		private static void SafeSetClipboard(object dataObject)
 		{
 			// Work around ExternalException bug. (SD2-426)
 			// Best reproducable inside Virtual PC.
@@ -137,8 +113,10 @@ namespace ControlLibrary.Controls.TextControl.TextEditor
 			}
 			catch (ExternalException)
 			{
-				Timer timer = new Timer();
-				timer.Interval = 100;
+				Timer timer = new Timer
+				{
+					Interval = 100
+				};
 				timer.Tick += delegate
 				{
 					timer.Stop();
@@ -156,7 +134,7 @@ namespace ControlLibrary.Controls.TextControl.TextEditor
 			}
 		}
 
-		bool CopyTextToClipboard(string stringToCopy)
+		private bool CopyTextToClipboard(string stringToCopy)
 		{
 			return CopyTextToClipboard(stringToCopy, false);
 		}
@@ -280,10 +258,7 @@ namespace ControlLibrary.Controls.TextControl.TextEditor
 
 		protected virtual void OnCopyText(CopyTextEventArgs e)
 		{
-			if (CopyText != null)
-			{
-				CopyText(this, e);
-			}
+			CopyText?.Invoke(this, e);
 		}
 
 		public event CopyTextEventHandler CopyText;
@@ -292,15 +267,9 @@ namespace ControlLibrary.Controls.TextControl.TextEditor
 	public delegate void CopyTextEventHandler(object sender, CopyTextEventArgs e);
 	public class CopyTextEventArgs : EventArgs
 	{
-		string text;
+		private string text;
 
-		public string Text
-		{
-			get
-			{
-				return text;
-			}
-		}
+		public string Text => text;
 
 		public CopyTextEventArgs(string text)
 		{

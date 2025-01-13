@@ -8,8 +8,7 @@ namespace ControlLibrary.Controls.TextControl.TextEditor
 	public class TextAreaDragDropHandler
 	{
 		public static Action<Exception> OnDragDropException = ex => MessageBox.Show(ex.ToString());
-
-		TextArea textArea;
+		private TextArea textArea;
 
 		public void Attach(TextArea textArea)
 		{
@@ -25,7 +24,7 @@ namespace ControlLibrary.Controls.TextControl.TextEditor
 		/// Create a drag'n'drop event handler.
 		/// Windows Forms swallows unhandled exceptions during drag'n'drop, so we report them here.
 		/// </summary>
-		static DragEventHandler MakeDragEventHandler(DragEventHandler h)
+		private static DragEventHandler MakeDragEventHandler(DragEventHandler h)
 		{
 			return (sender, e) =>
 			{
@@ -40,7 +39,7 @@ namespace ControlLibrary.Controls.TextControl.TextEditor
 			};
 		}
 
-		static DragDropEffects GetDragDropEffect(DragEventArgs e)
+		private static DragDropEffects GetDragDropEffect(DragEventArgs e)
 		{
 			if ((e.AllowedEffect & DragDropEffects.Move) > 0 &&
 				(e.AllowedEffect & DragDropEffects.Copy) > 0)
@@ -66,8 +65,7 @@ namespace ControlLibrary.Controls.TextControl.TextEditor
 			}
 		}
 
-
-		void InsertString(int offset, string str)
+		private void InsertString(int offset, string str)
 		{
 			textArea.Document.Insert(offset, str);
 
@@ -145,14 +143,9 @@ namespace ControlLibrary.Controls.TextControl.TextEditor
 
 				textArea.Caret.Position = new TextLocation(realmousepos.X, lineNr);
 				textArea.SetDesiredColumn();
-				if (e.Data.GetDataPresent(typeof(string)) && !textArea.IsReadOnly(textArea.Caret.Offset))
-				{
-					e.Effect = GetDragDropEffect(e);
-				}
-				else
-				{
-					e.Effect = DragDropEffects.None;
-				}
+				e.Effect = e.Data.GetDataPresent(typeof(string)) && !textArea.IsReadOnly(textArea.Caret.Offset)
+					? GetDragDropEffect(e)
+					: DragDropEffects.None;
 			}
 			else
 			{

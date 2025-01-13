@@ -86,11 +86,11 @@ namespace ControlLibrary.Controls.PriodControls
 
 			if (month_label_width > 0)
 			{
-				Width = month_label_border + (month_label_width + month_label_border) * 3;
-				Height = month_label_border + (month_label_height + month_label_border) * 6;
+				Width = month_label_border + ((month_label_width + month_label_border) * 3);
+				Height = month_label_border + ((month_label_height + month_label_border) * 6);
 			}
 
-			periodRectagle = new Rectangle(month_label_height + month_label_border, month_label_border, Width - month_label_height * 2 - month_label_border * 4, month_label_height);
+			periodRectagle = new Rectangle(month_label_height + month_label_border, month_label_border, Width - (month_label_height * 2) - (month_label_border * 4), month_label_height);
 			todateRectagle = new Rectangle(month_label_height + month_label_border, Height - month_label_height - month_label_border, (int)(month_label_height * 1.5), month_label_height);
 
 			buttons.Add(new PeriodBoxButton(0, ""));
@@ -126,8 +126,8 @@ namespace ControlLibrary.Controls.PriodControls
 		{
 			if (month_label_width > 0)
 			{
-				Width = month_label_border + (month_label_width + month_label_border) * 3;
-				Height = month_label_border + (month_label_height + month_label_border) * 6;
+				Width = month_label_border + ((month_label_width + month_label_border) * 3);
+				Height = month_label_border + ((month_label_height + month_label_border) * 6);
 			}
 		}
 
@@ -136,14 +136,14 @@ namespace ControlLibrary.Controls.PriodControls
 			base.OnPaint(e);
 			Graphics graphics = e.Graphics;
 
-			int startY = month_label_height + month_label_border * 2;
+			int startY = month_label_height + (month_label_border * 2);
 			int startX = month_label_border;
 			int i = 0;
 			for (int y = 0; y <= 3; y++)
 			{
 				for (int x = 0; x <= 2; x++)
 				{
-					Rectangle rec = new Rectangle(startX + (month_label_border + month_label_width) * x, startY + (month_label_border + month_label_height) * y, month_label_width, month_label_height);
+					Rectangle rec = new Rectangle(startX + ((month_label_border + month_label_width) * x), startY + ((month_label_border + month_label_height) * y), month_label_width, month_label_height);
 					buttons[i].rectangle = rec;
 					PaintButton(buttons[i], graphics);
 					i++;
@@ -357,7 +357,7 @@ namespace ControlLibrary.Controls.PriodControls
 
 		public Period Value
 		{
-			get { return period; }
+			get => period;
 			set
 			{
 				if (!Equals(period, value))
@@ -429,10 +429,7 @@ namespace ControlLibrary.Controls.PriodControls
 				this.owner = owner;
 			}
 
-			public PeriodBoxButton this[int index]
-			{
-				get { return (PeriodBoxButton)List[index]; }
-			}
+			public PeriodBoxButton this[int index] => (PeriodBoxButton)List[index];
 
 			public PeriodBoxButton this[string text]
 			{

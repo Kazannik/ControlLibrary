@@ -20,44 +20,35 @@ namespace ControlLibrary.Controls.TextControl.TextEditor
 	[ToolboxItem(false)]
 	public class TextArea : Control
 	{
-		bool hiddenMouseCursor = false;
+		private bool hiddenMouseCursor = false;
+
 		/// <summary>
 		/// The position where the mouse cursor was when it was hidden. Sometimes the text editor gets MouseMove
 		/// events when typing text even if the mouse is not moved.
 		/// </summary>
-		Point mouseCursorHidePosition;
-
-		Point virtualTop = new Point(0, 0);
-		TextAreaControl motherTextAreaControl;
-		TextEditorBox motherTextEditorControl;
-
-		List<BracketHighlightingSheme> bracketshemes = new List<BracketHighlightingSheme>();
-		TextAreaClipboardHandler textAreaClipboardHandler;
-		bool autoClearSelection = false;
-
-		List<AbstractMargin> leftMargins = new List<AbstractMargin>();
-
-		TextView textView;
-		GutterMargin gutterMargin;
-		FoldMargin foldMargin;
-		IconBarMargin iconBarMargin;
-
-		SelectionManager selectionManager;
-		Caret caret;
+		private Point mouseCursorHidePosition;
+		private Point virtualTop = new Point(0, 0);
+		private TextAreaControl motherTextAreaControl;
+		private TextEditorBox motherTextEditorControl;
+		private List<BracketHighlightingSheme> bracketshemes = new List<BracketHighlightingSheme>();
+		private TextAreaClipboardHandler textAreaClipboardHandler;
+		private bool autoClearSelection = false;
+		private List<AbstractMargin> leftMargins = new List<AbstractMargin>();
+		private TextView textView;
+		private GutterMargin gutterMargin;
+		private FoldMargin foldMargin;
+		private IconBarMargin iconBarMargin;
+		private SelectionManager selectionManager;
+		private Caret caret;
 
 		internal Point mousepos = new Point(0, 0);
+
 		//public Point selectionStartPos = new Point(0,0);
 
-		bool disposed;
+		private bool disposed;
 
 		[Browsable(false)]
-		public IList<AbstractMargin> LeftMargins
-		{
-			get
-			{
-				return leftMargins.AsReadOnly();
-			}
-		}
+		public IList<AbstractMargin> LeftMargins => leftMargins.AsReadOnly();
 
 		public void InsertLeftMargin(int index, AbstractMargin margin)
 		{
@@ -65,91 +56,28 @@ namespace ControlLibrary.Controls.TextControl.TextEditor
 			Refresh();
 		}
 
-		public TextEditorBox MotherTextEditorControl
-		{
-			get
-			{
-				return motherTextEditorControl;
-			}
-		}
+		public TextEditorBox MotherTextEditorControl => motherTextEditorControl;
 
-		public TextAreaControl MotherTextAreaControl
-		{
-			get
-			{
-				return motherTextAreaControl;
-			}
-		}
+		public TextAreaControl MotherTextAreaControl => motherTextAreaControl;
 
-		public SelectionManager SelectionManager
-		{
-			get
-			{
-				return selectionManager;
-			}
-		}
+		public SelectionManager SelectionManager => selectionManager;
 
-		public Caret Caret
-		{
-			get
-			{
-				return caret;
-			}
-		}
+		public Caret Caret => caret;
 
-		public TextView TextView
-		{
-			get
-			{
-				return textView;
-			}
-		}
+		public TextView TextView => textView;
 
-		public GutterMargin GutterMargin
-		{
-			get
-			{
-				return gutterMargin;
-			}
-		}
+		public GutterMargin GutterMargin => gutterMargin;
 
-		public FoldMargin FoldMargin
-		{
-			get
-			{
-				return foldMargin;
-			}
-		}
+		public FoldMargin FoldMargin => foldMargin;
 
-		public IconBarMargin IconBarMargin
-		{
-			get
-			{
-				return iconBarMargin;
-			}
-		}
+		public IconBarMargin IconBarMargin => iconBarMargin;
 
-		public Encoding Encoding
-		{
-			get
-			{
-				return motherTextEditorControl.Encoding;
-			}
-		}
-		public int MaxVScrollValue
-		{
-			get
-			{
-				return (Document.GetVisibleLine(Document.TotalNumberOfLines - 1) + 1 + TextView.VisibleLineCount * 2 / 3) * TextView.FontHeight;
-			}
-		}
+		public Encoding Encoding => motherTextEditorControl.Encoding;
+		public int MaxVScrollValue => (Document.GetVisibleLine(Document.TotalNumberOfLines - 1) + 1 + (TextView.VisibleLineCount * 2 / 3)) * TextView.FontHeight;
 
 		public Point VirtualTop
 		{
-			get
-			{
-				return virtualTop;
-			}
+			get => virtualTop;
 			set
 			{
 				Point newVirtualTop = new Point(value.X, Math.Min(MaxVScrollValue, Math.Max(0, value.Y)));
@@ -165,41 +93,17 @@ namespace ControlLibrary.Controls.TextControl.TextEditor
 
 		public bool AutoClearSelection
 		{
-			get
-			{
-				return autoClearSelection;
-			}
-			set
-			{
-				autoClearSelection = value;
-			}
+			get => autoClearSelection;
+			set => autoClearSelection = value;
 		}
 
 		[Browsable(false)]
-		public IDocument Document
-		{
-			get
-			{
-				return motherTextEditorControl.Document;
-			}
-		}
+		public IDocument Document => motherTextEditorControl.Document;
 
-		public TextAreaClipboardHandler ClipboardHandler
-		{
-			get
-			{
-				return textAreaClipboardHandler;
-			}
-		}
+		public TextAreaClipboardHandler ClipboardHandler => textAreaClipboardHandler;
 
 
-		public ITextEditorProperties TextEditorProperties
-		{
-			get
-			{
-				return motherTextEditorControl.TextEditorProperties;
-			}
-		}
+		public ITextEditorProperties TextEditorProperties => motherTextEditorControl.TextEditorProperties;
 
 		public TextArea(TextEditorBox motherTextEditorControl, TextAreaControl motherTextAreaControl)
 		{
@@ -246,12 +150,13 @@ namespace ControlLibrary.Controls.TextControl.TextEditor
 			SearchMatchingBracket(null, null);
 		}
 
-		void TextContentChanged(object sender, EventArgs e)
+		private void TextContentChanged(object sender, EventArgs e)
 		{
 			Caret.Position = new TextLocation(0, 0);
 			SelectionManager.SelectionCollection.Clear();
 		}
-		void SearchMatchingBracket(object sender, EventArgs e)
+
+		private void SearchMatchingBracket(object sender, EventArgs e)
 		{
 			if (!TextEditorProperties.ShowMatchingBracket)
 			{
@@ -318,7 +223,7 @@ namespace ControlLibrary.Controls.TextControl.TextEditor
 			Refresh();
 		}
 
-		AbstractMargin lastMouseInMargin;
+		private AbstractMargin lastMouseInMargin;
 
 		protected override void OnMouseLeave(System.EventArgs e)
 		{
@@ -371,10 +276,10 @@ namespace ControlLibrary.Controls.TextControl.TextEditor
 
 		// static because the mouse can only be in one text area and we don't want to have
 		// tooltips of text areas from inactive tabs floating around.
-		static DeclarationViewWindow toolTip;
-		static string oldToolTip;
+		private static DeclarationViewWindow toolTip;
+		private static string oldToolTip;
 
-		void SetToolTip(string text, int lineNumber)
+		private void SetToolTip(string text, int lineNumber)
 		{
 			if (toolTip == null || toolTip.IsDisposed)
 				toolTip = new DeclarationViewWindow(this.FindForm());
@@ -391,7 +296,7 @@ namespace ControlLibrary.Controls.TextControl.TextEditor
 				if (lineNumber >= 0)
 				{
 					lineNumber = this.Document.GetVisibleLine(lineNumber);
-					p.Y = (p.Y - cp.Y) + (lineNumber * this.TextView.FontHeight) - this.virtualTop.Y;
+					p.Y = p.Y - cp.Y + (lineNumber * this.TextView.FontHeight) - this.virtualTop.Y;
 				}
 				p.Offset(3, 3);
 				toolTip.Owner = this.FindForm();
@@ -407,21 +312,19 @@ namespace ControlLibrary.Controls.TextControl.TextEditor
 
 		protected virtual void OnToolTipRequest(ToolTipRequestEventArgs e)
 		{
-			if (ToolTipRequest != null)
-			{
-				ToolTipRequest(this, e);
-			}
+			ToolTipRequest?.Invoke(this, e);
 		}
 
-		bool toolTipActive;
+		private bool toolTipActive;
+
 		/// <summary>
 		/// Rectangle in text area that caused the current tool tip.
 		/// Prevents tooltip from re-showing when it was closed because of a click or keyboard
 		/// input and the mouse was not used.
 		/// </summary>
-		Rectangle toolTipRectangle;
+		private Rectangle toolTipRectangle;
 
-		void CloseToolTip()
+		private void CloseToolTip()
 		{
 			if (toolTipActive)
 			{
@@ -531,7 +434,8 @@ namespace ControlLibrary.Controls.TextControl.TextEditor
 			}
 			this.Cursor = Cursors.Default;
 		}
-		AbstractMargin updateMargin = null;
+
+		private AbstractMargin updateMargin = null;
 
 		public void Refresh(AbstractMargin margin)
 		{
@@ -623,7 +527,8 @@ namespace ControlLibrary.Controls.TextControl.TextEditor
 
 			base.OnPaint(e);
 		}
-		void DocumentFoldingsChanged(object sender, EventArgs e)
+
+		private void DocumentFoldingsChanged(object sender, EventArgs e)
 		{
 			Caret.UpdateCaretPosition();
 			Invalidate();
@@ -641,11 +546,7 @@ namespace ControlLibrary.Controls.TextControl.TextEditor
 		/// </returns>
 		protected internal virtual bool HandleKeyPress(char ch)
 		{
-			if (KeyEventHandler != null)
-			{
-				return KeyEventHandler(ch);
-			}
-			return false;
+			return KeyEventHandler != null ? KeyEventHandler(ch) : false;
 		}
 
 		// Fixes SD2-747: Form containing the text editor and a button with a shortcut
@@ -656,34 +557,18 @@ namespace ControlLibrary.Controls.TextControl.TextEditor
 
 		internal bool IsReadOnly(int offset)
 		{
-			if (Document.ReadOnly)
-			{
-				return true;
-			}
-			if (TextEditorProperties.SupportReadOnlySegments)
-			{
-				return Document.MarkerStrategy.GetMarkers(offset).Exists(m => m.IsReadOnly);
-			}
-			else
-			{
-				return false;
-			}
+			return Document.ReadOnly
+				? true
+				: TextEditorProperties.SupportReadOnlySegments ? Document.MarkerStrategy.GetMarkers(offset).Exists(m => m.IsReadOnly) : false;
 		}
 
 		internal bool IsReadOnly(int offset, int length)
 		{
-			if (Document.ReadOnly)
-			{
-				return true;
-			}
-			if (TextEditorProperties.SupportReadOnlySegments)
-			{
-				return Document.MarkerStrategy.GetMarkers(offset, length).Exists(m => m.IsReadOnly);
-			}
-			else
-			{
-				return false;
-			}
+			return Document.ReadOnly
+				? true
+				: TextEditorProperties.SupportReadOnlySegments
+				? Document.MarkerStrategy.GetMarkers(offset, length).Exists(m => m.IsReadOnly)
+				: false;
 		}
 
 		public void SimulateKeyPress(char ch)
@@ -820,20 +705,11 @@ namespace ControlLibrary.Controls.TextControl.TextEditor
 			motherTextEditorControl.EndUpdate();
 		}
 
-		public bool EnableCutOrPaste
-		{
-			get
-			{
-				if (motherTextAreaControl == null)
-					return false;
-				if (SelectionManager.HasSomethingSelected)
-					return !SelectionManager.SelectionIsReadonly;
-				else
-					return !IsReadOnly(Caret.Offset);
-			}
-		}
+		public bool EnableCutOrPaste => motherTextAreaControl == null
+					? false
+					: SelectionManager.HasSomethingSelected ? !SelectionManager.SelectionIsReadonly : !IsReadOnly(Caret.Offset);
 
-		string GenerateWhitespaceString(int length)
+		private string GenerateWhitespaceString(int length)
 		{
 			return new String(' ', length);
 		}
@@ -1042,13 +918,8 @@ namespace ControlLibrary.Controls.TextControl.TextEditor
 		{
 			UpdateLines(line, line);
 		}
-		int FirstPhysicalLine
-		{
-			get
-			{
-				return VirtualTop.Y / textView.FontHeight;
-			}
-		}
+
+		private int FirstPhysicalLine => VirtualTop.Y / textView.FontHeight;
 		internal void UpdateLines(int xPos, int lineBegin, int lineEnd)
 		{
 			//			if (lineEnd < FirstPhysicalLine || lineBegin > FirstPhysicalLine + textView.VisibleLineCount) {
@@ -1058,7 +929,7 @@ namespace ControlLibrary.Controls.TextControl.TextEditor
 			InvalidateLines((int)(xPos * this.TextView.WideSpaceWidth), lineBegin, lineEnd);
 		}
 
-		void InvalidateLines(int xPos, int lineBegin, int lineEnd)
+		private void InvalidateLines(int xPos, int lineBegin, int lineEnd)
 		{
 			lineBegin = Math.Max(Document.GetVisibleLine(lineBegin), FirstPhysicalLine);
 			lineEnd = Math.Min(Document.GetVisibleLine(lineEnd), FirstPhysicalLine + textView.VisibleLineCount);

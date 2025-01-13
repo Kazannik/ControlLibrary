@@ -4,6 +4,7 @@ using System.Drawing.Drawing2D;
 using static ControlLibrary.Controls.QRCoder.ArtQRCode;
 using static ControlLibrary.Controls.QRCoder.QRCodeGenerator;
 
+
 // pull request raised to extend library used. 
 namespace ControlLibrary.Controls.QRCoder
 {
@@ -63,7 +64,7 @@ namespace ControlLibrary.Controls.QRCoder
 			int pixelSize = (int)Math.Min(pixelsPerModule, Math.Floor(pixelsPerModule / pixelSizeFactor));
 
 			var numModules = QrCodeData.ModuleMatrix.Count - (drawQuietZones ? 0 : 8);
-			var offset = (drawQuietZones ? 0 : 4);
+			var offset = drawQuietZones ? 0 : 4;
 			var size = numModules * pixelsPerModule;
 
 			var bitmap = new Bitmap(size, size);
@@ -85,7 +86,7 @@ namespace ControlLibrary.Controls.QRCoder
 							else if (backgroundImageStyle == BackgroundImageStyle.DataAreaOnly)
 							{
 								var bgOffset = 4 - offset;
-								graphics.DrawImage(Resize(backgroundImage, size - (2 * bgOffset * pixelsPerModule)), 0 + (bgOffset * pixelsPerModule), (bgOffset * pixelsPerModule));
+								graphics.DrawImage(Resize(backgroundImage, size - (2 * bgOffset * pixelsPerModule)), 0 + (bgOffset * pixelsPerModule), bgOffset * pixelsPerModule);
 							}
 						}
 
@@ -187,7 +188,7 @@ namespace ControlLibrary.Controls.QRCoder
 		private bool IsPartOfFinderPattern(int x, int y, int numModules, int offset)
 		{
 			var cornerSize = 11 - offset;
-			var outerLimitLow = (numModules - cornerSize - 1);
+			var outerLimitLow = numModules - cornerSize - 1;
 			var outerLimitHigh = outerLimitLow + 8;
 			var invertedOffset = 4 - offset;
 			return

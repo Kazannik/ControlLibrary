@@ -6,32 +6,25 @@ namespace ControlLibrary.Controls.TextControl.TextEditor.Document
 	public class GapTextBufferStrategy : ITextBufferStrategy
 	{
 #if DEBUG
-		int creatorThread = System.Threading.Thread.CurrentThread.ManagedThreadId;
+		private int creatorThread = System.Threading.Thread.CurrentThread.ManagedThreadId;
 
-		void CheckThread()
+		private void CheckThread()
 		{
 			if (System.Threading.Thread.CurrentThread.ManagedThreadId != creatorThread)
 				throw new InvalidOperationException("GapTextBufferStategy is not thread-safe!");
 		}
 #endif
 
-		char[] buffer = new char[0];
-		string cachedContent;
+		private char[] buffer = new char[0];
+		private string cachedContent;
+		private int gapBeginOffset = 0;
+		private int gapEndOffset = 0;
+		private int gapLength = 0; // gapLength == gapEndOffset - gapBeginOffset
 
-		int gapBeginOffset = 0;
-		int gapEndOffset = 0;
-		int gapLength = 0; // gapLength == gapEndOffset - gapBeginOffset
+		private const int minGapLength = 128;
+		private const int maxGapLength = 2048;
 
-		const int minGapLength = 128;
-		const int maxGapLength = 2048;
-
-		public int Length
-		{
-			get
-			{
-				return buffer.Length - gapLength;
-			}
-		}
+		public int Length => buffer.Length - gapLength;
 
 		public void SetContent(string text)
 		{
@@ -50,12 +43,9 @@ namespace ControlLibrary.Controls.TextControl.TextEditor.Document
 			CheckThread();
 #endif
 
-			if (offset < 0 || offset >= Length)
-			{
-				throw new ArgumentOutOfRangeException("offset", offset, "0 <= offset < " + Length.ToString());
-			}
-
-			return offset < gapBeginOffset ? buffer[offset] : buffer[offset + gapLength];
+			return offset < 0 || offset >= Length
+				? throw new ArgumentOutOfRangeException("offset", offset, "0 <= offset < " + Length.ToString())
+				: offset < gapBeginOffset ? buffer[offset] : buffer[offset + gapLength];
 		}
 
 		public string GetText(int offset, int length)
@@ -68,24 +58,14 @@ namespace ControlLibrary.Controls.TextControl.TextEditor.Document
 			{
 				throw new ArgumentOutOfRangeException("offset", offset, "0 <= offset <= " + Length.ToString());
 			}
-			if (length < 0 || offset + length > Length)
-			{
-				throw new ArgumentOutOfRangeException("length", length, "0 <= length, offset(" + offset + ")+length <= " + Length.ToString());
-			}
-			if (offset == 0 && length == Length)
-			{
-				if (cachedContent != null)
-					return cachedContent;
-				else
-					return cachedContent = GetTextInternal(offset, length);
-			}
-			else
-			{
-				return GetTextInternal(offset, length);
-			}
+			return length < 0 || offset + length > Length
+				? throw new ArgumentOutOfRangeException("length", length, "0 <= length, offset(" + offset + ")+length <= " + Length.ToString())
+				: offset == 0 && length == Length
+				? cachedContent ?? (cachedContent = GetTextInternal(offset, length))
+				: GetTextInternal(offset, length);
 		}
 
-		string GetTextInternal(int offset, int length)
+		private string GetTextInternal(int offset, int length)
 		{
 			int end = offset + length;
 
@@ -153,7 +133,7 @@ namespace ControlLibrary.Controls.TextControl.TextEditor.Document
 			}
 		}
 
-		void PlaceGap(int newGapOffset, int minRequiredGapLength)
+		private void PlaceGap(int newGapOffset, int minRequiredGapLength)
 		{
 			if (gapLength < minRequiredGapLength)
 			{
@@ -173,7 +153,7 @@ namespace ControlLibrary.Controls.TextControl.TextEditor.Document
 			}
 		}
 
-		void MakeNewBuffer(int newGapOffset, int newGapLength)
+		private void MakeNewBuffer(int newGapOffset, int newGapLength)
 		{
 			if (newGapLength < minGapLength) newGapLength = minGapLength;
 

@@ -9,9 +9,9 @@ namespace ControlLibrary.Controls.TextControl.TextEditor
 	/// </summary>
 	public class BrushRegistry
 	{
-		static Dictionary<Color, Brush> brushes = new Dictionary<Color, Brush>();
-		static Dictionary<Color, Pen> pens = new Dictionary<Color, Pen>();
-		static Dictionary<Color, Pen> dotPens = new Dictionary<Color, Pen>();
+		private static Dictionary<Color, Brush> brushes = new Dictionary<Color, Brush>();
+		private static Dictionary<Color, Pen> pens = new Dictionary<Color, Pen>();
+		private static Dictionary<Color, Pen> dotPens = new Dictionary<Color, Pen>();
 
 		public static Brush GetBrush(Color color)
 		{
@@ -41,7 +41,7 @@ namespace ControlLibrary.Controls.TextControl.TextEditor
 			}
 		}
 
-		static readonly float[] dotPattern = { 1, 1, 1, 1 };
+		private static readonly float[] dotPattern = { 1, 1, 1, 1 };
 
 		public static Pen GetDotPen(Color color)
 		{
@@ -50,8 +50,10 @@ namespace ControlLibrary.Controls.TextControl.TextEditor
 				Pen pen;
 				if (!dotPens.TryGetValue(color, out pen))
 				{
-					pen = new Pen(color);
-					pen.DashPattern = dotPattern;
+					pen = new Pen(color)
+					{
+						DashPattern = dotPattern
+					};
 					dotPens.Add(color, pen);
 				}
 				return pen;

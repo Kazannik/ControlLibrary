@@ -7,30 +7,17 @@ namespace ControlLibrary.Controls.TextControl.TextEditor.Document
 {
 	public class HighlightingManager
 	{
-		ArrayList syntaxModeFileProviders = new ArrayList();
-		static HighlightingManager highlightingManager;
+		private ArrayList syntaxModeFileProviders = new ArrayList();
+		private static HighlightingManager highlightingManager;
 
 		// hash table from extension name to highlighting definition,
 		// OR from extension name to Pair SyntaxMode,ISyntaxModeFileProvider
-		Hashtable highlightingDefs = new Hashtable();
+		private Hashtable highlightingDefs = new Hashtable();
+		private Hashtable extensionsToName = new Hashtable();
 
-		Hashtable extensionsToName = new Hashtable();
+		public Hashtable HighlightingDefinitions => highlightingDefs;
 
-		public Hashtable HighlightingDefinitions
-		{
-			get
-			{
-				return highlightingDefs;
-			}
-		}
-
-		public static HighlightingManager Manager
-		{
-			get
-			{
-				return highlightingManager;
-			}
-		}
+		public static HighlightingManager Manager => highlightingManager;
 
 		static HighlightingManager()
 		{
@@ -81,15 +68,17 @@ namespace ControlLibrary.Controls.TextControl.TextEditor.Document
 			OnReloadSyntaxHighlighting(EventArgs.Empty);
 		}
 
-		void CreateDefaultHighlightingStrategy()
+		private void CreateDefaultHighlightingStrategy()
 		{
-			DefaultHighlightingStrategy defaultHighlightingStrategy = new DefaultHighlightingStrategy();
-			defaultHighlightingStrategy.Extensions = new string[] { };
+			DefaultHighlightingStrategy defaultHighlightingStrategy = new DefaultHighlightingStrategy
+			{
+				Extensions = new string[] { }
+			};
 			defaultHighlightingStrategy.Rules.Add(new HighlightRuleSet());
 			highlightingDefs["Default"] = defaultHighlightingStrategy;
 		}
 
-		IHighlightingStrategy LoadDefinition(DictionaryEntry entry)
+		private IHighlightingStrategy LoadDefinition(DictionaryEntry entry)
 		{
 			SyntaxMode syntaxMode = (SyntaxMode)entry.Key;
 			ISyntaxModeFileProvider syntaxModeFileProvider = (ISyntaxModeFileProvider)entry.Value;
@@ -118,13 +107,7 @@ namespace ControlLibrary.Controls.TextControl.TextEditor.Document
 			return highlightingStrategy;
 		}
 
-		public DefaultHighlightingStrategy DefaultHighlighting
-		{
-			get
-			{
-				return (DefaultHighlightingStrategy)highlightingDefs["Default"];
-			}
-		}
+		public DefaultHighlightingStrategy DefaultHighlighting => (DefaultHighlightingStrategy)highlightingDefs["Default"];
 
 		internal KeyValuePair<SyntaxMode, ISyntaxModeFileProvider> FindHighlighterEntry(string name)
 		{
@@ -144,11 +127,7 @@ namespace ControlLibrary.Controls.TextControl.TextEditor.Document
 		public IHighlightingStrategy FindHighlighter(string name)
 		{
 			object def = highlightingDefs[name];
-			if (def is DictionaryEntry)
-			{
-				return LoadDefinition((DictionaryEntry)def);
-			}
-			return def == null ? DefaultHighlighting : (IHighlightingStrategy)def;
+			return def is DictionaryEntry ? LoadDefinition((DictionaryEntry)def) : def == null ? DefaultHighlighting : (IHighlightingStrategy)def;
 		}
 
 		public IHighlightingStrategy FindHighlighterForFile(string fileName)
@@ -157,11 +136,7 @@ namespace ControlLibrary.Controls.TextControl.TextEditor.Document
 			if (highlighterName != null)
 			{
 				object def = highlightingDefs[highlighterName];
-				if (def is DictionaryEntry)
-				{
-					return LoadDefinition((DictionaryEntry)def);
-				}
-				return def == null ? DefaultHighlighting : (IHighlightingStrategy)def;
+				return def is DictionaryEntry ? LoadDefinition((DictionaryEntry)def) : def == null ? DefaultHighlighting : (IHighlightingStrategy)def;
 			}
 			else
 			{
@@ -171,10 +146,7 @@ namespace ControlLibrary.Controls.TextControl.TextEditor.Document
 
 		protected virtual void OnReloadSyntaxHighlighting(EventArgs e)
 		{
-			if (ReloadSyntaxHighlighting != null)
-			{
-				ReloadSyntaxHighlighting(this, e);
-			}
+			ReloadSyntaxHighlighting?.Invoke(this, e);
 		}
 
 		public event EventHandler ReloadSyntaxHighlighting;

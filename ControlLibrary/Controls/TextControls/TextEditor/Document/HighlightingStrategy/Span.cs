@@ -5,127 +5,54 @@ namespace ControlLibrary.Controls.TextControl.TextEditor.Document
 {
 	public sealed class Span
 	{
-		bool stopEOL;
-		HighlightColor color;
-		HighlightColor beginColor;
-		HighlightColor endColor;
-		char[] begin;
-		char[] end;
-		string name;
-		string rule;
-		HighlightRuleSet ruleSet;
-		char escapeCharacter;
-		bool ignoreCase;
-		bool isBeginSingleWord;
-		bool? isBeginStartOfLine;
-		bool isEndSingleWord;
+		private bool stopEOL;
+		private HighlightColor color;
+		private HighlightColor beginColor;
+		private HighlightColor endColor;
+		private char[] begin;
+		private char[] end;
+		private string name;
+		private string rule;
+		private HighlightRuleSet ruleSet;
+		private char escapeCharacter;
+		private bool ignoreCase;
+		private bool isBeginSingleWord;
+		private bool? isBeginStartOfLine;
+		private bool isEndSingleWord;
 
 		internal HighlightRuleSet RuleSet
 		{
-			get
-			{
-				return ruleSet;
-			}
-			set
-			{
-				ruleSet = value;
-			}
+			get => ruleSet;
+			set => ruleSet = value;
 		}
 
 		public bool IgnoreCase
 		{
-			get
-			{
-				return ignoreCase;
-			}
-			set
-			{
-				ignoreCase = value;
-			}
+			get => ignoreCase;
+			set => ignoreCase = value;
 		}
 
-		public bool StopEOL
-		{
-			get
-			{
-				return stopEOL;
-			}
-		}
+		public bool StopEOL => stopEOL;
 
-		public bool? IsBeginStartOfLine
-		{
-			get
-			{
-				return isBeginStartOfLine;
-			}
-		}
+		public bool? IsBeginStartOfLine => isBeginStartOfLine;
 
-		public bool IsBeginSingleWord
-		{
-			get
-			{
-				return isBeginSingleWord;
-			}
-		}
+		public bool IsBeginSingleWord => isBeginSingleWord;
 
-		public bool IsEndSingleWord
-		{
-			get
-			{
-				return isEndSingleWord;
-			}
-		}
+		public bool IsEndSingleWord => isEndSingleWord;
 
-		public HighlightColor Color
-		{
-			get
-			{
-				return color;
-			}
-		}
+		public HighlightColor Color => color;
 
-		public HighlightColor BeginColor
-		{
-			get
-			{
-				if (beginColor != null)
-				{
-					return beginColor;
-				}
-				else
-				{
-					return color;
-				}
-			}
-		}
+		public HighlightColor BeginColor => beginColor ?? color;
 
-		public HighlightColor EndColor
-		{
-			get
-			{
-				return endColor != null ? endColor : color;
-			}
-		}
+		public HighlightColor EndColor => endColor ?? color;
 
-		public char[] Begin
-		{
-			get { return begin; }
-		}
+		public char[] Begin => begin;
 
-		public char[] End
-		{
-			get { return end; }
-		}
+		public char[] End => end;
 
-		public string Name
-		{
-			get { return name; }
-		}
+		public string Name => name;
 
-		public string Rule
-		{
-			get { return rule; }
-		}
+		public string Rule => rule;
 
 		/// <summary>
 		/// Gets the escape character of the span. The escape character is a character that can be used in front
@@ -133,10 +60,7 @@ namespace ControlLibrary.Controls.TextControl.TextEditor.Document
 		/// means the escape character was escaped like in @"a "" b" literals in C#.
 		/// The default value '\0' means no escape character is allowed.
 		/// </summary>
-		public char EscapeCharacter
-		{
-			get { return escapeCharacter; }
-		}
+		public char EscapeCharacter => escapeCharacter;
 
 		public Span(XmlElement span)
 		{

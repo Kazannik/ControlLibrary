@@ -11,15 +11,9 @@ namespace ControlLibrary.Controls.TextControl.TextEditor.Document
 	/// </summary>
 	public class StringTextBufferStrategy : ITextBufferStrategy
 	{
-		string storedText = "";
+		private string storedText = "";
 
-		public int Length
-		{
-			get
-			{
-				return storedText.Length;
-			}
-		}
+		public int Length => storedText.Length;
 
 		public void Insert(int offset, string text)
 		{
@@ -42,24 +36,16 @@ namespace ControlLibrary.Controls.TextControl.TextEditor.Document
 
 		public string GetText(int offset, int length)
 		{
-			if (length == 0)
-			{
-				return "";
-			}
-			if (offset == 0 && length >= storedText.Length)
-			{
-				return storedText;
-			}
-			return storedText.Substring(offset, Math.Min(length, storedText.Length - offset));
+			return length == 0
+				? ""
+				: offset == 0 && length >= storedText.Length
+				? storedText
+				: storedText.Substring(offset, Math.Min(length, storedText.Length - offset));
 		}
 
 		public char GetCharAt(int offset)
 		{
-			if (offset == Length)
-			{
-				return '\0';
-			}
-			return storedText[offset];
+			return offset == Length ? '\0' : storedText[offset];
 		}
 
 		public void SetContent(string text)

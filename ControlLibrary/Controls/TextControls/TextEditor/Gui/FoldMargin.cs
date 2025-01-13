@@ -11,24 +11,12 @@ namespace ControlLibrary.Controls.TextControl.TextEditor
 	/// </summary>
 	public class FoldMargin : AbstractMargin
 	{
-		int selectedFoldLine = -1;
+		private int selectedFoldLine = -1;
 
-		public override Size Size
-		{
-			get
-			{
-				return new Size((int)(textArea.TextView.FontHeight),
+		public override Size Size => new Size((int)textArea.TextView.FontHeight,
 								-1);
-			}
-		}
 
-		public override bool IsVisible
-		{
-			get
-			{
-				return textArea.TextEditorProperties.EnableFolding;
-			}
-		}
+		public override bool IsVisible => textArea.TextEditorProperties.EnableFolding;
 
 		public FoldMargin(TextArea textArea) : base(textArea)
 		{
@@ -43,10 +31,10 @@ namespace ControlLibrary.Controls.TextControl.TextEditor
 			HighlightColor lineNumberPainterColor = textArea.Document.HighlightingStrategy.GetColorFor("LineNumbers");
 
 
-			for (int y = 0; y < (DrawingPosition.Height + textArea.TextView.VisibleLineDrawingRemainder) / textArea.TextView.FontHeight + 1; ++y)
+			for (int y = 0; y < ((DrawingPosition.Height + textArea.TextView.VisibleLineDrawingRemainder) / textArea.TextView.FontHeight) + 1; ++y)
 			{
 				Rectangle markerRectangle = new Rectangle(DrawingPosition.X,
-														  DrawingPosition.Top + y * textArea.TextView.FontHeight - textArea.TextView.VisibleLineDrawingRemainder,
+														  DrawingPosition.Top + (y * textArea.TextView.FontHeight) - textArea.TextView.VisibleLineDrawingRemainder,
 														  DrawingPosition.Width,
 														  textArea.TextView.FontHeight);
 
@@ -78,7 +66,7 @@ namespace ControlLibrary.Controls.TextControl.TextEditor
 			}
 		}
 
-		bool SelectedFoldingFrom(List<FoldMarker> list)
+		private bool SelectedFoldingFrom(List<FoldMarker> list)
 		{
 			if (list != null)
 			{
@@ -93,7 +81,7 @@ namespace ControlLibrary.Controls.TextControl.TextEditor
 			return false;
 		}
 
-		void PaintFoldMarker(Graphics g, int lineNumber, Rectangle drawingRectangle)
+		private void PaintFoldMarker(Graphics g, int lineNumber, Rectangle drawingRectangle)
 		{
 			HighlightColor foldLineColor = textArea.Document.HighlightingStrategy.GetColorFor("FoldLine");
 			HighlightColor selectedFoldLine = textArea.Document.HighlightingStrategy.GetColorFor("SelectedFoldLine");
@@ -111,9 +99,9 @@ namespace ControlLibrary.Controls.TextControl.TextEditor
 			bool isEndSelected = SelectedFoldingFrom(foldingsWithEnd);
 
 			int foldMarkerSize = (int)Math.Round(textArea.TextView.FontHeight * 0.57f);
-			foldMarkerSize -= (foldMarkerSize) % 2;
+			foldMarkerSize -= foldMarkerSize % 2;
 			int foldMarkerYPos = drawingRectangle.Y + (int)((drawingRectangle.Height - foldMarkerSize) / 2);
-			int xPos = drawingRectangle.X + (drawingRectangle.Width - foldMarkerSize) / 2 + foldMarkerSize / 2;
+			int xPos = drawingRectangle.X + ((drawingRectangle.Width - foldMarkerSize) / 2) + (foldMarkerSize / 2);
 
 
 			if (isFoldStart)
@@ -141,7 +129,7 @@ namespace ControlLibrary.Controls.TextControl.TextEditor
 					}
 				}
 
-				DrawFoldMarker(g, new RectangleF(drawingRectangle.X + (drawingRectangle.Width - foldMarkerSize) / 2,
+				DrawFoldMarker(g, new RectangleF(drawingRectangle.X + ((drawingRectangle.Width - foldMarkerSize) / 2),
 												 foldMarkerYPos,
 												 foldMarkerSize,
 												 foldMarkerSize),
@@ -173,13 +161,13 @@ namespace ControlLibrary.Controls.TextControl.TextEditor
 			{
 				if (isFoldEnd)
 				{
-					int midy = drawingRectangle.Top + drawingRectangle.Height / 2;
+					int midy = drawingRectangle.Top + (drawingRectangle.Height / 2);
 
 					// draw fold end marker
 					g.DrawLine(BrushRegistry.GetPen(isEndSelected ? selectedFoldLine.Color : foldLineColor.Color),
 							   xPos,
 							   midy,
-							   xPos + foldMarkerSize / 2,
+							   xPos + (foldMarkerSize / 2),
 							   midy);
 
 					// draw line above fold end marker
@@ -225,14 +213,7 @@ namespace ControlLibrary.Controls.TextControl.TextEditor
 
 			List<FoldMarker> foldMarkers = textArea.Document.FoldingManager.GetFoldingsWithStart(realline);
 			int oldSelection = selectedFoldLine;
-			if (foldMarkers.Count > 0)
-			{
-				selectedFoldLine = realline;
-			}
-			else
-			{
-				selectedFoldLine = -1;
-			}
+			selectedFoldLine = foldMarkers.Count > 0 ? realline : -1;
 			if (oldSelection != selectedFoldLine)
 			{
 				textArea.Refresh(this);
@@ -271,7 +252,7 @@ namespace ControlLibrary.Controls.TextControl.TextEditor
 		}
 
 		#region Drawing functions
-		void DrawFoldMarker(Graphics g, RectangleF rectangle, bool isOpened, bool isSelected)
+		private void DrawFoldMarker(Graphics g, RectangleF rectangle, bool isOpened, bool isSelected)
 		{
 			HighlightColor foldMarkerColor = textArea.Document.HighlightingStrategy.GetColorFor("FoldMarker");
 			HighlightColor foldLineColor = textArea.Document.HighlightingStrategy.GetColorFor("FoldLine");
@@ -282,7 +263,7 @@ namespace ControlLibrary.Controls.TextControl.TextEditor
 			g.DrawRectangle(BrushRegistry.GetPen(isSelected ? selectedFoldLine.Color : foldLineColor.Color), intRect);
 
 			int space = (int)Math.Round(((double)rectangle.Height) / 8d) + 1;
-			int mid = intRect.Height / 2 + intRect.Height % 2;
+			int mid = (intRect.Height / 2) + (intRect.Height % 2);
 
 			// draw minus
 			g.DrawLine(BrushRegistry.GetPen(foldMarkerColor.Color),

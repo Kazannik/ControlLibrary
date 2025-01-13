@@ -11,21 +11,13 @@
 		{
 			IHighlightingStrategy highlightingStrategy = HighlightingManager.Manager.FindHighlighter(name);
 
-			if (highlightingStrategy == null)
-			{
-				return CreateHighlightingStrategy();
-			}
-			return highlightingStrategy;
+			return highlightingStrategy ?? CreateHighlightingStrategy();
 		}
 
 		public static IHighlightingStrategy CreateHighlightingStrategyForFile(string fileName)
 		{
 			IHighlightingStrategy highlightingStrategy = HighlightingManager.Manager.FindHighlighterForFile(fileName);
-			if (highlightingStrategy == null)
-			{
-				return CreateHighlightingStrategy();
-			}
-			return highlightingStrategy;
+			return highlightingStrategy ?? CreateHighlightingStrategy();
 		}
 	}
 }

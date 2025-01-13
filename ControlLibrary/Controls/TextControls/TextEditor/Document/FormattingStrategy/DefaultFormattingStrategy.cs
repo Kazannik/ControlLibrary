@@ -59,7 +59,7 @@ namespace ControlLibrary.Controls.TextControl.TextEditor.Document
 			return indentation.Length;
 		}
 
-		static readonly char[] whitespaceChars = { ' ', '\t' };
+		private static readonly char[] whitespaceChars = { ' ', '\t' };
 
 		/// <summary>
 		/// Replaces the text in a line.

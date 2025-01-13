@@ -3,9 +3,9 @@ using System.Collections.Generic;
 using System.Linq;
 using static ControlLibrary.Controls.QRCoder.QRCodeGenerator;
 
+
 namespace ControlLibrary.Controls.QRCoder
 {
-
 	// ReSharper disable once InconsistentNaming
 	public class BitmapByteQRCode : AbstractQRCode, IDisposable
 	{
@@ -54,7 +54,7 @@ namespace ControlLibrary.Controls.QRCoder
 					for (var y = 0; y < sideLength; y = y + pixelsPerModule)
 					{
 						var module =
-							QrCodeData.ModuleMatrix[(x + pixelsPerModule) / pixelsPerModule - 1][(y + pixelsPerModule) / pixelsPerModule - 1];
+							QrCodeData.ModuleMatrix[((x + pixelsPerModule) / pixelsPerModule) - 1][((y + pixelsPerModule) / pixelsPerModule) - 1];
 						for (int i = 0; i < pixelsPerModule; i++)
 						{
 							bmp.AddRange(module ? moduleDark : moduleLight);
@@ -92,7 +92,7 @@ namespace ControlLibrary.Controls.QRCoder
 			unchecked
 			{
 				bytes[1] = (byte)(inp >> 8);
-				bytes[0] = (byte)(inp);
+				bytes[0] = (byte)inp;
 			}
 			return bytes;
 		}

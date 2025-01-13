@@ -30,24 +30,15 @@ namespace ControlLibrary.Controls.TextControl
 		}
 
 		[Browsable(false), ReadOnly(true)]
-		public new bool Multiline
-		{
-			get { return base.Multiline; }
-		}
+		public new bool Multiline => base.Multiline;
 
 		[Browsable(false), ReadOnly(true)]
-		public new int MaxLength
-		{
-			get { return base.MaxLength; }
-		}
+		public new int MaxLength => base.MaxLength;
 
 		[Browsable(false), ReadOnly(true)]
-		public new ScrollBars ScrollBars
-		{
-			get { return base.ScrollBars; }
-		}
+		public new ScrollBars ScrollBars => base.ScrollBars;
 
-		bool IsNumeric(string s)
+		private bool IsNumeric(string s)
 		{
 			double output;
 			return double.TryParse(s, out output);
@@ -55,21 +46,8 @@ namespace ControlLibrary.Controls.TextControl
 
 		public double Value
 		{
-			get
-			{
-				if (double.TryParse(base.Text, out double output))
-				{
-					return output;
-				}
-				else
-				{
-					return 0;
-				}
-			}
-			set
-			{
-				base.Text = value.ToString();
-			}
+			get => double.TryParse(base.Text, out double output) ? output : 0;
+			set => base.Text = value.ToString();
 		}
 
 		protected override void OnKeyPress(KeyPressEventArgs e)
@@ -90,7 +68,7 @@ namespace ControlLibrary.Controls.TextControl
 			}
 		}
 
-		string oldText = string.Empty;
+		private string oldText = string.Empty;
 
 		protected override void OnTextChanged(EventArgs e)
 		{

@@ -19,7 +19,7 @@ namespace ControlLibrary.Controls.TextControl.TextEditor.Document
 	/// 
 	/// NOTE: The tree is never empty, Clear() causes it to contain an empty segment.
 	/// </summary>
-	sealed class LineSegmentTree : IList<LineSegment>
+	internal sealed class LineSegmentTree : IList<LineSegment>
 	{
 		internal struct RBNode
 		{
@@ -44,7 +44,7 @@ namespace ControlLibrary.Controls.TextControl.TextEditor.Document
 			}
 		}
 
-		struct MyHost : IRedBlackTreeHost<RBNode>
+		private struct MyHost : IRedBlackTreeHost<RBNode>
 		{
 			public int Compare(RBNode x, RBNode y)
 			{
@@ -91,9 +91,9 @@ namespace ControlLibrary.Controls.TextControl.TextEditor.Document
 			}
 		}
 
-		readonly AugmentableRedBlackTree<RBNode, MyHost> tree = new AugmentableRedBlackTree<RBNode, MyHost>(new MyHost());
+		private readonly AugmentableRedBlackTree<RBNode, MyHost> tree = new AugmentableRedBlackTree<RBNode, MyHost>(new MyHost());
 
-		RedBlackTreeNode<RBNode> GetNode(int index)
+		private RedBlackTreeNode<RBNode> GetNode(int index)
 		{
 			if (index < 0 || index >= tree.Count)
 				throw new ArgumentOutOfRangeException("index", index, "index should be between 0 and " + (tree.Count - 1));
@@ -118,7 +118,7 @@ namespace ControlLibrary.Controls.TextControl.TextEditor.Document
 			}
 		}
 
-		static int GetIndexFromNode(RedBlackTreeNode<RBNode> node)
+		private static int GetIndexFromNode(RedBlackTreeNode<RBNode> node)
 		{
 			int index = (node.left != null) ? node.left.val.count : 0;
 			while (node.parent != null)
@@ -134,15 +134,15 @@ namespace ControlLibrary.Controls.TextControl.TextEditor.Document
 			return index;
 		}
 
-		RedBlackTreeNode<RBNode> GetNodeByOffset(int offset)
+		private RedBlackTreeNode<RBNode> GetNodeByOffset(int offset)
 		{
 			if (offset < 0 || offset > this.TotalLength)
 				throw new ArgumentOutOfRangeException("offset", offset, "offset should be between 0 and " + this.TotalLength);
 			if (offset == this.TotalLength)
 			{
-				if (tree.root == null)
-					throw new InvalidOperationException("Cannot call GetNodeByOffset while tree is empty.");
-				return tree.root.RightMost;
+				return tree.root == null
+					? throw new InvalidOperationException("Cannot call GetNodeByOffset while tree is empty.")
+					: tree.root.RightMost;
 			}
 			RedBlackTreeNode<RBNode> node = tree.root;
 			while (true)
@@ -165,7 +165,7 @@ namespace ControlLibrary.Controls.TextControl.TextEditor.Document
 			}
 		}
 
-		static int GetOffsetFromNode(RedBlackTreeNode<RBNode> node)
+		private static int GetOffsetFromNode(RedBlackTreeNode<RBNode> node)
 		{
 			int offset = (node.left != null) ? node.left.val.totalLength : 0;
 			while (node.parent != null)
@@ -189,16 +189,7 @@ namespace ControlLibrary.Controls.TextControl.TextEditor.Document
 		/// <summary>
 		/// Gets the total length of all line segments. Runs in O(1).
 		/// </summary>
-		public int TotalLength
-		{
-			get
-			{
-				if (tree.root == null)
-					return 0;
-				else
-					return tree.root.val.totalLength;
-			}
-		}
+		public int TotalLength => tree.root == null ? 0 : tree.root.val.totalLength;
 
 		/// <summary>
 		/// Updates the length of a line segment. Runs in O(lg n).
@@ -225,15 +216,17 @@ namespace ControlLibrary.Controls.TextControl.TextEditor.Document
 
 		public LineSegment InsertSegmentAfter(LineSegment segment, int length)
 		{
-			LineSegment newSegment = new LineSegment();
-			newSegment.TotalLength = length;
-			newSegment.DelimiterLength = segment.DelimiterLength;
+			LineSegment newSegment = new LineSegment
+			{
+				TotalLength = length,
+				DelimiterLength = segment.DelimiterLength
+			};
 
 			newSegment.treeEntry = InsertAfter(segment.treeEntry.it.node, newSegment);
 			return newSegment;
 		}
 
-		Enumerator InsertAfter(RedBlackTreeNode<RBNode> node, LineSegment newSegment)
+		private Enumerator InsertAfter(RedBlackTreeNode<RBNode> node, LineSegment newSegment)
 		{
 			RedBlackTreeNode<RBNode> newNode = new RedBlackTreeNode<RBNode>(new RBNode(newSegment));
 			if (node.right == null)
@@ -253,30 +246,18 @@ namespace ControlLibrary.Controls.TextControl.TextEditor.Document
 		/// <summary>
 		/// Gets the number of items in the collections. Runs in O(1).
 		/// </summary>
-		public int Count
-		{
-			get { return tree.Count; }
-		}
+		public int Count => tree.Count;
 
 		/// <summary>
 		/// Gets or sets an item by index. Runs in O(lg n).
 		/// </summary>
 		public LineSegment this[int index]
 		{
-			get
-			{
-				return GetNode(index).val.lineSegment;
-			}
-			set
-			{
-				throw new NotSupportedException();
-			}
+			get => GetNode(index).val.lineSegment;
+			set => throw new NotSupportedException();
 		}
 
-		bool ICollection<LineSegment>.IsReadOnly
-		{
-			get { return true; }
-		}
+		bool ICollection<LineSegment>.IsReadOnly => true;
 
 		/// <summary>
 		/// Gets the index of an item. Runs in O(lg n).
@@ -284,11 +265,7 @@ namespace ControlLibrary.Controls.TextControl.TextEditor.Document
 		public int IndexOf(LineSegment item)
 		{
 			int index = item.LineNumber;
-			if (index < 0 || index >= this.Count)
-				return -1;
-			if (item != this[index])
-				return -1;
-			return index;
+			return index < 0 || index >= this.Count ? -1 : item != this[index] ? -1 : index;
 		}
 
 		void IList<LineSegment>.RemoveAt(int index)
@@ -298,7 +275,7 @@ namespace ControlLibrary.Controls.TextControl.TextEditor.Document
 
 #if DEBUG
 		[Conditional("DATACONSISTENCYTEST")]
-		void CheckProperties()
+		private void CheckProperties()
 		{
 			if (tree.root == null)
 			{
@@ -311,7 +288,7 @@ namespace ControlLibrary.Controls.TextControl.TextEditor.Document
 			}
 		}
 
-		void CheckProperties(RedBlackTreeNode<RBNode> node)
+		private void CheckProperties(RedBlackTreeNode<RBNode> node)
 		{
 			int count = 1;
 			int totalLength = node.val.lineSegment.TotalLength;
@@ -348,9 +325,11 @@ namespace ControlLibrary.Controls.TextControl.TextEditor.Document
 		public void Clear()
 		{
 			tree.Clear();
-			LineSegment emptySegment = new LineSegment();
-			emptySegment.TotalLength = 0;
-			emptySegment.DelimiterLength = 0;
+			LineSegment emptySegment = new LineSegment
+			{
+				TotalLength = 0,
+				DelimiterLength = 0
+			};
 			tree.Add(new RBNode(emptySegment));
 			emptySegment.treeEntry = GetEnumeratorForIndex(0);
 #if DEBUG
@@ -407,7 +386,7 @@ namespace ControlLibrary.Controls.TextControl.TextEditor.Document
 			/// An invalid enumerator value. Calling MoveNext on the invalid enumerator
 			/// will always return false, accessing Current will throw an exception.
 			/// </summary>
-			public static readonly Enumerator Invalid = default(Enumerator);
+			public static readonly Enumerator Invalid = default;
 
 			internal RedBlackTreeIterator<RBNode> it;
 
@@ -419,55 +398,21 @@ namespace ControlLibrary.Controls.TextControl.TextEditor.Document
 			/// <summary>
 			/// Gets the current value. Runs in O(1).
 			/// </summary>
-			public LineSegment Current
-			{
-				get
-				{
-					return it.Current.lineSegment;
-				}
-			}
+			public LineSegment Current => it.Current.lineSegment;
 
-			public bool IsValid
-			{
-				get
-				{
-					return it.IsValid;
-				}
-			}
+			public bool IsValid => it.IsValid;
 
 			/// <summary>
 			/// Gets the index of the current value. Runs in O(lg n).
 			/// </summary>
-			public int CurrentIndex
-			{
-				get
-				{
-					if (it.node == null)
-						throw new InvalidOperationException();
-					return GetIndexFromNode(it.node);
-				}
-			}
+			public int CurrentIndex => it.node == null ? throw new InvalidOperationException() : GetIndexFromNode(it.node);
 
 			/// <summary>
 			/// Gets the offset of the current value. Runs in O(lg n).
 			/// </summary>
-			public int CurrentOffset
-			{
-				get
-				{
-					if (it.node == null)
-						throw new InvalidOperationException();
-					return GetOffsetFromNode(it.node);
-				}
-			}
+			public int CurrentOffset => it.node == null ? throw new InvalidOperationException() : GetOffsetFromNode(it.node);
 
-			object System.Collections.IEnumerator.Current
-			{
-				get
-				{
-					return it.Current.lineSegment;
-				}
-			}
+			object System.Collections.IEnumerator.Current => it.Current.lineSegment;
 
 			public void Dispose()
 			{

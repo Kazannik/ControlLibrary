@@ -12,14 +12,15 @@ namespace ControlLibrary.Controls.TextControl.TextEditor
 	/// </summary>
 	public class GutterMargin : AbstractMargin, IDisposable
 	{
-		StringFormat numberStringFormat = (StringFormat)StringFormat.GenericTypographic.Clone();
+		private StringFormat numberStringFormat = (StringFormat)StringFormat.GenericTypographic.Clone();
 
 		public static Cursor RightLeftCursor;
 
 		static GutterMargin()
 		{
-			Stream cursorStream = Assembly.GetCallingAssembly().GetManifestResourceStream("StatLibrary.Resources.RightArrow.cur");
-			if (cursorStream == null) throw new Exception("could not find cursor resource");
+			Stream cursorStream = Assembly
+				.GetCallingAssembly()
+				.GetManifestResourceStream("ControlLibrary.Resources.arrow_r.cur") ?? throw new Exception("could not find cursor resource");
 			RightLeftCursor = new Cursor(cursorStream);
 			cursorStream.Close();
 		}
@@ -29,31 +30,13 @@ namespace ControlLibrary.Controls.TextControl.TextEditor
 			numberStringFormat.Dispose();
 		}
 
-		public override Cursor Cursor
-		{
-			get
-			{
-				return RightLeftCursor;
-			}
-		}
+		public override Cursor Cursor => RightLeftCursor;
 
-		public override Size Size
-		{
-			get
-			{
-				return new Size((int)(textArea.TextView.WideSpaceWidth
+		public override Size Size => new Size((int)(textArea.TextView.WideSpaceWidth
 									  * Math.Max(3, (int)Math.Log10(textArea.Document.TotalNumberOfLines) + 1)),
 								-1);
-			}
-		}
 
-		public override bool IsVisible
-		{
-			get
-			{
-				return textArea.TextEditorProperties.ShowLineNumbers;
-			}
-		}
+		public override bool IsVisible => textArea.TextEditorProperties.ShowLineNumbers;
 
 		public GutterMargin(TextArea textArea) : base(textArea)
 		{
@@ -72,9 +55,9 @@ namespace ControlLibrary.Controls.TextControl.TextEditor
 			int fontHeight = textArea.TextView.FontHeight;
 			Brush fillBrush = textArea.Enabled ? BrushRegistry.GetBrush(lineNumberPainterColor.BackgroundColor) : SystemBrushes.InactiveBorder;
 			Brush drawBrush = BrushRegistry.GetBrush(lineNumberPainterColor.Color);
-			for (int y = 0; y < (DrawingPosition.Height + textArea.TextView.VisibleLineDrawingRemainder) / fontHeight + 1; ++y)
+			for (int y = 0; y < ((DrawingPosition.Height + textArea.TextView.VisibleLineDrawingRemainder) / fontHeight) + 1; ++y)
 			{
-				int ypos = drawingPosition.Y + fontHeight * y - textArea.TextView.VisibleLineDrawingRemainder;
+				int ypos = drawingPosition.Y + (fontHeight * y) - textArea.TextView.VisibleLineDrawingRemainder;
 				Rectangle backgroundRectangle = new Rectangle(drawingPosition.X, ypos, drawingPosition.Width, fontHeight);
 				if (rect.IntersectsWith(backgroundRectangle))
 				{

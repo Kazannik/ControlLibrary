@@ -87,160 +87,96 @@ namespace ControlLibrary.Controls.TextControl.TextEditor.Document
 	/// </summary>
 	internal sealed class DefaultDocument : IDocument
 	{
-		bool readOnly = false;
-
-		LineManager lineTrackingStrategy;
-		BookmarkManager bookmarkManager;
-		ITextBufferStrategy textBufferStrategy;
-		IFormattingStrategy formattingStrategy;
-		FoldingManager foldingManager;
-		readonly UndoStack undoStack = new UndoStack();
-		ITextEditorProperties textEditorProperties = new DefaultTextEditorProperties();
-		MarkerStrategy markerStrategy;
+		private bool readOnly = false;
+		private LineManager lineTrackingStrategy;
+		private BookmarkManager bookmarkManager;
+		private ITextBufferStrategy textBufferStrategy;
+		private IFormattingStrategy formattingStrategy;
+		private FoldingManager foldingManager;
+		private readonly UndoStack undoStack = new UndoStack();
+		private ITextEditorProperties textEditorProperties = new DefaultTextEditorProperties();
+		private MarkerStrategy markerStrategy;
 
 		public LineManager LineManager
 		{
-			get { return lineTrackingStrategy; }
-			set { lineTrackingStrategy = value; }
+			get => lineTrackingStrategy;
+			set => lineTrackingStrategy = value;
 		}
 
 		public event EventHandler<LineLengthChangeEventArgs> LineLengthChanged
 		{
-			add { lineTrackingStrategy.LineLengthChanged += value; }
-			remove { lineTrackingStrategy.LineLengthChanged -= value; }
+			add => lineTrackingStrategy.LineLengthChanged += value;
+			remove => lineTrackingStrategy.LineLengthChanged -= value;
 		}
 		public event EventHandler<LineCountChangeEventArgs> LineCountChanged
 		{
-			add { lineTrackingStrategy.LineCountChanged += value; }
-			remove { lineTrackingStrategy.LineCountChanged -= value; }
+			add => lineTrackingStrategy.LineCountChanged += value;
+			remove => lineTrackingStrategy.LineCountChanged -= value;
 		}
 		public event EventHandler<LineEventArgs> LineDeleted
 		{
-			add { lineTrackingStrategy.LineDeleted += value; }
-			remove { lineTrackingStrategy.LineDeleted -= value; }
+			add => lineTrackingStrategy.LineDeleted += value;
+			remove => lineTrackingStrategy.LineDeleted -= value;
 		}
 
 		public MarkerStrategy MarkerStrategy
 		{
-			get { return markerStrategy; }
-			set { markerStrategy = value; }
+			get => markerStrategy;
+			set => markerStrategy = value;
 		}
 
 		public ITextEditorProperties TextEditorProperties
 		{
-			get
-			{
-				return textEditorProperties;
-			}
-			set
-			{
-				textEditorProperties = value;
-			}
+			get => textEditorProperties;
+			set => textEditorProperties = value;
 		}
 
-		public UndoStack UndoStack
-		{
-			get
-			{
-				return undoStack;
-			}
-		}
+		public UndoStack UndoStack => undoStack;
 
-		public IList<LineSegment> LineSegmentCollection
-		{
-			get
-			{
-				return lineTrackingStrategy.LineSegmentCollection;
-			}
-		}
+		public IList<LineSegment> LineSegmentCollection => lineTrackingStrategy.LineSegmentCollection;
 
 		public bool ReadOnly
 		{
-			get
-			{
-				return readOnly;
-			}
-			set
-			{
-				readOnly = value;
-			}
+			get => readOnly;
+			set => readOnly = value;
 		}
 
 		public ITextBufferStrategy TextBufferStrategy
 		{
-			get
-			{
-				return textBufferStrategy;
-			}
-			set
-			{
-				textBufferStrategy = value;
-			}
+			get => textBufferStrategy;
+			set => textBufferStrategy = value;
 		}
 
 		public IFormattingStrategy FormattingStrategy
 		{
-			get
-			{
-				return formattingStrategy;
-			}
-			set
-			{
-				formattingStrategy = value;
-			}
+			get => formattingStrategy;
+			set => formattingStrategy = value;
 		}
 
 		public FoldingManager FoldingManager
 		{
-			get
-			{
-				return foldingManager;
-			}
-			set
-			{
-				foldingManager = value;
-			}
+			get => foldingManager;
+			set => foldingManager = value;
 		}
 
 		public IHighlightingStrategy HighlightingStrategy
 		{
-			get
-			{
-				return lineTrackingStrategy.HighlightingStrategy;
-			}
-			set
-			{
-				lineTrackingStrategy.HighlightingStrategy = value;
-			}
+			get => lineTrackingStrategy.HighlightingStrategy;
+			set => lineTrackingStrategy.HighlightingStrategy = value;
 		}
 
-		public int TextLength
-		{
-			get
-			{
-				return textBufferStrategy.Length;
-			}
-		}
+		public int TextLength => textBufferStrategy.Length;
 
 		public BookmarkManager BookmarkManager
 		{
-			get
-			{
-				return bookmarkManager;
-			}
-			set
-			{
-				bookmarkManager = value;
-			}
+			get => bookmarkManager;
+			set => bookmarkManager = value;
 		}
 
 
 		public string TextContent
 		{
-			get
-			{
-				return GetText(0, textBufferStrategy.Length);
-			}
+			get => GetText(0, textBufferStrategy.Length);
 			set
 			{
 				Debug.Assert(textBufferStrategy != null);
@@ -318,13 +254,7 @@ namespace ControlLibrary.Controls.TextControl.TextEditor.Document
 			return GetText(segment.Offset, segment.Length);
 		}
 
-		public int TotalNumberOfLines
-		{
-			get
-			{
-				return lineTrackingStrategy.TotalNumberOfLines;
-			}
-		}
+		public int TotalNumberOfLines => lineTrackingStrategy.TotalNumberOfLines;
 
 		public int GetLineNumberForOffset(int offset)
 		{
@@ -432,12 +362,12 @@ namespace ControlLibrary.Controls.TextControl.TextEditor.Document
 			}
 		}
 
-		void OnDocumentAboutToBeChanged(DocumentEventArgs e)
+		private void OnDocumentAboutToBeChanged(DocumentEventArgs e)
 		{
 			DocumentAboutToBeChanged?.Invoke(this, e);
 		}
 
-		void OnDocumentChanged(DocumentEventArgs e)
+		private void OnDocumentChanged(DocumentEventArgs e)
 		{
 			DocumentChanged?.Invoke(this, e);
 		}
@@ -446,15 +376,9 @@ namespace ControlLibrary.Controls.TextControl.TextEditor.Document
 		public event DocumentEventHandler DocumentChanged;
 
 		// UPDATE STUFF
-		readonly List<TextAreaUpdate> updateQueue = new List<TextAreaUpdate>();
+		private readonly List<TextAreaUpdate> updateQueue = new List<TextAreaUpdate>();
 
-		public List<TextAreaUpdate> UpdateQueue
-		{
-			get
-			{
-				return updateQueue;
-			}
-		}
+		public List<TextAreaUpdate> UpdateQueue => updateQueue;
 
 		public void RequestUpdate(TextAreaUpdate update)
 		{
@@ -476,7 +400,7 @@ namespace ControlLibrary.Controls.TextControl.TextEditor.Document
 			UpdateCommited?.Invoke(this, EventArgs.Empty);
 		}
 
-		void OnTextContentChanged(EventArgs e)
+		private void OnTextContentChanged(EventArgs e)
 		{
 			TextContentChanged?.Invoke(this, e);
 		}

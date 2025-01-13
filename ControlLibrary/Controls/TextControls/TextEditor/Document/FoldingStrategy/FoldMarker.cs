@@ -12,13 +12,13 @@ namespace ControlLibrary.Controls.TextControl.TextEditor.Document
 
 	public class FoldMarker : AbstractSegment, IComparable
 	{
-		bool isFolded = false;
-		string foldText = "...";
-		FoldType foldType = FoldType.Unspecified;
-		IDocument document = null;
-		int startLine = -1, startColumn, endLine = -1, endColumn;
+		private bool isFolded = false;
+		private string foldText = "...";
+		private FoldType foldType = FoldType.Unspecified;
+		private IDocument document = null;
+		private int startLine = -1, startColumn, endLine = -1, endColumn;
 
-		static void GetPointForOffset(IDocument document, int offset, out int line, out int column)
+		private static void GetPointForOffset(IDocument document, int offset, out int line, out int column)
 		{
 			if (offset > document.TextLength)
 			{
@@ -39,8 +39,8 @@ namespace ControlLibrary.Controls.TextControl.TextEditor.Document
 
 		public FoldType FoldType
 		{
-			get { return foldType; }
-			set { foldType = value; }
+			get => foldType;
+			set => foldType = value;
 		}
 
 		public int StartLine
@@ -93,7 +93,7 @@ namespace ControlLibrary.Controls.TextControl.TextEditor.Document
 
 		public override int Offset
 		{
-			get { return base.Offset; }
+			get => base.Offset;
 			set
 			{
 				base.Offset = value;
@@ -102,7 +102,7 @@ namespace ControlLibrary.Controls.TextControl.TextEditor.Document
 		}
 		public override int Length
 		{
-			get { return base.Length; }
+			get => base.Length;
 			set
 			{
 				base.Length = value;
@@ -112,31 +112,13 @@ namespace ControlLibrary.Controls.TextControl.TextEditor.Document
 
 		public bool IsFolded
 		{
-			get
-			{
-				return isFolded;
-			}
-			set
-			{
-				isFolded = value;
-			}
+			get => isFolded;
+			set => isFolded = value;
 		}
 
-		public string FoldText
-		{
-			get
-			{
-				return foldText;
-			}
-		}
+		public string FoldText => foldText;
 
-		public string InnerText
-		{
-			get
-			{
-				return document.GetText(offset, length);
-			}
-		}
+		public string InnerText => document.GetText(offset, length);
 
 		public FoldMarker(IDocument document, int offset, int length, string foldText, bool isFolded)
 		{
@@ -178,7 +160,7 @@ namespace ControlLibrary.Controls.TextControl.TextEditor.Document
 			this.FoldType = foldType;
 			this.foldText = foldText;
 			this.offset = startLineSegment.Offset + Math.Min(startColumn, startLineSegment.Length);
-			this.length = (endLineSegment.Offset + Math.Min(endColumn, endLineSegment.Length)) - this.offset;
+			this.length = endLineSegment.Offset + Math.Min(endColumn, endLineSegment.Length) - this.offset;
 			this.isFolded = isFolded;
 		}
 
@@ -189,12 +171,7 @@ namespace ControlLibrary.Controls.TextControl.TextEditor.Document
 				throw new ArgumentException();
 			}
 			FoldMarker f = (FoldMarker)o;
-			if (offset != f.offset)
-			{
-				return offset.CompareTo(f.offset);
-			}
-
-			return length.CompareTo(f.length);
+			return offset != f.offset ? offset.CompareTo(f.offset) : length.CompareTo(f.length);
 		}
 	}
 }

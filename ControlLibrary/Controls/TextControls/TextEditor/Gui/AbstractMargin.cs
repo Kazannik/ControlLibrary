@@ -13,7 +13,7 @@ namespace ControlLibrary.Controls.TextControl.TextEditor
 	/// </summary>
 	public abstract class AbstractMargin
 	{
-		Cursor cursor = Cursors.Default;
+		private Cursor cursor = Cursors.Default;
 
 		//[CLSCompliant(false)]
 		protected Rectangle drawingPosition = new Rectangle(0, 0, 0, 0);
@@ -22,67 +22,25 @@ namespace ControlLibrary.Controls.TextControl.TextEditor
 
 		public Rectangle DrawingPosition
 		{
-			get
-			{
-				return drawingPosition;
-			}
-			set
-			{
-				drawingPosition = value;
-			}
+			get => drawingPosition;
+			set => drawingPosition = value;
 		}
 
-		public TextArea TextArea
-		{
-			get
-			{
-				return textArea;
-			}
-		}
+		public TextArea TextArea => textArea;
 
-		public IDocument Document
-		{
-			get
-			{
-				return textArea.Document;
-			}
-		}
+		public IDocument Document => textArea.Document;
 
-		public ITextEditorProperties TextEditorProperties
-		{
-			get
-			{
-				return textArea.Document.TextEditorProperties;
-			}
-		}
+		public ITextEditorProperties TextEditorProperties => textArea.Document.TextEditorProperties;
 
 		public virtual Cursor Cursor
 		{
-			get
-			{
-				return cursor;
-			}
-			set
-			{
-				cursor = value;
-			}
+			get => cursor;
+			set => cursor = value;
 		}
 
-		public virtual Size Size
-		{
-			get
-			{
-				return new Size(-1, -1);
-			}
-		}
+		public virtual Size Size => new Size(-1, -1);
 
-		public virtual bool IsVisible
-		{
-			get
-			{
-				return true;
-			}
-		}
+		public virtual bool IsVisible => true;
 
 		protected AbstractMargin(TextArea textArea)
 		{

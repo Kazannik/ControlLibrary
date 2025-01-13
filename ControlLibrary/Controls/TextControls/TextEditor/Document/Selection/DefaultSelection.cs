@@ -8,17 +8,14 @@ namespace ControlLibrary.Controls.TextControl.TextEditor.Document
 	/// </summary>
 	public class DefaultSelection : ISelection
 	{
-		IDocument document;
-		bool isRectangularSelection;
-		TextLocation startPosition;
-		TextLocation endPosition;
+		private IDocument document;
+		private bool isRectangularSelection;
+		private TextLocation startPosition;
+		private TextLocation endPosition;
 
 		public TextLocation StartPosition
 		{
-			get
-			{
-				return startPosition;
-			}
+			get => startPosition;
 			set
 			{
 				DefaultDocument.ValidatePosition(document, value);
@@ -28,10 +25,7 @@ namespace ControlLibrary.Controls.TextControl.TextEditor.Document
 
 		public TextLocation EndPosition
 		{
-			get
-			{
-				return endPosition;
-			}
+			get => endPosition;
 			set
 			{
 				DefaultDocument.ValidatePosition(document, value);
@@ -39,40 +33,16 @@ namespace ControlLibrary.Controls.TextControl.TextEditor.Document
 			}
 		}
 
-		public int Offset
-		{
-			get
-			{
-				return document.PositionToOffset(startPosition);
-			}
-		}
+		public int Offset => document.PositionToOffset(startPosition);
 
-		public int EndOffset
-		{
-			get
-			{
-				return document.PositionToOffset(endPosition);
-			}
-		}
+		public int EndOffset => document.PositionToOffset(endPosition);
 
-		public int Length
-		{
-			get
-			{
-				return EndOffset - Offset;
-			}
-		}
+		public int Length => EndOffset - Offset;
 
 		/// <value>
 		/// Returns true, if the selection is empty
 		/// </value>
-		public bool IsEmpty
-		{
-			get
-			{
-				return startPosition == endPosition;
-			}
-		}
+		public bool IsEmpty => startPosition == endPosition;
 
 		/// <value>
 		/// Returns true, if the selection is rectangular
@@ -80,34 +50,14 @@ namespace ControlLibrary.Controls.TextControl.TextEditor.Document
 		// TODO : make this unused property used.
 		public bool IsRectangularSelection
 		{
-			get
-			{
-				return isRectangularSelection;
-			}
-			set
-			{
-				isRectangularSelection = value;
-			}
+			get => isRectangularSelection;
+			set => isRectangularSelection = value;
 		}
 
 		/// <value>
 		/// The text which is selected by this selection.
 		/// </value>
-		public string SelectedText
-		{
-			get
-			{
-				if (document != null)
-				{
-					if (Length < 0)
-					{
-						return null;
-					}
-					return document.GetText(Offset, Length);
-				}
-				return null;
-			}
-		}
+		public string SelectedText => document != null ? Length < 0 ? null : document.GetText(Offset, Length) : null;
 
 		/// <summary>
 		/// Creates a new instance of <see cref="DefaultSelection"/>
@@ -131,11 +81,11 @@ namespace ControlLibrary.Controls.TextControl.TextEditor.Document
 		}
 		public bool ContainsPosition(TextLocation position)
 		{
-			if (this.IsEmpty)
-				return false;
-			return startPosition.Y < position.Y && position.Y < endPosition.Y ||
-				startPosition.Y == position.Y && startPosition.X <= position.X && (startPosition.Y != endPosition.Y || position.X <= endPosition.X) ||
-				endPosition.Y == position.Y && startPosition.Y != endPosition.Y && position.X <= endPosition.X;
+			return this.IsEmpty
+				? false
+				: (startPosition.Y < position.Y && position.Y < endPosition.Y) ||
+				(startPosition.Y == position.Y && startPosition.X <= position.X && (startPosition.Y != endPosition.Y || position.X <= endPosition.X)) ||
+				(endPosition.Y == position.Y && startPosition.Y != endPosition.Y && position.X <= endPosition.X);
 		}
 
 		public bool ContainsOffset(int offset)

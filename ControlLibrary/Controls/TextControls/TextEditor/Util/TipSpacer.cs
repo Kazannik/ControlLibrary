@@ -3,9 +3,9 @@ using System.Drawing;
 
 namespace ControlLibrary.Controls.TextControl.TextEditor.Util
 {
-	class TipSpacer : TipSection
+	internal class TipSpacer : TipSection
 	{
-		SizeF spacerSize;
+		private SizeF spacerSize;
 
 		public TipSpacer(Graphics graphics, SizeF size) : base(graphics)
 		{

@@ -4,12 +4,12 @@ using System.Drawing;
 
 namespace ControlLibrary.Controls.TextControl.TextEditor.Util
 {
-	abstract class TipSection
+	internal abstract class TipSection
 	{
-		SizeF tipAllocatedSize;
-		Graphics tipGraphics;
-		SizeF tipMaxSize;
-		SizeF tipRequiredSize;
+		private SizeF tipAllocatedSize;
+		private Graphics tipGraphics;
+		private SizeF tipMaxSize;
+		private SizeF tipRequiredSize;
 
 		protected TipSection(Graphics graphics)
 		{
@@ -56,28 +56,10 @@ namespace ControlLibrary.Controls.TextControl.TextEditor.Util
 			tipRequiredSize = requiredSize;
 		}
 
-		protected Graphics Graphics
-		{
-			get
-			{
-				return tipGraphics;
-			}
-		}
+		protected Graphics Graphics => tipGraphics;
 
-		protected SizeF AllocatedSize
-		{
-			get
-			{
-				return tipAllocatedSize;
-			}
-		}
+		protected SizeF AllocatedSize => tipAllocatedSize;
 
-		protected SizeF MaximumSize
-		{
-			get
-			{
-				return tipMaxSize;
-			}
-		}
+		protected SizeF MaximumSize => tipMaxSize;
 	}
 }

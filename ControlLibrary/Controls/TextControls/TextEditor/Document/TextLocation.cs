@@ -19,39 +19,33 @@ namespace ControlLibrary.Controls.TextControl.TextEditor
 			y = line;
 		}
 
-		int x, y;
+		private int x, y;
 
 		public int X
 		{
-			get { return x; }
-			set { x = value; }
+			get => x;
+			set => x = value;
 		}
 
 		public int Y
 		{
-			get { return y; }
-			set { y = value; }
+			get => y;
+			set => y = value;
 		}
 
 		public int Line
 		{
-			get { return y; }
-			set { y = value; }
+			get => y;
+			set => y = value;
 		}
 
 		public int Column
 		{
-			get { return x; }
-			set { x = value; }
+			get => x;
+			set => x = value;
 		}
 
-		public bool IsEmpty
-		{
-			get
-			{
-				return x <= 0 && y <= 0;
-			}
-		}
+		public bool IsEmpty => x <= 0 && y <= 0;
 
 		public override string ToString()
 		{
@@ -60,13 +54,12 @@ namespace ControlLibrary.Controls.TextControl.TextEditor
 
 		public override int GetHashCode()
 		{
-			return unchecked(87 * x.GetHashCode() ^ y.GetHashCode());
+			return unchecked((87 * x.GetHashCode()) ^ y.GetHashCode());
 		}
 
 		public override bool Equals(object obj)
 		{
-			if (!(obj is TextLocation)) return false;
-			return (TextLocation)obj == this;
+			return !(obj is TextLocation) ? false : (TextLocation)obj == this;
 		}
 
 		public bool Equals(TextLocation other)
@@ -86,22 +79,12 @@ namespace ControlLibrary.Controls.TextControl.TextEditor
 
 		public static bool operator <(TextLocation a, TextLocation b)
 		{
-			if (a.y < b.y)
-				return true;
-			else if (a.y == b.y)
-				return a.x < b.x;
-			else
-				return false;
+			return a.y < b.y ? true : a.y == b.y ? a.x < b.x : false;
 		}
 
 		public static bool operator >(TextLocation a, TextLocation b)
 		{
-			if (a.y > b.y)
-				return true;
-			else if (a.y == b.y)
-				return a.x > b.x;
-			else
-				return false;
+			return a.y > b.y ? true : a.y == b.y ? a.x > b.x : false;
 		}
 
 		public static bool operator <=(TextLocation a, TextLocation b)
@@ -116,12 +99,7 @@ namespace ControlLibrary.Controls.TextControl.TextEditor
 
 		public int CompareTo(TextLocation other)
 		{
-			if (this == other)
-				return 0;
-			if (this < other)
-				return -1;
-			else
-				return 1;
+			return this == other ? 0 : this < other ? -1 : 1;
 		}
 	}
 }

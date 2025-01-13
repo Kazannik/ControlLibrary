@@ -5,6 +5,7 @@ using System.IO;
 using static ControlLibrary.Controls.QRCoder.Base64QRCode;
 using static ControlLibrary.Controls.QRCoder.QRCodeGenerator;
 
+
 namespace ControlLibrary.Controls.QRCoder
 {
 	public class Base64QRCode : AbstractQRCode, IDisposable

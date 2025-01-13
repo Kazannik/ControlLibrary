@@ -7,35 +7,21 @@ namespace ControlLibrary.Controls.TextControl.TextEditor.Document
 {
 	public class DefaultHighlightingStrategy : IHighlightingStrategyUsingRuleSets
 	{
-		string name;
-		List<HighlightRuleSet> rules = new List<HighlightRuleSet>();
-
-		Dictionary<string, HighlightColor> environmentColors = new Dictionary<string, HighlightColor>();
-		Dictionary<string, string> properties = new Dictionary<string, string>();
-		string[] extensions;
-
-		HighlightColor digitColor;
-		HighlightRuleSet defaultRuleSet = null;
+		private string name;
+		private List<HighlightRuleSet> rules = new List<HighlightRuleSet>();
+		private Dictionary<string, HighlightColor> environmentColors = new Dictionary<string, HighlightColor>();
+		private Dictionary<string, string> properties = new Dictionary<string, string>();
+		private string[] extensions;
+		private HighlightColor digitColor;
+		private HighlightRuleSet defaultRuleSet = null;
 
 		public HighlightColor DigitColor
 		{
-			get
-			{
-				return digitColor;
-			}
-			set
-			{
-				digitColor = value;
-			}
+			get => digitColor;
+			set => digitColor = value;
 		}
 
-		public IEnumerable<KeyValuePair<string, HighlightColor>> EnvironmentColors
-		{
-			get
-			{
-				return environmentColors;
-			}
-		}
+		public IEnumerable<KeyValuePair<string, HighlightColor>> EnvironmentColors => environmentColors;
 
 		protected void ImportSettingsFrom(DefaultHighlightingStrategy source)
 		{
@@ -80,41 +66,17 @@ namespace ControlLibrary.Controls.TextControl.TextEditor.Document
 
 		}
 
-		public Dictionary<string, string> Properties
-		{
-			get
-			{
-				return properties;
-			}
-		}
+		public Dictionary<string, string> Properties => properties;
 
-		public string Name
-		{
-			get
-			{
-				return name;
-			}
-		}
+		public string Name => name;
 
 		public string[] Extensions
 		{
-			set
-			{
-				extensions = value;
-			}
-			get
-			{
-				return extensions;
-			}
+			set => extensions = value;
+			get => extensions;
 		}
 
-		public List<HighlightRuleSet> Rules
-		{
-			get
-			{
-				return rules;
-			}
-		}
+		public List<HighlightRuleSet> Rules => rules;
 
 		public HighlightRuleSet FindHighlightRuleSet(string name)
 		{
@@ -149,7 +111,7 @@ namespace ControlLibrary.Controls.TextControl.TextEditor.Document
 			ResolveExternalReferences();
 		}
 
-		void ResolveRuleSetReferences()
+		private void ResolveRuleSetReferences()
 		{
 			foreach (HighlightRuleSet ruleSet in Rules)
 			{
@@ -191,7 +153,7 @@ namespace ControlLibrary.Controls.TextControl.TextEditor.Document
 			}
 		}
 
-		void ResolveExternalReferences()
+		private void ResolveExternalReferences()
 		{
 			foreach (HighlightRuleSet ruleSet in Rules)
 			{
@@ -202,10 +164,9 @@ namespace ControlLibrary.Controls.TextControl.TextEditor.Document
 
 					if (highlighter == null)
 						throw new HighlightingDefinitionInvalidException("The mode defintion " + ruleSet.Reference + " which is refered from the " + this.Name + " mode definition could not be found");
-					if (highlighter is IHighlightingStrategyUsingRuleSets)
-						ruleSet.Highlighter = (IHighlightingStrategyUsingRuleSets)highlighter;
-					else
-						throw new HighlightingDefinitionInvalidException("The mode defintion " + ruleSet.Reference + " which is refered from the " + this.Name + " mode definition does not implement IHighlightingStrategyUsingRuleSets");
+					ruleSet.Highlighter = highlighter is IHighlightingStrategyUsingRuleSets
+						? (IHighlightingStrategyUsingRuleSets)highlighter
+						: throw new HighlightingDefinitionInvalidException("The mode defintion " + ruleSet.Reference + " which is refered from the " + this.Name + " mode definition does not implement IHighlightingStrategyUsingRuleSets");
 				}
 			}
 		}
@@ -216,15 +177,9 @@ namespace ControlLibrary.Controls.TextControl.TextEditor.Document
 		//			defaultColor = color;
 		//		}
 
-		HighlightColor defaultTextColor;
+		private HighlightColor defaultTextColor;
 
-		public HighlightColor DefaultTextColor
-		{
-			get
-			{
-				return defaultTextColor;
-			}
-		}
+		public HighlightColor DefaultTextColor => defaultTextColor;
 
 		public void SetColorFor(string name, HighlightColor color)
 		{
@@ -236,10 +191,7 @@ namespace ControlLibrary.Controls.TextControl.TextEditor.Document
 		public HighlightColor GetColorFor(string name)
 		{
 			HighlightColor color;
-			if (environmentColors.TryGetValue(name, out color))
-				return color;
-			else
-				return defaultTextColor;
+			return environmentColors.TryGetValue(name, out color) ? color : defaultTextColor;
 		}
 
 		public HighlightColor GetColor(IDocument document, LineSegment currentSegment, int currentOffset, int currentLength)
@@ -249,44 +201,18 @@ namespace ControlLibrary.Controls.TextControl.TextEditor.Document
 
 		protected virtual HighlightColor GetColor(HighlightRuleSet ruleSet, IDocument document, LineSegment currentSegment, int currentOffset, int currentLength)
 		{
-			if (ruleSet != null)
-			{
-				if (ruleSet.Reference != null)
-				{
-					return ruleSet.Highlighter.GetColor(document, currentSegment, currentOffset, currentLength);
-				}
-				else
-				{
-					return (HighlightColor)ruleSet.KeyWords[document, currentSegment, currentOffset, currentLength];
-				}
-			}
-			return null;
+			return ruleSet != null
+				? ruleSet.Reference != null
+					? ruleSet.Highlighter.GetColor(document, currentSegment, currentOffset, currentLength)
+					: (HighlightColor)ruleSet.KeyWords[document, currentSegment, currentOffset, currentLength]
+				: null;
 		}
 
 		public HighlightRuleSet GetRuleSet(Span aSpan)
 		{
-			if (aSpan == null)
-			{
-				return this.defaultRuleSet;
-			}
-			else
-			{
-				if (aSpan.RuleSet != null)
-				{
-					if (aSpan.RuleSet.Reference != null)
-					{
-						return aSpan.RuleSet.Highlighter.GetRuleSet(null);
-					}
-					else
-					{
-						return aSpan.RuleSet;
-					}
-				}
-				else
-				{
-					return null;
-				}
-			}
+			return aSpan == null
+				? this.defaultRuleSet
+				: aSpan.RuleSet != null ? aSpan.RuleSet.Reference != null ? aSpan.RuleSet.Highlighter.GetRuleSet(null) : aSpan.RuleSet : null;
 		}
 
 		// Line state variable
@@ -307,13 +233,13 @@ namespace ControlLibrary.Controls.TextControl.TextEditor.Document
 
 			while (lineNumber < document.TotalNumberOfLines)
 			{
-				LineSegment previousLine = (lineNumber > 0 ? document.GetLineSegment(lineNumber - 1) : null);
+				LineSegment previousLine = lineNumber > 0 ? document.GetLineSegment(lineNumber - 1) : null;
 				if (lineNumber >= document.LineSegmentCollection.Count)
 				{ // may be, if the last line ends with a delimiter
 					break;                                                // then the last line is not in the collection :)
 				}
 
-				currentSpanStack = ((previousLine != null && previousLine.HighlightSpanStack != null) ? previousLine.HighlightSpanStack.Clone() : null);
+				currentSpanStack = (previousLine != null && previousLine.HighlightSpanStack != null) ? previousLine.HighlightSpanStack.Clone() : null;
 
 				if (currentSpanStack != null)
 				{
@@ -348,13 +274,13 @@ namespace ControlLibrary.Controls.TextControl.TextEditor.Document
 			currentLine = null;
 		}
 
-		bool MarkTokensInLine(IDocument document, int lineNumber, ref bool spanChanged)
+		private bool MarkTokensInLine(IDocument document, int lineNumber, ref bool spanChanged)
 		{
 			currentLineNumber = lineNumber;
 			bool processNextLine = false;
-			LineSegment previousLine = (lineNumber > 0 ? document.GetLineSegment(lineNumber - 1) : null);
+			LineSegment previousLine = lineNumber > 0 ? document.GetLineSegment(lineNumber - 1) : null;
 
-			currentSpanStack = ((previousLine != null && previousLine.HighlightSpanStack != null) ? previousLine.HighlightSpanStack.Clone() : null);
+			currentSpanStack = (previousLine != null && previousLine.HighlightSpanStack != null) ? previousLine.HighlightSpanStack.Clone() : null;
 			if (currentSpanStack != null)
 			{
 				while (!currentSpanStack.IsEmpty && currentSpanStack.Peek().StopEOL)
@@ -538,14 +464,14 @@ namespace ControlLibrary.Controls.TextControl.TextEditor.Document
 		protected int currentOffset;
 		protected int currentLength;
 
-		void UpdateSpanStateVariables()
+		private void UpdateSpanStateVariables()
 		{
-			inSpan = (currentSpanStack != null && !currentSpanStack.IsEmpty);
+			inSpan = currentSpanStack != null && !currentSpanStack.IsEmpty;
 			activeSpan = inSpan ? currentSpanStack.Peek() : null;
 			activeRuleSet = GetRuleSet(activeSpan);
 		}
 
-		List<TextWord> ParseLine(IDocument document)
+		private List<TextWord> ParseLine(IDocument document)
 		{
 			List<TextWord> words = new List<TextWord>();
 			HighlightColor markNext = null;
@@ -825,7 +751,7 @@ namespace ControlLibrary.Controls.TextControl.TextEditor.Document
 		/// pushes the curWord string on the word list, with the
 		/// correct color.
 		/// </summary>
-		void PushCurWord(IDocument document, ref HighlightColor markNext, List<TextWord> words)
+		private void PushCurWord(IDocument document, ref HighlightColor markNext, List<TextWord> words)
 		{
 			// Svante Lidman : Need to look through the next prev logic.
 			if (currentLength > 0)
@@ -878,11 +804,11 @@ namespace ControlLibrary.Controls.TextControl.TextEditor.Document
 						}
 						hasDefaultColor = true;
 					}
-					words.Add(new TextWord(document, currentLine, currentOffset, currentLength, markNext != null ? markNext : c, hasDefaultColor));
+					words.Add(new TextWord(document, currentLine, currentOffset, currentLength, markNext ?? c, hasDefaultColor));
 				}
 				else
 				{
-					HighlightColor c = markNext != null ? markNext : GetColor(activeRuleSet, document, currentLine, currentOffset, currentLength);
+					HighlightColor c = markNext ?? GetColor(activeRuleSet, document, currentLine, currentOffset, currentLength);
 					if (c == null)
 					{
 						words.Add(new TextWord(document, currentLine, currentOffset, currentLength, this.DefaultTextColor, true));
@@ -900,7 +826,7 @@ namespace ControlLibrary.Controls.TextControl.TextEditor.Document
 					{
 						if (nextMarker.MarkMarker && words.Count > 0)
 						{
-							TextWord prevword = ((TextWord)words[words.Count - 1]);
+							TextWord prevword = (TextWord)words[words.Count - 1];
 							prevword.SyntaxColor = nextMarker.Color;
 						}
 						markNext = nextMarker.Color;
@@ -920,7 +846,7 @@ namespace ControlLibrary.Controls.TextControl.TextEditor.Document
 		/// get the string, which matches the regular expression expr,
 		/// in string s2 at index
 		/// </summary>
-		static string GetRegString(LineSegment lineSegment, char[] expr, int index, IDocument document)
+		private static string GetRegString(LineSegment lineSegment, char[] expr, int index, IDocument document)
 		{
 			int j = 0;
 			StringBuilder regexpr = new StringBuilder();
@@ -966,7 +892,7 @@ namespace ControlLibrary.Controls.TextControl.TextEditor.Document
 		/// <summary>
 		/// returns true, if the get the string s2 at index matches the expression expr
 		/// </summary>
-		static bool MatchExpr(LineSegment lineSegment, char[] expr, int index, IDocument document, bool ignoreCase)
+		private static bool MatchExpr(LineSegment lineSegment, char[] expr, int index, IDocument document, bool ignoreCase)
 		{
 			for (int i = 0, j = 0; i < expr.Length; ++i, ++j)
 			{

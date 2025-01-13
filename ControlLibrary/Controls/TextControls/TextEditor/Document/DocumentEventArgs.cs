@@ -13,53 +13,29 @@ namespace ControlLibrary.Controls.TextControl.TextEditor.Document
 	public class DocumentEventArgs : EventArgs
 	{
 		private readonly IDocument document;
-		int offset;
-		int length;
-		string text;
+		private int offset;
+		private int length;
+		private string text;
 
 		/// <returns>
 		/// always a valid Document which is related to the Event.
 		/// </returns>
-		public IDocument Document
-		{
-			get
-			{
-				return document;
-			}
-		}
+		public IDocument Document => document;
 
 		/// <returns>
 		/// -1 if no offset was specified for this event
 		/// </returns>
-		public int Offset
-		{
-			get
-			{
-				return offset;
-			}
-		}
+		public int Offset => offset;
 
 		/// <returns>
 		/// null if no text was specified for this event
 		/// </returns>
-		public string Text
-		{
-			get
-			{
-				return text;
-			}
-		}
+		public string Text => text;
 
 		/// <returns>
 		/// -1 if no length was specified for this event
 		/// </returns>
-		public int Length
-		{
-			get
-			{
-				return length;
-			}
-		}
+		public int Length => length;
 
 		/// <summary>
 		/// Creates a new instance off <see cref="DocumentEventArgs"/>

@@ -10,19 +10,20 @@ namespace ControlLibrary.Controls.TextControl.TextEditor.Document
 	/// </summary>
 	public class SelectionManager : IDisposable
 	{
-		TextLocation selectionStart;
+		private TextLocation selectionStart;
 
 		internal TextLocation SelectionStart
 		{
-			get { return selectionStart; }
+			get => selectionStart;
 			set
 			{
 				DefaultDocument.ValidatePosition(document, value);
 				selectionStart = value;
 			}
 		}
-		IDocument document;
-		TextArea textArea;
+
+		private IDocument document;
+		private TextArea textArea;
 		internal SelectFrom selectFrom = new SelectFrom();
 
 		internal List<ISelection> selectionCollection = new List<ISelection>();
@@ -30,24 +31,12 @@ namespace ControlLibrary.Controls.TextControl.TextEditor.Document
 		/// <value>
 		/// A collection containing all selections.
 		/// </value>
-		public List<ISelection> SelectionCollection
-		{
-			get
-			{
-				return selectionCollection;
-			}
-		}
+		public List<ISelection> SelectionCollection => selectionCollection;
 
 		/// <value>
 		/// true if the <see cref="SelectionCollection"/> is not empty, false otherwise.
 		/// </value>
-		public bool HasSomethingSelected
-		{
-			get
-			{
-				return selectionCollection.Count > 0;
-			}
-		}
+		public bool HasSomethingSelected => selectionCollection.Count > 0;
 
 		public bool SelectionIsReadonly
 		{
@@ -66,10 +55,9 @@ namespace ControlLibrary.Controls.TextControl.TextEditor.Document
 
 		internal static bool SelectionIsReadOnly(IDocument document, ISelection sel)
 		{
-			if (document.TextEditorProperties.SupportReadOnlySegments)
-				return document.MarkerStrategy.GetMarkers(sel.Offset, sel.Length).Exists(m => m.IsReadOnly);
-			else
-				return false;
+			return document.TextEditorProperties.SupportReadOnlySegments
+				? document.MarkerStrategy.GetMarkers(sel.Offset, sel.Length).Exists(m => m.IsReadOnly)
+				: false;
 		}
 
 		/// <value>
@@ -126,7 +114,7 @@ namespace ControlLibrary.Controls.TextControl.TextEditor.Document
 			}
 		}
 
-		void DocumentChanged(object sender, DocumentEventArgs e)
+		private void DocumentChanged(object sender, DocumentEventArgs e)
 		{
 			if (e.Text == null)
 			{
@@ -179,7 +167,7 @@ namespace ControlLibrary.Controls.TextControl.TextEditor.Document
 
 		public bool GreaterEqPos(TextLocation p1, TextLocation p2)
 		{
-			return p1.Y > p2.Y || p1.Y == p2.Y && p1.X >= p2.X;
+			return p1.Y > p2.Y || (p1.Y == p2.Y && p1.X >= p2.X);
 		}
 
 		public void ExtendSelection(TextLocation oldPosition, TextLocation newPosition)
@@ -274,13 +262,12 @@ namespace ControlLibrary.Controls.TextControl.TextEditor.Document
 		// - if there are NOT then the last position on the given line is returned
 		public TextLocation NextValidPosition(int line)
 		{
-			if (line < document.TotalNumberOfLines - 1)
-				return new TextLocation(0, line + 1);
-			else
-				return new TextLocation(document.GetLineSegment(document.TotalNumberOfLines - 1).Length + 1, line);
+			return line < document.TotalNumberOfLines - 1
+				? new TextLocation(0, line + 1)
+				: new TextLocation(document.GetLineSegment(document.TotalNumberOfLines - 1).Length + 1, line);
 		}
 
-		void ClearWithoutUpdate()
+		private void ClearWithoutUpdate()
 		{
 			while (selectionCollection.Count > 0)
 			{
@@ -375,8 +362,7 @@ namespace ControlLibrary.Controls.TextControl.TextEditor.Document
 			}
 		}
 
-
-		bool SelectionsOverlap(ISelection s1, ISelection s2)
+		private bool SelectionsOverlap(ISelection s1, ISelection s2)
 		{
 			return (s1.Offset <= s2.Offset && s2.Offset <= s1.Offset + s1.Length) ||
 				(s1.Offset <= s2.Offset + s2.Length && s2.Offset + s2.Length <= s1.Offset + s1.Length) ||
@@ -488,10 +474,7 @@ namespace ControlLibrary.Controls.TextControl.TextEditor.Document
 		}
 		protected virtual void OnSelectionChanged(EventArgs e)
 		{
-			if (SelectionChanged != null)
-			{
-				SelectionChanged(this, e);
-			}
+			SelectionChanged?.Invoke(this, e);
 		}
 
 		public event EventHandler SelectionChanged;

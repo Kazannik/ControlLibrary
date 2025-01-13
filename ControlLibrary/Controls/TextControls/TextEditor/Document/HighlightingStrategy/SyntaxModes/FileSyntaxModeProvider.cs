@@ -7,16 +7,10 @@ namespace ControlLibrary.Controls.TextControl.TextEditor.Document
 {
 	public class FileSyntaxModeProvider : ISyntaxModeFileProvider
 	{
-		string directory;
-		List<SyntaxMode> syntaxModes = null;
+		private string directory;
+		private List<SyntaxMode> syntaxModes = null;
 
-		public ICollection<SyntaxMode> SyntaxModes
-		{
-			get
-			{
-				return syntaxModes;
-			}
-		}
+		public ICollection<SyntaxMode> SyntaxModes => syntaxModes;
 
 		public FileSyntaxModeProvider(string directory)
 		{
@@ -42,14 +36,12 @@ namespace ControlLibrary.Controls.TextControl.TextEditor.Document
 		public XmlTextReader GetSyntaxModeFile(SyntaxMode syntaxMode)
 		{
 			string syntaxModeFile = Path.Combine(directory, syntaxMode.FileName);
-			if (!File.Exists(syntaxModeFile))
-			{
-				throw new HighlightingDefinitionInvalidException("Can't load highlighting definition " + syntaxModeFile + " (file not found)!");
-			}
-			return new XmlTextReader(File.OpenRead(syntaxModeFile));
+			return !File.Exists(syntaxModeFile)
+				? throw new HighlightingDefinitionInvalidException("Can't load highlighting definition " + syntaxModeFile + " (file not found)!")
+				: new XmlTextReader(File.OpenRead(syntaxModeFile));
 		}
 
-		List<SyntaxMode> ScanDirectory(string directory)
+		private List<SyntaxMode> ScanDirectory(string directory)
 		{
 			string[] files = Directory.GetFiles(directory);
 			List<SyntaxMode> modes = new List<SyntaxMode>();

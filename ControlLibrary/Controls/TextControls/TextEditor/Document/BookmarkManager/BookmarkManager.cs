@@ -25,21 +25,9 @@ namespace ControlLibrary.Controls.TextControl.TextEditor.Document
 		/// <value>
 		/// Contains all bookmarks
 		/// </value>
-		public ReadOnlyCollection<Bookmark> Marks
-		{
-			get
-			{
-				return new ReadOnlyCollection<Bookmark>(bookmark);
-			}
-		}
+		public ReadOnlyCollection<Bookmark> Marks => new ReadOnlyCollection<Bookmark>(bookmark);
 
-		public IDocument Document
-		{
-			get
-			{
-				return document;
-			}
-		}
+		public IDocument Document => document;
 
 		/// <summary>
 		/// Creates a new instance of <see cref="BookmarkManager"/>
@@ -60,16 +48,7 @@ namespace ControlLibrary.Controls.TextControl.TextEditor.Document
 		/// </summary>
 		public void ToggleMarkAt(TextLocation location)
 		{
-			Bookmark newMark;
-			if (Factory != null)
-			{
-				newMark = Factory.CreateBookmark(document, location);
-			}
-			else
-			{
-				newMark = new Bookmark(document, location);
-			}
-
+			Bookmark newMark = Factory != null ? Factory.CreateBookmark(document, location) : new Bookmark(document, location);
 			Type newMarkType = newMark.GetType();
 
 			for (int i = 0; i < bookmark.Count; ++i)
@@ -179,7 +158,8 @@ namespace ControlLibrary.Controls.TextControl.TextEditor.Document
 			}
 			return last;
 		}
-		bool AcceptAnyMarkPredicate(Bookmark mark)
+
+		private bool AcceptAnyMarkPredicate(Bookmark mark)
 		{
 			return true;
 		}

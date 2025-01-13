@@ -1,14 +1,7 @@
-﻿using ControlLibrary.Controls.TextControl.TextEditor.Gui.CompletionWindow;
-using ControlLibrary.Utils;
-using System;
-using System.Collections.Generic;
+﻿using System;
 using System.ComponentModel;
 using System.Drawing;
-using System.Drawing.Drawing2D;
-using System.Linq;
 using System.Runtime.InteropServices;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows.Forms;
 
 namespace ControlLibrary.Controls.RatingControls
@@ -19,7 +12,6 @@ namespace ControlLibrary.Controls.RatingControls
 	public class RatingControl : Control
 	{
 		private IContainer components = null;
-
 
 		public RatingControl()
 		{
@@ -41,8 +33,6 @@ namespace ControlLibrary.Controls.RatingControls
 		{
 			base.OnPaint(e);
 			Utils.Drawing.DrawStar(e.Graphics, Color.Black, Color.Cyan, 100, e.ClipRectangle);
-
-
 		}
 
 
@@ -55,7 +45,6 @@ namespace ControlLibrary.Controls.RatingControls
 			// Controls
 			// 
 			this.ResumeLayout(false);
-
 		}
 
 		protected override void Dispose(bool disposing)

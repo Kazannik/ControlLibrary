@@ -7,7 +7,7 @@ namespace ControlLibrary.Controls.TextControl.TextEditor.Actions
 	public abstract class AbstractLineFormatAction : AbstractEditAction
 	{
 		protected TextArea textArea;
-		abstract protected void Convert(IDocument document, int startLine, int endLine);
+		protected abstract void Convert(IDocument document, int startLine, int endLine);
 
 		public override void Execute(TextArea textArea)
 		{
@@ -39,7 +39,7 @@ namespace ControlLibrary.Controls.TextControl.TextEditor.Actions
 	public abstract class AbstractSelectionFormatAction : AbstractEditAction
 	{
 		protected TextArea textArea;
-		abstract protected void Convert(IDocument document, int offset, int length);
+		protected abstract void Convert(IDocument document, int offset, int length);
 
 		public override void Execute(TextArea textArea)
 		{
@@ -105,7 +105,6 @@ namespace ControlLibrary.Controls.TextControl.TextEditor.Actions
 			}
 		}
 	}
-
 
 	public class ToUpperCase : AbstractSelectionFormatAction
 	{

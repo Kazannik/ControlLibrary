@@ -362,8 +362,8 @@ namespace ControlLibrary.Controls.QRCoder
 				{
 					for (var y = 0; y < 3; y++)
 					{
-						qrCode.ModuleMatrix[y + size - 11][x] = vStr[x * 3 + y] == '1';
-						qrCode.ModuleMatrix[x][y + size - 11] = vStr[x * 3 + y] == '1';
+						qrCode.ModuleMatrix[y + size - 11][x] = vStr[(x * 3) + y] == '1';
+						qrCode.ModuleMatrix[x][y + size - 11] = vStr[(x * 3) + y] == '1';
 					}
 				}
 			}
@@ -543,8 +543,8 @@ namespace ControlLibrary.Controls.QRCoder
 			}
 			public static void PlaceDarkModule(ref QRCodeData qrCode, int version, ref List<Rectangle> blockedModules)
 			{
-				qrCode.ModuleMatrix[4 * version + 9][8] = true;
-				blockedModules.Add(new Rectangle(8, 4 * version + 9, 1, 1));
+				qrCode.ModuleMatrix[(4 * version) + 9][8] = true;
+				blockedModules.Add(new Rectangle(8, (4 * version) + 9, 1, 1));
 			}
 
 			public static void PlaceFinderPatterns(ref QRCodeData qrCode, ref List<Rectangle> blockedModules)
@@ -660,17 +660,17 @@ namespace ControlLibrary.Controls.QRCoder
 
 				public static bool Pattern6(int x, int y)
 				{
-					return ((x * y) % 2) + ((x * y) % 3) == 0;
+					return (x * y % 2) + (x * y % 3) == 0;
 				}
 
 				public static bool Pattern7(int x, int y)
 				{
-					return (((x * y) % 2) + ((x * y) % 3)) % 2 == 0;
+					return ((x * y % 2) + (x * y % 3)) % 2 == 0;
 				}
 
 				public static bool Pattern8(int x, int y)
 				{
-					return (((x + y) % 2) + ((x * y) % 3)) % 2 == 0;
+					return (((x + y) % 2) + (x * y % 3)) % 2 == 0;
 				}
 
 				public static int Score(ref QRCodeData qrCode)
@@ -792,9 +792,9 @@ namespace ControlLibrary.Controls.QRCoder
 							if (bit)
 								blackModules++;
 
-					var percent = (blackModules / (qrCode.ModuleMatrix.Count * qrCode.ModuleMatrix.Count)) * 100;
-					var prevMultipleOf5 = Math.Abs((int)Math.Floor(percent / 5) * 5 - 50) / 5;
-					var nextMultipleOf5 = Math.Abs((int)Math.Floor(percent / 5) * 5 - 45) / 5;
+					var percent = blackModules / (qrCode.ModuleMatrix.Count * qrCode.ModuleMatrix.Count) * 100;
+					var prevMultipleOf5 = Math.Abs(((int)Math.Floor(percent / 5) * 5) - 50) / 5;
+					var nextMultipleOf5 = Math.Abs(((int)Math.Floor(percent / 5) * 5) - 45) / 5;
 					score4 = Math.Min(prevMultipleOf5, nextMultipleOf5) * 10;
 
 					return score1 + score2 + score3 + score4;
@@ -817,7 +817,7 @@ namespace ControlLibrary.Controls.QRCoder
 					generatorPolynom.PolyItems[i].Exponent + (messagePolynom.PolyItems.Count - 1));
 
 			var leadTermSource = messagePolynom;
-			for (var i = 0; (leadTermSource.PolyItems.Count > 0 && leadTermSource.PolyItems[leadTermSource.PolyItems.Count - 1].Exponent > 0); i++)
+			for (var i = 0; leadTermSource.PolyItems.Count > 0 && leadTermSource.PolyItems[leadTermSource.PolyItems.Count - 1].Exponent > 0; i++)
 			{
 				if (leadTermSource.PolyItems[0].Coefficient == 0)
 				{
@@ -841,9 +841,9 @@ namespace ControlLibrary.Controls.QRCoder
 			for (var i = 0; i < poly.PolyItems.Count; i++)
 				newPoly.PolyItems.Add(
 					new PolynomItem(
-						(poly.PolyItems[i].Coefficient != 0
+						poly.PolyItems[i].Coefficient != 0
 							? GetAlphaExpFromIntVal(poly.PolyItems[i].Coefficient)
-							: 0), poly.PolyItems[i].Exponent));
+							: 0, poly.PolyItems[i].Exponent));
 			return newPoly;
 		}
 
@@ -860,9 +860,9 @@ namespace ControlLibrary.Controls.QRCoder
 
 			var fittingVersions = capacityTable.Where(
 				x => x.Details.Any(
-					y => (y.ErrorCorrectionLevel == eccLevel
+					y => y.ErrorCorrectionLevel == eccLevel
 						  && y.CapacityDict[encMode] >= Convert.ToInt32(length)
-						  )
+
 					)
 			  ).Select(x => new
 			  {
@@ -876,7 +876,7 @@ namespace ControlLibrary.Controls.QRCoder
 
 			var maxSizeByte = capacityTable.Where(
 				x => x.Details.Any(
-					y => (y.ErrorCorrectionLevel == eccLevel))
+					y => y.ErrorCorrectionLevel == eccLevel)
 				).Max(x => x.Details.Single(y => y.ErrorCorrectionLevel == eccLevel).CapacityDict[encMode]);
 			throw new Exceptions.DataTooLongException(eccLevel.ToString(), encMode.ToString(), maxSizeByte);
 		}
@@ -903,7 +903,7 @@ namespace ControlLibrary.Controls.QRCoder
 		private static Polynom CalculateMessagePolynom(string bitString)
 		{
 			var messagePol = new Polynom();
-			for (var i = bitString.Length / 8 - 1; i >= 0; i--)
+			for (var i = (bitString.Length / 8) - 1; i >= 0; i--)
 			{
 				messagePol.PolyItems.Add(new PolynomItem(BinToDec(bitString.Substring(0, 8)), i));
 				bitString = bitString.Remove(0, 8);
@@ -969,34 +969,15 @@ namespace ControlLibrary.Controls.QRCoder
 		{
 			if (version < 10)
 			{
-				if (encMode == EncodingMode.Numeric)
-					return 10;
-				else if (encMode == EncodingMode.Alphanumeric)
-					return 9;
-				else
-					return 8;
+				return encMode == EncodingMode.Numeric ? 10 : encMode == EncodingMode.Alphanumeric ? 9 : 8;
 			}
 			else if (version < 27)
 			{
-				if (encMode == EncodingMode.Numeric)
-					return 12;
-				else if (encMode == EncodingMode.Alphanumeric)
-					return 11;
-				else if (encMode == EncodingMode.Byte)
-					return 16;
-				else
-					return 10;
+				return encMode == EncodingMode.Numeric ? 12 : encMode == EncodingMode.Alphanumeric ? 11 : encMode == EncodingMode.Byte ? 16 : 10;
 			}
 			else
 			{
-				if (encMode == EncodingMode.Numeric)
-					return 14;
-				else if (encMode == EncodingMode.Alphanumeric)
-					return 13;
-				else if (encMode == EncodingMode.Byte)
-					return 16;
-				else
-					return 12;
+				return encMode == EncodingMode.Numeric ? 14 : encMode == EncodingMode.Alphanumeric ? 13 : encMode == EncodingMode.Byte ? 16 : 12;
 			}
 		}
 
@@ -1007,7 +988,7 @@ namespace ControlLibrary.Controls.QRCoder
 
 		private static bool IsUtf8(EncodingMode encoding, string plainText, bool forceUtf8)
 		{
-			return (encoding == EncodingMode.Byte && (!IsValidISO(plainText) || forceUtf8));
+			return encoding == EncodingMode.Byte && (!IsValidISO(plainText) || forceUtf8);
 		}
 
 		private static bool IsValidISO(string input)
@@ -1065,7 +1046,7 @@ namespace ControlLibrary.Controls.QRCoder
 			while (plainText.Length >= 2)
 			{
 				var token = plainText.Substring(0, 2);
-				var dec = alphanumEncDict[token[0]] * 45 + alphanumEncDict[token[1]];
+				var dec = (alphanumEncDict[token[0]] * 45) + alphanumEncDict[token[1]];
 				codeText += DecToBin(dec, 11);
 				plainText = plainText.Substring(2);
 
@@ -1187,7 +1168,7 @@ namespace ControlLibrary.Controls.QRCoder
 					var polItemRes = new PolynomItem
 					(
 						ShrinkAlphaExp(polItemBase.Coefficient + polItemMulti.Coefficient),
-						(polItemBase.Exponent + polItemMulti.Exponent)
+						polItemBase.Exponent + polItemMulti.Exponent
 					);
 					resultPolynom.PolyItems.Add(polItemRes);
 				}
@@ -1432,7 +1413,7 @@ namespace ControlLibrary.Controls.QRCoder
 			public List<Point> PatternPositions;
 		}
 
-		private struct CodewordBlock
+		private readonly struct CodewordBlock
 		{
 			public CodewordBlock(int groupNumber, int blockNumber, string bitString, List<string> codeWords,
 				List<string> eccWords, List<int> codeWordsInt, List<int> eccWordsInt)
@@ -1455,7 +1436,7 @@ namespace ControlLibrary.Controls.QRCoder
 			public List<int> ECCWordsInt { get; }
 		}
 
-		private struct ECCInfo
+		private readonly struct ECCInfo
 		{
 			public ECCInfo(int version, ECCLevel errorCorrectionLevel, int totalDataCodewords, int eccPerBlock, int blocksInGroup1,
 				int codewordsInGroup1, int blocksInGroup2, int codewordsInGroup2)
@@ -1479,7 +1460,7 @@ namespace ControlLibrary.Controls.QRCoder
 			public int CodewordsInGroup2 { get; }
 		}
 
-		private struct VersionInfo
+		private readonly struct VersionInfo
 		{
 			public VersionInfo(int version, List<VersionInfoDetails> versionInfoDetails)
 			{
@@ -1490,7 +1471,7 @@ namespace ControlLibrary.Controls.QRCoder
 			public List<VersionInfoDetails> Details { get; }
 		}
 
-		private struct VersionInfoDetails
+		private readonly struct VersionInfoDetails
 		{
 			public VersionInfoDetails(ECCLevel errorCorrectionLevel, Dictionary<EncodingMode, int> capacityDict)
 			{
@@ -1502,7 +1483,7 @@ namespace ControlLibrary.Controls.QRCoder
 			public Dictionary<EncodingMode, int> CapacityDict { get; }
 		}
 
-		private struct Antilog
+		private readonly struct Antilog
 		{
 			public Antilog(int exponentAlpha, int integerValue)
 			{
@@ -1513,7 +1494,7 @@ namespace ControlLibrary.Controls.QRCoder
 			public int IntegerValue { get; }
 		}
 
-		private struct PolynomItem
+		private readonly struct PolynomItem
 		{
 			public PolynomItem(int coefficient, int exponent)
 			{

@@ -21,21 +21,9 @@ namespace ControlLibrary.Controls.ComboControls
 			}
 		}
 
-		public override Type EditType
-		{
-			get
-			{
-				return typeof(CalendarEditingControl);
-			}
-		}
+		public override Type EditType => typeof(CalendarEditingControl);
 
-		public override Type ValueType
-		{
-			get
-			{
-				return typeof(DateTime);
-			}
-		}
+		public override Type ValueType => typeof(DateTime);
 	}
 
 	public class CalendarEditingControl : DateTimePicker, IDataGridViewEditingControl
@@ -47,10 +35,7 @@ namespace ControlLibrary.Controls.ComboControls
 
 		public object EditingControlFormattedValue
 		{
-			get
-			{
-				return Value.ToShortDateString();
-			}
+			get => Value.ToShortDateString();
 			set
 			{
 				if (value is string v)
@@ -101,25 +86,13 @@ namespace ControlLibrary.Controls.ComboControls
 
 		public void PrepareEditingControlForEdit(bool selectAll) { }
 
-		public bool RepositionEditingControlOnValueChange
-		{
-			get
-			{
-				return false;
-			}
-		}
+		public bool RepositionEditingControlOnValueChange => false;
 
 		public DataGridView EditingControlDataGridView { get; set; }
 
 		public bool EditingControlValueChanged { get; set; }
 
-		public Cursor EditingPanelCursor
-		{
-			get
-			{
-				return base.Cursor;
-			}
-		}
+		public Cursor EditingPanelCursor => base.Cursor;
 
 		protected override void OnValueChanged(EventArgs eventargs)
 		{
