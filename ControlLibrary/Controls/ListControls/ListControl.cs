@@ -9,6 +9,7 @@ namespace ControlLibrary.Controls.ListControls
 {
 	[ToolboxItem(false)]
 	[DesignerCategory("code")]
+	[DesignTimeVisible(true)]
 	[ToolboxBitmap(typeof(ListBox))]
 	[ComVisible(false)]
 	public abstract class ListControl<I, S> : ListBox
@@ -24,19 +25,26 @@ namespace ControlLibrary.Controls.ListControls
 		protected override ObjectCollection CreateItemCollection()
 		{
 			ItemCollection<I, S> collection = new ItemCollection<I, S>(this);
-			collection.ContentChanged += new EventHandler<EventArgs>(Collection_ContentChanged);
-			collection.CountChanged += new EventHandler<EventArgs>(Collection_CountChanged);
+			collection.ClipSizeChanged += new EventHandler<ItemEventArgs<I>>(Collection_ClipSizeChanged);
+			collection.ContentChanged += new EventHandler<ItemEventArgs<I>>(Collection_ContentChanged);
+			collection.SizeChanged += new EventHandler<EventArgs>(Collection_SizeChanged);
 			return collection;
 		}
 
-		private void Collection_CountChanged(object sender, EventArgs e)
-		{
-
-		}
-
-		private void Collection_ContentChanged(object sender, EventArgs e)
+		private void Collection_SizeChanged(object sender, EventArgs e)
 		{
 			base.RefreshItems();
+		}
+
+		private void Collection_ClipSizeChanged(object sender, ItemEventArgs<I> e)
+		{
+			base.RefreshItems();
+		}
+
+		private void Collection_ContentChanged(object sender, ItemEventArgs<I> e)
+		{
+			base.Invalidate(e.Item.Bounds);
+			OnItemContentChanged(e);
 		}
 
 		private void ResizeTimer_Tick(object sender, EventArgs e)
@@ -77,13 +85,13 @@ namespace ControlLibrary.Controls.ListControls
 			}
 		}
 
-		protected override void OnDrawItem(System.Windows.Forms.DrawItemEventArgs e)
+		protected override void OnDrawItem(DrawItemEventArgs e)
 		{
 			if (e.Bounds.Height > 0)
 			{
 				grafx = context.Allocate(e.Graphics, e.Bounds);
 				DrawItemEventArgs args = new DrawItemEventArgs(grafx.Graphics, e.Font, e.Bounds, e.Index, e.State, e.ForeColor, e.BackColor);
-				args.DrawBackground();
+				//args.DrawBackground();
 				if (DesignMode || args.Index < 0)
 				{
 					const TextFormatFlags flags = TextFormatFlags.Left | TextFormatFlags.Top;
@@ -105,11 +113,31 @@ namespace ControlLibrary.Controls.ListControls
 
 		#region Click Event
 
+		[Category("Action"), Browsable(true), EditorBrowsable(EditorBrowsableState.Always)]
+		public event EventHandler<ItemEventArgs<I>> SelectedItemChanged;
+		[Category("Action"), Browsable(true), EditorBrowsable(EditorBrowsableState.Always)]
+		public event EventHandler<ItemEventArgs<I>> ItemContentChanged;
+
+		[Category("Mouse"), Browsable(true), EditorBrowsable(EditorBrowsableState.Always)]
 		public event EventHandler<ItemMouseEventArgs<I, S>> ItemMouseDown;
+		[Category("Mouse"), Browsable(true), EditorBrowsable(EditorBrowsableState.Always)]
 		public event EventHandler<ItemMouseEventArgs<I, S>> ItemMouseUp;
+		[Category("Action"), Browsable(true), EditorBrowsable(EditorBrowsableState.Always)]
 		public event EventHandler<ItemMouseEventArgs<I, S>> ItemMouseClick;
+		[Category("Action"), Browsable(true), EditorBrowsable(EditorBrowsableState.Always)]
 		public event EventHandler<ItemMouseEventArgs<I, S>> ItemMouseDoubleClick;
+		[Category("Mouse"), Browsable(true), EditorBrowsable(EditorBrowsableState.Always)]
 		public event EventHandler<ItemMouseEventArgs<I, S>> ItemMouseMove;
+
+		protected virtual void OnSelectedItemChanged(ItemEventArgs<I> e)
+		{
+			SelectedItemChanged?.Invoke(this, e);
+		}
+
+		protected virtual void OnItemContentChanged(ItemEventArgs<I> e)
+		{
+			ItemContentChanged?.Invoke(this, e);
+		}
 
 		protected virtual void OnItemMouseDown(ItemMouseEventArgs<I, S> e)
 		{
@@ -135,11 +163,25 @@ namespace ControlLibrary.Controls.ListControls
 		{
 			ItemMouseMove?.Invoke(this, e);
 		}
-						
+
 		#endregion
 
-		#region Mouse
+		protected override void OnSelectedIndexChanged(EventArgs e)
+		{
+			if (SelectedIndex >=0)
+			{
+				I item = this[SelectedIndex];
+				OnSelectedItemChanged(new ItemEventArgs<I>(item, null));
+			}
+			else
+			{
+				OnSelectedItemChanged(new ItemEventArgs<I>(default, null));
+			}
+			base.OnSelectedIndexChanged(e);
+		}
 
+		#region Mouse
+				
 		private I GetListItem(Point location)
 		{
 			for (int i = 0; i < Items.Count; i++)
@@ -156,7 +198,7 @@ namespace ControlLibrary.Controls.ListControls
 		{
 			for (int i = 0; i < item.Count; i++)
 			{
-				if (item.GetSibItemRectangle(i).Contains(location))
+				if (item.GetSubitemRectangle(i).Contains(location))
 				{
 					return (S)item[i];
 				}
@@ -270,10 +312,10 @@ namespace ControlLibrary.Controls.ListControls
 		[ReadOnly(true)]
 		public new int ItemHeight => base.ItemHeight;		
 	}
-
+	
 	public class ItemMouseEventArgs<I, S> : MouseEventArgs where I : IListItem, new() where S : IListItemNote
 	{
-		public ItemMouseEventArgs(I item, S subItem, object argument, MouseEventArgs evntArgs) : base(evntArgs.Button, evntArgs.Clicks, evntArgs.X, evntArgs.Y, evntArgs.Delta)
+		public ItemMouseEventArgs(I item, S subItem, object argument, MouseEventArgs eventArgs) : base(eventArgs.Button, eventArgs.Clicks, eventArgs.X, eventArgs.Y, eventArgs.Delta)
 		{
 			Item = item;
 			SubItem = subItem;

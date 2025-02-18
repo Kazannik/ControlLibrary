@@ -25,16 +25,12 @@ namespace ControlLibrary.Controls.ListControls
 		public new void Add(object value)
 		{
 			OnValidate(value);
+			((I)value).ClipSizeChanged += new EventHandler<EventArgs>(ItemCollection_ClipSizeChanged);
 			((I)value).ContentChanged += new EventHandler<EventArgs>(ItemCollection_ContentChanged);
 			base.Add(value);
-			DoCountChanged();
+			DoSizeChanged();
 		}
-
-		private void ItemCollection_ContentChanged(object sender, EventArgs e)
-		{
-			DoContentChanged();
-		}
-
+				
 		public void Add(I item)
 		{
 			Add(value: item);
@@ -46,10 +42,11 @@ namespace ControlLibrary.Controls.ListControls
 			{
 				OnValidate(value[i]);
 				I item = (I)value[i];
+				item.ClipSizeChanged += new EventHandler<EventArgs>(ItemCollection_ClipSizeChanged);
 				item.ContentChanged += new EventHandler<EventArgs>(ItemCollection_ContentChanged);
 			}
 			base.AddRange(items: value);
-			DoCountChanged();
+			DoSizeChanged();
 		}
 
 		public new void AddRange(ObjectCollection value)
@@ -58,10 +55,11 @@ namespace ControlLibrary.Controls.ListControls
 			{
 				OnValidate(value[i]);
 				I item = (I)value[i];
+				item.ClipSizeChanged += new EventHandler<EventArgs>(ItemCollection_ClipSizeChanged);
 				item.ContentChanged += new EventHandler<EventArgs>(ItemCollection_ContentChanged);
 			}
 			base.AddRange(value: value);
-			DoCountChanged();
+			DoSizeChanged();
 		}
 
 		public void AddRange(ItemCollection<I, S> items)
@@ -93,9 +91,10 @@ namespace ControlLibrary.Controls.ListControls
 		public new void Insert(int index, object value)
 		{
 			OnValidate(value: value);
+			((I)value).ClipSizeChanged += new EventHandler<EventArgs>(ItemCollection_ClipSizeChanged);
 			((I)value).ContentChanged += new EventHandler<EventArgs>(ItemCollection_ContentChanged);
 			Insert(index: index, item: value);
-			DoCountChanged();
+			DoSizeChanged();
 		}
 
 		public void Insert(int index, I item)
@@ -106,8 +105,10 @@ namespace ControlLibrary.Controls.ListControls
 		public new void Remove(object value)
 		{
 			OnValidate(value: value);
+			((I)value).ClipSizeChanged -= new EventHandler<EventArgs>(ItemCollection_ClipSizeChanged);
 			((I)value).ContentChanged -= new EventHandler<EventArgs>(ItemCollection_ContentChanged);
 			base.Remove(value: value);
+			DoSizeChanged();
 		}
 
 		public void Remove(I item)
@@ -127,10 +128,11 @@ namespace ControlLibrary.Controls.ListControls
 			for (int i = 0; i < list.Count; i++)
 			{
 				I item = list[i];
+				item.ClipSizeChanged -= new EventHandler<EventArgs>(ItemCollection_ClipSizeChanged);
 				item.ContentChanged -= new EventHandler<EventArgs>(ItemCollection_ContentChanged);
 			}
 			base.Clear();
-			DoCountChanged();
+			DoSizeChanged();
 		}
 
 		public new bool Contains(object value)
@@ -152,32 +154,48 @@ namespace ControlLibrary.Controls.ListControls
 			}
 		}
 
-		public event EventHandler<EventArgs> CountChanged;
+		public event EventHandler<EventArgs> SizeChanged;
 
-		private void DoCountChanged()
+		private void DoSizeChanged()
 		{
-			OnCountChanged(new EventArgs());
-			DoContentChanged();
+			OnSizeChanged(new EventArgs());
 		}
 
-		protected virtual void OnCountChanged(EventArgs e)
+		protected virtual void OnSizeChanged(EventArgs e)
 		{
-			CountChanged?.Invoke(this, e);
+			SizeChanged?.Invoke(this, e);
 		}
 
-		private void ListItem_ContentChanged(object sender, EventArgs e)
+		private void ItemCollection_ClipSizeChanged(object sender, EventArgs e)
 		{
-			DoContentChanged();
+			DoClipSizeChanged((I)sender);
 		}
 
-		public event EventHandler<EventArgs> ContentChanged;
+		public event EventHandler<ItemEventArgs<I>> ClipSizeChanged;
 
-		private void DoContentChanged()
+		private void DoClipSizeChanged(I item)
 		{
-			OnContentChanged(new EventArgs());
+			OnClipSizeChanged(new ItemEventArgs<I>(item: item, argument: null));
 		}
 
-		protected virtual void OnContentChanged(EventArgs e)
+		protected virtual void OnClipSizeChanged(ItemEventArgs<I> e)
+		{
+			ClipSizeChanged?.Invoke(this, e);
+		}
+
+		private void ItemCollection_ContentChanged(object sender, EventArgs e)
+		{
+			DoContentChanged((I)sender);
+		}
+		
+		public event EventHandler<ItemEventArgs<I>> ContentChanged;
+
+		private void DoContentChanged(I item)
+		{
+			OnContentChanged(new ItemEventArgs<I>(item: item, argument: null));
+		}
+
+		protected virtual void OnContentChanged(ItemEventArgs<I> e)
 		{
 			ContentChanged?.Invoke(this, e);
 		}
@@ -220,5 +238,18 @@ namespace ControlLibrary.Controls.ListControls
 				enumerator.Reset();
 			}
 		}
+	}
+
+	public class ItemEventArgs<I> : EventArgs where I : IListItem, new()
+	{
+		public ItemEventArgs(I item, object argument) : base()
+		{
+			Item = item;
+			Argument = argument;
+		}
+
+		public I Item { get; }
+
+		public object Argument { get; }
 	}
 }

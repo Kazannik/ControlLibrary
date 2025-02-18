@@ -1,4 +1,6 @@
-﻿using ControlLibrary.Structures;
+﻿// Ignore Spelling: Priod
+
+using ControlLibrary.Structures;
 using System;
 using System.Collections;
 using System.Drawing;
@@ -13,7 +15,7 @@ namespace ControlLibrary.Controls.PriodControls
 		//private ColorThemeList theme;
 		private Rectangle periodRectagle;
 		private Rectangle todateRectagle;
-		private Rectangle todateTextRectagle;
+		//private Rectangle todateTextRectagle;
 
 		private readonly DateTimeFormatInfo FormatInfo = CultureInfo.CurrentCulture.DateTimeFormat;
 		private readonly StringFormat sf = new StringFormat() { Alignment = StringAlignment.Center };
@@ -449,12 +451,9 @@ namespace ControlLibrary.Controls.PriodControls
 				{
 					foreach (PeriodBoxButton item in List)
 					{
-						if (item.rectangle != null)
+						if (item.rectangle.Contains(new Point(x, y)))
 						{
-							if (item.rectangle.Contains(new Point(x, y)))
-							{
-								return item;
-							}
+							return item;
 						}
 					}
 					return null;

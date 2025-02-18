@@ -1,4 +1,6 @@
-﻿using System;
+﻿// Ignore Spelling: Utils
+
+using System;
 using System.IO;
 
 namespace ControlLibrary.Utils

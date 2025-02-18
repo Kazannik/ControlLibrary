@@ -1,10 +1,16 @@
-﻿using System;
+﻿// Ignore Spelling: Utils Gdi BLENDFUNCTION RGBQUAD rgb BITMAPINFOHEADER Pels Clr DIBSECTION
+
+using System;
 using System.Drawing;
 using System.Drawing.Drawing2D;
 using System.Drawing.Imaging;
 using System.Runtime.InteropServices;
 
+#if WORD
+namespace WordHiddenPowers.Utils
+#else
 namespace ControlLibrary.Utils
+#endif
 {
 	public static class Gdi32
 	{
@@ -296,5 +302,8 @@ namespace ControlLibrary.Utils
 				}
 			}
 		}
+
+		[DllImport("user32.dll", CharSet = CharSet.Auto)]
+		public extern static bool DestroyIcon(IntPtr handle);
 	}
 }

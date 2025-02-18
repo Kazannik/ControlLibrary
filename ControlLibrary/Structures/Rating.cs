@@ -22,7 +22,7 @@ namespace ControlLibrary.Structures
 		/// Представляет максимальное значение (5). Это поле доступно только для чтения.
 		/// </summary>
 		public static readonly Rating MaxValue = new Rating(MAX_VALUE);
-
+		
 		private Rating(int value)
 		{
 			Validate(value: value);

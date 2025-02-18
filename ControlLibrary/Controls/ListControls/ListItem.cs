@@ -1,4 +1,6 @@
-﻿using System.Drawing;
+﻿using System.Collections;
+using System.Collections.Generic;
+using System.Drawing;
 using System.Drawing.Drawing2D;
 using System.Windows.Forms;
 using Font = System.Drawing.Font;
@@ -10,18 +12,18 @@ namespace ControlLibrary.Controls.ListControls
 	{		
 		private static readonly StringFormat LEFT_STRING_FORMAT = new StringFormat
 		{
-			Alignment = StringAlignment.Far,
-			LineAlignment = StringAlignment.Far
+			Alignment = StringAlignment.Near,
+			LineAlignment = StringAlignment.Near
 		};
 
-		protected Rectangle bounds;
 		protected readonly IListItemNote[] notes;
 
 		public ListItem() : this(text: typeof(ListItem).Name) { }
 
 		public ListItem(string text) :this(note: new Note(text: text))
 		{
-			bounds = Rectangle.Empty;
+			Bounds = Rectangle.Empty;
+			Size = Size.Empty;
 			notes[0] = new Note(text);
 		}
 
@@ -29,28 +31,31 @@ namespace ControlLibrary.Controls.ListControls
 
 		public ListItem(IListItemNote[] notes)
 		{
-			bounds = Rectangle.Empty;
+			Bounds = Rectangle.Empty;
 			this.notes = notes;
 
 			for (int i = 0; i < notes.Length; i++)
 			{
+				this.notes[i].ClipSizeChanged += new System.EventHandler<System.EventArgs>(ListItem_ClipSizeChanged);
 				this.notes[i].ContentChanged += new System.EventHandler<System.EventArgs>(ListItem_ContentChanged);
 			}
 			this.Size = Size.Empty;
 		}
 
+		public Rectangle Bounds { get; protected set; }
+
 		public Size Size { get; private set; }
 
-		public Rectangle GetSibItemRectangle(int index)
+		public Rectangle GetSubitemRectangle(int index)
 		{
 			if (index >= notes.Length) return Rectangle.Empty;
 
-			int top = bounds.Y;
+			int top = Bounds.Y;
 			for (int i = 0; i < index; i++)
 			{
 				top += notes[i].Size.IsEmpty ? 0 : notes[i].Size.Height;
 			}
-			return new Rectangle(bounds.X, top, notes[index].Size.Width, notes[index].Size.Height);
+			return new Rectangle(Bounds.X, top, notes[index].Size.Width, notes[index].Size.Height);
 		}
 
 		public IListItemNote this[int index] { get { return notes[index]; } }
@@ -71,7 +76,7 @@ namespace ControlLibrary.Controls.ListControls
 				
 		protected virtual void OnDraw(DrawItemEventArgs e)
 		{
-			bounds = e.Bounds;
+			Bounds = e.Bounds;
 			e.Graphics.SmoothingMode = SmoothingMode.AntiAlias;
 			int top = e.Bounds.Y;
 			for (int i = 0; i < notes.Length; i++)
@@ -91,8 +96,24 @@ namespace ControlLibrary.Controls.ListControls
 			e.Graphics.DrawRectangle(Pens.Green, new Rectangle(e.Bounds.X + 1, e.Bounds.Y, e.Bounds.Width - 2, e.Bounds.Height - 1));
 #endif
 		}
-		
+
+		public event System.EventHandler<System.EventArgs> ClipSizeChanged;
 		public event System.EventHandler<System.EventArgs> ContentChanged;
+
+		private void ListItem_ClipSizeChanged(object sender, System.EventArgs e)
+		{
+			DoClipSizeChanged();
+		}
+
+		private void DoClipSizeChanged()
+		{
+			OnClipSizeChanged(new System.EventArgs());
+		}
+
+		protected virtual void OnClipSizeChanged(System.EventArgs e)
+		{
+			ClipSizeChanged?.Invoke(this, e);
+		}
 
 		private void ListItem_ContentChanged(object sender, System.EventArgs e)
 		{
@@ -118,7 +139,17 @@ namespace ControlLibrary.Controls.ListControls
 		{
 			OnDraw(e);
 		}
-		
+
+		IEnumerator<IListItemNote> IEnumerable<IListItemNote>.GetEnumerator()
+		{
+			return new ListItemNoteEnumerator(GetEnumerator());
+		}
+
+		public IEnumerator GetEnumerator()
+		{
+			return notes.GetEnumerator();
+		}
+
 		private class Note : ListItemNote, IListItemNote
 		{			
 			private string text;
@@ -150,11 +181,40 @@ namespace ControlLibrary.Controls.ListControls
 				e.Graphics.DrawString(Text, e.Font, brush, e.Bounds, LEFT_STRING_FORMAT);
 				brush.Dispose();
 			}
-
+			
 			protected override Size OnMeasureBound(Graphics graphics, Font font, int itemWidth, int itemHeight)
 			{
 				return GetTextSize(graphics: graphics, Text, font: font, width: itemWidth, LEFT_STRING_FORMAT);
 			}
-		}	
+		}
+
+		private class ListItemNoteEnumerator : IEnumerator<IListItemNote>
+		{
+			private readonly IEnumerator enumerator;
+
+			internal ListItemNoteEnumerator(IEnumerator enumerator)
+			{
+				this.enumerator = enumerator;
+			}
+
+			public IListItemNote Current => (IListItemNote)enumerator.Current;
+
+			object IEnumerator.Current => Current;
+
+			public void Dispose()
+			{
+				enumerator.Reset();
+			}
+
+			public bool MoveNext()
+			{
+				return enumerator.MoveNext();
+			}
+
+			public void Reset()
+			{
+				enumerator.Reset();
+			}
+		}
 	}	
 }

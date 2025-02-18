@@ -1,4 +1,6 @@
-﻿using System;
+﻿// Ignore Spelling: Utils
+
+using System;
 using System.Runtime.InteropServices;
 
 namespace ControlLibrary.Utils
@@ -56,7 +58,7 @@ namespace ControlLibrary.Utils
 		/// <param name="iconLocation">Значок. Например: "notepad.exe, 0"</param>
 		/// <param name="description">Комментарий.</param>
 		/// <param name="workingDirectory">Рабочая папка.</param>
-		/// <param name="arguments">Аргументы коммандной строки.</param>
+		/// <param name="arguments">Аргументы командной строки.</param>
 		public static void Create(string name, string path, string targetPath, WindowStyle windowsSyle, string hotkey, string iconLocation, string description, string workingDirectory, string arguments)
 		{
 			IWshShortcut shortcut = (IWshShortcut)m_type.InvokeMember("CreateShortcut", System.Reflection.BindingFlags.InvokeMethod, null, m_shell, new object[] { System.IO.Path.Combine(path, name + ".lnk") });
@@ -85,7 +87,7 @@ namespace ControlLibrary.Utils
 		/// <param name="iconLocation">Значок. Например: "notepad.exe, 0"</param>
 		/// <param name="description">Комментарий.</param>
 		/// <param name="workingDirectory">Рабочая папка.</param>
-		/// <param name="arguments">Аргументы коммандной строки.</param>
+		/// <param name="arguments">Аргументы командной строки.</param>
 		public static void Create(string name, Environment.SpecialFolder folder, string targetPath, WindowStyle windowsSyle, string hotkey, string iconLocation, string description, string workingDirectory, string arguments)
 		{
 			Create(name: name, path: Environment.GetFolderPath(folder), targetPath: targetPath, windowsSyle: windowsSyle, hotkey: hotkey, iconLocation: iconLocation, description: description, workingDirectory: workingDirectory, arguments: arguments);
@@ -129,7 +131,7 @@ namespace ControlLibrary.Utils
 		public enum WindowStyle : int
 		{
 			/// <summary>
-			/// Обычный размерн окна.
+			/// Обычный размер окна.
 			/// </summary>
 			Original = 1,
 			/// <summary>

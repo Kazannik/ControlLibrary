@@ -1,4 +1,6 @@
-﻿using System;
+﻿// Ignore Spelling: Utils
+
+using System;
 using System.Drawing;
 using System.Drawing.Drawing2D;
 using System.Windows.Forms;
@@ -153,6 +155,33 @@ namespace ControlLibrary.Utils
 			graphics.DrawEllipse(pen, rect);
 			pen.Dispose();
 		}
+
+
+		public static void DrawCheckedIcon(Graphics graphics, Color foreColor, Color backColor, Rectangle rect)
+		{
+			double r = (double)rect.Height / (double)4, R = (double)rect.Height / (double)2.5;
+			double x0 = (double)rect.Width / (double)2, y0 = (double)rect.Height / (double)2;
+			Point[] points = new Point[3];
+			points[0] = GetVertexPoint(rect.X + x0, rect.Y + y0, R, 8, 1);
+			points[1] = GetVertexPoint(rect.X + x0, rect.Y + y0, R, 8, 4);
+			points[2] = GetVertexPoint(rect.X + x0, rect.Y + y0, r, 8, 6);
+			GraphicsPath path = new GraphicsPath();
+			path.AddLines(points);
+			Pen pen = new Pen(foreColor, 2);
+
+			graphics.DrawPath(pen, path);
+			path.Dispose();
+			graphics.DrawEllipse(pen, rect);
+			pen.Dispose();
+		}
+
+		public static void DrawUncheckedIcon(Graphics graphics, Color foreColor, Color backColor, Rectangle rect)
+		{
+			Pen pen = new Pen(foreColor, 2);
+			graphics.DrawEllipse(pen, rect);
+			pen.Dispose();
+		}
+
 
 		public static Bitmap GetImageMso(stdole.IPictureDisp img)
 		{

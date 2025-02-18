@@ -4,13 +4,13 @@ using System.Runtime.InteropServices;
 // Общие сведения об этой сборке предоставляются следующим набором
 // набора атрибутов. Измените значения этих атрибутов, чтобы изменить сведения,
 // связанные со сборкой.
-[assembly: AssemblyTitle("ControlLibrary")]
-[assembly: AssemblyDescription("")]
+[assembly: AssemblyTitle("ControlLibrary.dll")]
+[assembly: AssemblyDescription("ControlLibrary.dll")]
 [assembly: AssemblyConfiguration("")]
-[assembly: AssemblyCompany("")]
-[assembly: AssemblyProduct("ControlLibrary")]
-[assembly: AssemblyCopyright("Copyright ©  2024")]
-[assembly: AssemblyTrademark("")]
+[assembly: AssemblyCompany("Kazannik M.")]
+[assembly: AssemblyProduct("ControlLibrary.dll")]
+[assembly: AssemblyCopyright("© Kazannik M. All rights reserved.")]
+[assembly: AssemblyTrademark("Kazannik M.")]
 [assembly: AssemblyCulture("")]
 
 // Установка значения False для параметра ComVisible делает типы в этой сборке невидимыми

@@ -8,8 +8,9 @@ namespace ControlLibrary.Controls.ListControls
 	{
 		private Size size;
 		
+		public event EventHandler<EventArgs> ClipSizeChanged;
 		public event EventHandler<EventArgs> ContentChanged;
-
+				
 		public Size Size { get { return size; } }
 
 		protected ListItemNote()
@@ -31,7 +32,17 @@ namespace ControlLibrary.Controls.ListControls
 		protected abstract void OnDraw(DrawItemEventArgs e);
 
 		protected abstract Size OnMeasureBound(Graphics graphics, Font font, int itemWidth, int itemHeight);
-		
+
+		private void OnClipSizeChanged(EventArgs e)
+		{
+			ClipSizeChanged?.Invoke(this, e);
+		}
+
+		protected void DoClipSizeChanged()
+		{
+			OnClipSizeChanged(new EventArgs());
+		}
+
 		private void OnContentChanged(EventArgs e)
 		{
 			ContentChanged?.Invoke(this, e);
