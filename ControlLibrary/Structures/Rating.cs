@@ -79,6 +79,11 @@ namespace ControlLibrary.Structures
 			return value.Value;
 		}
 
+		public static explicit operator Rating(int value)
+		{
+			return new Rating(value);
+		}
+
 		public override bool Equals(object obj)
 		{
 			if ((obj == null) || !GetType().Equals(obj.GetType()))
@@ -102,9 +107,19 @@ namespace ControlLibrary.Structures
 			return new Rating(value: a.Value + b.Value);
 		}
 
+		public static Rating operator ++(Rating value)
+		{
+			return new Rating(value: value.Value + 1);
+		}
+
 		public static Rating operator -(Rating a, Rating b)
 		{
 			return new Rating(value: a.Value - b.Value);
+		}
+
+		public static Rating operator --(Rating value)
+		{
+			return new Rating(value: value.Value - 1);
 		}
 
 		public static bool operator ==(Rating x, Rating y)

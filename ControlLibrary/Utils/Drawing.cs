@@ -95,20 +95,20 @@ namespace ControlLibrary.Utils
 		public static void DrawStar(Graphics graphics, Color foreColor, Color backColor, int percent, Rectangle rect)
 		{
 			GraphicsPath star = CreateStarPath(rect);
-			RectangleF starRectagle = star.GetBounds();
+			RectangleF starRectangle = star.GetBounds();
 			Region starRegion = new Region(star);
-			int percentWidth = (int)((double)starRectagle.Width / (double)100 * (double)Math.Abs(percent));
+			int percentWidth = (int)((double)starRectangle.Width / (double)100 * (double)Math.Abs(percent));
 
 			if (Math.Abs(percent) >= 100) { }
 			else if (percent < 0)
 			{
-				Region backRegion = new Region(new Rectangle((int)starRectagle.Left, (int)starRectagle.Top, (int)starRectagle.Width - percentWidth + 1, (int)starRectagle.Height));
+				Region backRegion = new Region(new Rectangle((int)starRectangle.Left, (int)starRectangle.Top, (int)starRectangle.Width - percentWidth + 1, (int)starRectangle.Height));
 				starRegion.Exclude(backRegion);
 				backRegion.Dispose();
 			}
 			else if (percent > 0)
 			{
-				Region backRegion = new Region(new Rectangle((int)starRectagle.Left + percentWidth + 1, (int)starRectagle.Top, (int)starRectagle.Width - percentWidth, (int)starRectagle.Height));
+				Region backRegion = new Region(new Rectangle((int)starRectangle.Left + percentWidth + 1, (int)starRectangle.Top, (int)starRectangle.Width - percentWidth, (int)starRectangle.Height));
 				starRegion.Exclude(backRegion);
 				backRegion.Dispose();
 			}

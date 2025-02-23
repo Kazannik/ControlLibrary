@@ -8,9 +8,10 @@
     <OutputType>Library</OutputType>
     <RootNamespace>ControlLibrary</RootNamespace>
     <AssemblyName>ControlLibrary</AssemblyName>
-    <TargetFrameworkVersion>v4.7.2</TargetFrameworkVersion>
+    <TargetFrameworkVersion>v4.8</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <Deterministic>true</Deterministic>
+    <TargetFrameworkProfile />
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <DebugSymbols>true</DebugSymbols>
@@ -35,7 +36,7 @@
     <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
   </PropertyGroup>
   <PropertyGroup>
-    <SignAssembly>false</SignAssembly>
+    <SignAssembly>true</SignAssembly>
   </PropertyGroup>
   <PropertyGroup>
     <AssemblyOriginatorKeyFile>Kazannik Test Software CA.pfx</AssemblyOriginatorKeyFile>
@@ -288,4 +289,7 @@
     <None Include="Kazannik Test Software CA.pfx" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+  <PropertyGroup>
+    <PostBuildEvent>"%25ProgramFiles(x86)%25\Windows Kits\10\bin\10.0.22621.0\x64\signtool.exe" sign /v /fd SHA256 /n "Mikhail Kazannik Software" /sha1 621E2114C5104C6CC726BABCAA86872D99B651DB /t http://timestamp.digicert.com /v $(TargetFileName)</PostBuildEvent>
+  </PropertyGroup>
 </Project>

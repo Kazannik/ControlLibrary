@@ -13,9 +13,8 @@ namespace ControlLibrary.Controls.PriodControls
 	internal class PeriodControl : Control
 	{
 		//private ColorThemeList theme;
-		private Rectangle periodRectagle;
-		private Rectangle todateRectagle;
-		//private Rectangle todateTextRectagle;
+		private Rectangle periodRectangle;
+		private Rectangle todateRectangle;
 
 		private readonly DateTimeFormatInfo FormatInfo = CultureInfo.CurrentCulture.DateTimeFormat;
 		private readonly StringFormat sf = new StringFormat() { Alignment = StringAlignment.Center };
@@ -92,8 +91,8 @@ namespace ControlLibrary.Controls.PriodControls
 				Height = month_label_border + ((month_label_height + month_label_border) * 6);
 			}
 
-			periodRectagle = new Rectangle(month_label_height + month_label_border, month_label_border, Width - (month_label_height * 2) - (month_label_border * 4), month_label_height);
-			todateRectagle = new Rectangle(month_label_height + month_label_border, Height - month_label_height - month_label_border, (int)(month_label_height * 1.5), month_label_height);
+			periodRectangle = new Rectangle(month_label_height + month_label_border, month_label_border, Width - (month_label_height * 2) - (month_label_border * 4), month_label_height);
+			todateRectangle = new Rectangle(month_label_height + month_label_border, Height - month_label_height - month_label_border, (int)(month_label_height * 1.5), month_label_height);
 
 			buttons.Add(new PeriodBoxButton(0, ""));
 			buttons.Add(new PeriodBoxButton(0, ""));
@@ -152,11 +151,11 @@ namespace ControlLibrary.Controls.PriodControls
 				}
 			}
 
-			graphics.DrawString(period.ToShortDateString(), Font, new SolidBrush(ForeColor), periodRectagle, sf);
+			graphics.DrawString(period.ToShortDateString(), Font, new SolidBrush(ForeColor), periodRectangle, sf);
 
 			Color BorderColor = GetBorderColor(ButtonState.Selected);
 			Pen BorderColorPen = new Pen(BorderColor, 1);
-			graphics.DrawRectangle(BorderColorPen, todateRectagle);
+			graphics.DrawRectangle(BorderColorPen, todateRectangle);
 			BorderColorPen.Dispose();
 		}
 
