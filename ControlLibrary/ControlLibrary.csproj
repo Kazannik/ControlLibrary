@@ -36,7 +36,7 @@
     <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
   </PropertyGroup>
   <PropertyGroup>
-    <SignAssembly>true</SignAssembly>
+    <SignAssembly>false</SignAssembly>
   </PropertyGroup>
   <PropertyGroup>
     <AssemblyOriginatorKeyFile>Kazannik Test Software CA.pfx</AssemblyOriginatorKeyFile>
@@ -290,6 +290,6 @@
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>
-    <PostBuildEvent>"%25ProgramFiles(x86)%25\Windows Kits\10\bin\10.0.22621.0\x64\signtool.exe" sign /v /fd SHA256 /n "Mikhail Kazannik Software" /sha1 621E2114C5104C6CC726BABCAA86872D99B651DB /t http://timestamp.digicert.com /v $(TargetFileName)</PostBuildEvent>
+    <PostBuildEvent>"%25ProgramFiles(x86)%25\Windows Kits\10\bin\10.0.22621.0\x64\signtool.exe" sign /v /fd SHA256 /n "Mikhail Kazannik Software" /sha1 621114f6fd186adf11b6c9a3f479a971987ace6e /t http://timestamp.digicert.com /v $(TargetFileName)</PostBuildEvent>
   </PropertyGroup>
 </Project>

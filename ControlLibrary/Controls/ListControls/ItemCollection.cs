@@ -28,6 +28,7 @@ namespace ControlLibrary.Controls.ListControls
 			((I)value).ClipSizeChanged += new EventHandler<EventArgs>(ItemCollection_ClipSizeChanged);
 			((I)value).ContentChanged += new EventHandler<EventArgs>(ItemCollection_ContentChanged);
 			base.Add(value);
+			DoItemAdded(item: (I)value);
 			DoSizeChanged();
 		}
 				
@@ -46,6 +47,10 @@ namespace ControlLibrary.Controls.ListControls
 				item.ContentChanged += new EventHandler<EventArgs>(ItemCollection_ContentChanged);
 			}
 			base.AddRange(items: value);
+			foreach (I item in value)
+			{
+				DoItemAdded(item: item);
+			}
 			DoSizeChanged();
 		}
 
@@ -94,6 +99,7 @@ namespace ControlLibrary.Controls.ListControls
 			((I)value).ClipSizeChanged += new EventHandler<EventArgs>(ItemCollection_ClipSizeChanged);
 			((I)value).ContentChanged += new EventHandler<EventArgs>(ItemCollection_ContentChanged);
 			Insert(index: index, item: value);
+			DoItemAdded(item: (I)value);
 			DoSizeChanged();
 		}
 
@@ -108,6 +114,7 @@ namespace ControlLibrary.Controls.ListControls
 			((I)value).ClipSizeChanged -= new EventHandler<EventArgs>(ItemCollection_ClipSizeChanged);
 			((I)value).ContentChanged -= new EventHandler<EventArgs>(ItemCollection_ContentChanged);
 			base.Remove(value: value);
+			DoItemDeleted();
 			DoSizeChanged();
 		}
 
@@ -152,6 +159,32 @@ namespace ControlLibrary.Controls.ListControls
 			{
 				throw new ArgumentException(string.Format(CultureInfo.CurrentCulture, "Не удалось привести тип Value: {0} к поддурживаемому коллекцией типу: {1}.", value.GetType().ToString(), typeof(I).ToString()));
 			}
+		}
+
+
+		public event EventHandler<ItemEventArgs<I>> ItemAdded;
+
+		private void DoItemAdded(I item)
+		{
+			OnItemAdded(new ItemEventArgs<I>(item: item, argument: null));
+		}
+
+		protected virtual void OnItemAdded(ItemEventArgs<I> e)
+		{
+			ItemAdded?.Invoke(this, e);
+		}
+
+
+		public event EventHandler<EventArgs> ItemDeleted;
+
+		private void DoItemDeleted()
+		{
+			OnItemDeleted(new EventArgs());
+		}
+
+		protected virtual void OnItemDeleted(EventArgs e)
+		{
+			ItemDeleted?.Invoke(this, e);
 		}
 
 		public event EventHandler<EventArgs> SizeChanged;

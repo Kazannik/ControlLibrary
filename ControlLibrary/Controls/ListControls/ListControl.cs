@@ -28,7 +28,19 @@ namespace ControlLibrary.Controls.ListControls
 			collection.ClipSizeChanged += new EventHandler<ItemEventArgs<I>>(Collection_ClipSizeChanged);
 			collection.ContentChanged += new EventHandler<ItemEventArgs<I>>(Collection_ContentChanged);
 			collection.SizeChanged += new EventHandler<EventArgs>(Collection_SizeChanged);
+			collection.ItemAdded += new EventHandler<ItemEventArgs<I>>(Collection_ItemAdded);
+			collection.ItemDeleted += new EventHandler<EventArgs>(Collection_ItemDeleted);
 			return collection;
+		}
+
+		private void Collection_ItemDeleted(object sender, EventArgs e)
+		{
+			OnItemDeleted(e);
+		}
+
+		private void Collection_ItemAdded(object sender, ItemEventArgs<I> e)
+		{
+			OnItemAdded(e);
 		}
 
 		private void Collection_SizeChanged(object sender, EventArgs e)
@@ -117,6 +129,11 @@ namespace ControlLibrary.Controls.ListControls
 		public event EventHandler<ItemEventArgs<I>> SelectedItemChanged;
 		[Category("Action"), Browsable(true), EditorBrowsable(EditorBrowsableState.Always)]
 		public event EventHandler<ItemEventArgs<I>> ItemContentChanged;
+		[Category("Action"), Browsable(true), EditorBrowsable(EditorBrowsableState.Always)]
+		public event EventHandler<ItemEventArgs<I>> ItemAdded;
+		[Category("Action"), Browsable(true), EditorBrowsable(EditorBrowsableState.Always)]
+		public event EventHandler<EventArgs> ItemDeleted;
+
 
 		[Category("Mouse"), Browsable(true), EditorBrowsable(EditorBrowsableState.Always)]
 		public event EventHandler<ItemMouseEventArgs<I, S>> ItemMouseDown;
@@ -137,6 +154,16 @@ namespace ControlLibrary.Controls.ListControls
 		protected virtual void OnItemContentChanged(ItemEventArgs<I> e)
 		{
 			ItemContentChanged?.Invoke(this, e);
+		}
+
+		protected virtual void OnItemAdded(ItemEventArgs<I> e)
+		{
+			ItemAdded?.Invoke(this, e);
+		}
+
+		protected virtual void OnItemDeleted(EventArgs e)
+		{
+			ItemDeleted?.Invoke(this, e);
 		}
 
 		protected virtual void OnItemMouseDown(ItemMouseEventArgs<I, S> e)
