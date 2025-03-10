@@ -19,7 +19,7 @@ namespace ControlLibrary.Controls.ListControls
 		private Timer resizeTimer;
 		private Size oldSize;
 
-		private BufferedGraphicsContext context;
+		private readonly BufferedGraphicsContext context;
 		private BufferedGraphics grafx;
 
 		protected override ObjectCollection CreateItemCollection()
