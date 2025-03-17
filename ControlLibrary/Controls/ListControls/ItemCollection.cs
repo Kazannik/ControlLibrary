@@ -47,7 +47,7 @@ namespace ControlLibrary.Controls.ListControls
 				item.ContentChanged += new EventHandler<EventArgs>(ItemCollection_ContentChanged);
 			}
 			base.AddRange(items: value);
-			foreach (I item in value)
+			foreach (I item in value.Select(v => (I)v))
 			{
 				DoItemAdded(item: item);
 			}

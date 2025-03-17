@@ -16,7 +16,7 @@ namespace ControlLibrary.Controls.TextControl.TextEditor
 		private HRuler hRuler = null;
 		private VScrollBar vScrollBar = new VScrollBar();
 		private HScrollBar hScrollBar = new HScrollBar();
-		private TextArea textArea;
+		private readonly TextArea textArea;
 		private bool doHandleMousewheel = true;
 		private bool disposed;
 
@@ -27,9 +27,9 @@ namespace ControlLibrary.Controls.TextControl.TextEditor
 		public Caret Caret => textArea.Caret;
 
 		[Browsable(false)]
-		public IDocument Document => motherTextEditorControl != null ? motherTextEditorControl.Document : null;
+		public IDocument Document => motherTextEditorControl?.Document;
 
-		public ITextEditorProperties TextEditorProperties => motherTextEditorControl != null ? motherTextEditorControl.TextEditorProperties : null;
+		public ITextEditorProperties TextEditorProperties => motherTextEditorControl?.TextEditorProperties;
 
 		public VScrollBar VScrollBar => vScrollBar;
 
@@ -277,7 +277,7 @@ namespace ControlLibrary.Controls.TextControl.TextEditor
 			textArea.Invalidate();
 		}
 
-		private Util.MouseWheelHandler mouseWheelHandler = new Util.MouseWheelHandler();
+		private readonly Util.MouseWheelHandler mouseWheelHandler = new Util.MouseWheelHandler();
 
 		public void HandleMouseWheel(MouseEventArgs e)
 		{
@@ -354,7 +354,7 @@ namespace ControlLibrary.Controls.TextControl.TextEditor
 			}
 		}
 
-		private int scrollMarginHeight = 3;
+		private readonly int scrollMarginHeight = 3;
 
 		/// <summary>
 		/// Ensure that <paramref name="line"/> is visible.

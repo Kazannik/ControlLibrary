@@ -61,7 +61,7 @@ namespace ControlLibrary.Controls.TextControl.TextEditor.Gui.InsightWindow
 		{
 			// move the window under the caret (don't change the x position)
 			TextLocation caretPos = control.ActiveTextAreaControl.Caret.Position;
-			int y = (int)((1 + caretPos.Y) * control.ActiveTextAreaControl.TextArea.TextView.FontHeight)
+			int y = (1 + caretPos.Y) * control.ActiveTextAreaControl.TextArea.TextView.FontHeight
 				- control.ActiveTextAreaControl.TextArea.VirtualTop.Y - 1
 				+ control.ActiveTextAreaControl.TextArea.TextView.DrawingPosition.Y;
 
@@ -100,7 +100,7 @@ namespace ControlLibrary.Controls.TextControl.TextEditor.Gui.InsightWindow
 
 		#endregion
 
-		private MouseWheelHandler mouseWheelHandler = new MouseWheelHandler();
+		private readonly MouseWheelHandler mouseWheelHandler = new MouseWheelHandler();
 
 		public void HandleMouseWheel(MouseEventArgs e)
 		{
@@ -160,7 +160,7 @@ namespace ControlLibrary.Controls.TextControl.TextEditor.Gui.InsightWindow
 		#endregion
 
 		#region InsightDataProvider handling
-		private Stack<InsightDataProviderStackElement> insightDataProviderStack = new Stack<InsightDataProviderStackElement>();
+		private readonly Stack<InsightDataProviderStackElement> insightDataProviderStack = new Stack<InsightDataProviderStackElement>();
 
 		private int CurrentData
 		{

@@ -8,8 +8,8 @@ namespace ControlLibrary.Controls.TextControl.TextEditor.Undo
 	/// </summary>
 	public class UndoStack
 	{
-		private Stack<IUndoableOperation> undostack = new Stack<IUndoableOperation>();
-		private Stack<IUndoableOperation> redostack = new Stack<IUndoableOperation>();
+		private readonly Stack<IUndoableOperation> undostack = new Stack<IUndoableOperation>();
+		private readonly Stack<IUndoableOperation> redostack = new Stack<IUndoableOperation>();
 
 		public TextEditorControlBase TextEditorControl = null;
 
@@ -175,7 +175,7 @@ namespace ControlLibrary.Controls.TextControl.TextEditor.Undo
 
 		private class UndoableSetCaretPosition : IUndoableOperation
 		{
-			private UndoStack stack;
+			private readonly UndoStack stack;
 			private TextLocation pos;
 			private TextLocation redoPos;
 
@@ -207,7 +207,7 @@ namespace ControlLibrary.Controls.TextControl.TextEditor.Undo
 			this.op = op;
 		}
 
-		private IUndoableOperation op;
+		private readonly IUndoableOperation op;
 
 		public IUndoableOperation Operation => op;
 	}

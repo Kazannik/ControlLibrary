@@ -35,9 +35,9 @@ namespace ControlLibrary.Controls.QRCoder
 			using (var lightBrush = new SolidBrush(lightColor))
 			using (var darkBrush = new SolidBrush(darkColor))
 			{
-				for (var x = 0; x < size + offset; x = x + pixelsPerModule)
+				for (var x = 0; x < size + offset; x += pixelsPerModule)
 				{
-					for (var y = 0; y < size + offset; y = y + pixelsPerModule)
+					for (var y = 0; y < size + offset; y += pixelsPerModule)
 					{
 						var module = QrCodeData.ModuleMatrix[((y + pixelsPerModule) / pixelsPerModule) - 1][((x + pixelsPerModule) / pixelsPerModule) - 1];
 
@@ -74,9 +74,9 @@ namespace ControlLibrary.Controls.QRCoder
 				gfx.Clear(lightColor);
 				var drawIconFlag = icon != null && iconSizePercent > 0 && iconSizePercent <= 100;
 
-				for (var x = 0; x < size + offset; x = x + pixelsPerModule)
+				for (var x = 0; x < size + offset; x += pixelsPerModule)
 				{
-					for (var y = 0; y < size + offset; y = y + pixelsPerModule)
+					for (var y = 0; y < size + offset; y += pixelsPerModule)
 					{
 						var moduleBrush = QrCodeData.ModuleMatrix[((y + pixelsPerModule) / pixelsPerModule) - 1][((x + pixelsPerModule) / pixelsPerModule) - 1] ? darkBrush : lightBrush;
 						gfx.FillRectangle(moduleBrush, new Rectangle(x - offset, y - offset, pixelsPerModule, pixelsPerModule));

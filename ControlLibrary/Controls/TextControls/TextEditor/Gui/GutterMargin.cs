@@ -12,7 +12,7 @@ namespace ControlLibrary.Controls.TextControl.TextEditor
 	/// </summary>
 	public class GutterMargin : AbstractMargin, IDisposable
 	{
-		private StringFormat numberStringFormat = (StringFormat)StringFormat.GenericTypographic.Clone();
+		private readonly StringFormat numberStringFormat = (StringFormat)StringFormat.GenericTypographic.Clone();
 
 		public static Cursor RightLeftCursor;
 

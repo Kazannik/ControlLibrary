@@ -7,7 +7,7 @@ namespace ControlLibrary.Controls.TextControl.TextEditor.Util
 	internal abstract class TipSection
 	{
 		private SizeF tipAllocatedSize;
-		private Graphics tipGraphics;
+		private readonly Graphics tipGraphics;
 		private SizeF tipMaxSize;
 		private SizeF tipRequiredSize;
 

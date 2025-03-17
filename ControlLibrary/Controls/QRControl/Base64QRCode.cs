@@ -10,7 +10,7 @@ namespace ControlLibrary.Controls.QRCoder
 {
 	public class Base64QRCode : AbstractQRCode, IDisposable
 	{
-		private QRCode qr;
+		private readonly QRCode qr;
 
 		/// <summary>
 		/// Constructor without params to be used in COM Objects connections

@@ -4,9 +4,9 @@ namespace ControlLibrary.Controls.TextControl.TextEditor.Document
 {
 	public class LineCountChangeEventArgs : EventArgs
 	{
-		private IDocument document;
-		private int start;
-		private int moved;
+		private readonly IDocument document;
+		private readonly int start;
+		private readonly int moved;
 
 		/// <returns>
 		/// always a valid Document which is related to the Event.
@@ -33,8 +33,8 @@ namespace ControlLibrary.Controls.TextControl.TextEditor.Document
 
 	public class LineEventArgs : EventArgs
 	{
-		private IDocument document;
-		private LineSegment lineSegment;
+		private readonly IDocument document;
+		private readonly LineSegment lineSegment;
 
 		public IDocument Document => document;
 
@@ -54,7 +54,7 @@ namespace ControlLibrary.Controls.TextControl.TextEditor.Document
 
 	public class LineLengthChangeEventArgs : LineEventArgs
 	{
-		private int lengthDelta;
+		private readonly int lengthDelta;
 
 		public int LengthDelta => lengthDelta;
 

@@ -302,7 +302,7 @@ namespace ControlLibrary.Controls.TextControl.TextEditor
 			}
 		}
 
-		private List<MarkerToDraw> markersToDraw = new List<MarkerToDraw>();
+		private readonly List<MarkerToDraw> markersToDraw = new List<MarkerToDraw>();
 
 		private void DrawMarker(Graphics g, TextMarker marker, RectangleF drawingRect)
 		{
@@ -408,11 +408,10 @@ namespace ControlLibrary.Controls.TextControl.TextEditor
 				int currentWordEndOffset = currentWordOffset + currentWord.Length - 1;
 				TextWordType currentWordType = currentWord.Type;
 
-				IList<TextMarker> markers;
 				Color wordForeColor = currentWordType == TextWordType.Space
 					? spaceMarkerColor.Color
 					: currentWordType == TextWordType.Tab ? tabMarkerColor.Color : currentWord.Color;
-				Brush wordBackBrush = GetMarkerBrushAt(currentLine.Offset + currentWordOffset, currentWord.Length, ref wordForeColor, out markers);
+				Brush wordBackBrush = GetMarkerBrushAt(currentLine.Offset + currentWordOffset, currentWord.Length, ref wordForeColor, out IList<TextMarker> markers);
 
 				// It is possible that we have to split the current word because a marker/the selection begins/ends inside it
 				if (currentWord.Length > 1)
@@ -621,10 +620,10 @@ namespace ControlLibrary.Controls.TextControl.TextEditor
 			return wordWidth;
 		}
 
-		private struct WordFontPair
+		private readonly struct WordFontPair
 		{
-			private string word;
-			private Font font;
+			private readonly string word;
+			private readonly Font font;
 			public WordFontPair(string word, Font font)
 			{
 				this.word = word;
@@ -633,7 +632,7 @@ namespace ControlLibrary.Controls.TextControl.TextEditor
 			public override bool Equals(object obj)
 			{
 				WordFontPair myWordFontPair = (WordFontPair)obj;
-				return !word.Equals(myWordFontPair.word) ? false : font.Equals(myWordFontPair.font);
+				return word.Equals(myWordFontPair.word) && font.Equals(myWordFontPair.font);
 			}
 
 			public override int GetHashCode()
@@ -642,7 +641,7 @@ namespace ControlLibrary.Controls.TextControl.TextEditor
 			}
 		}
 
-		private Dictionary<WordFontPair, int> measureCache = new Dictionary<WordFontPair, int>();
+		private readonly Dictionary<WordFontPair, int> measureCache = new Dictionary<WordFontPair, int>();
 
 		// split words after 1000 characters. Fixes GDI+ crash on very longs words, for example
 		// a 100 KB Base64-file without any line breaks.
@@ -695,7 +694,7 @@ namespace ControlLibrary.Controls.TextControl.TextEditor
 		#endregion
 
 		#region Conversion Functions
-		private Dictionary<Font, Dictionary<char, int>> fontBoundCharWidth = new Dictionary<Font, Dictionary<char, int>>();
+		private readonly Dictionary<Font, Dictionary<char, int>> fontBoundCharWidth = new Dictionary<Font, Dictionary<char, int>>();
 
 		public int GetWidth(char ch, Font font)
 		{
@@ -764,8 +763,7 @@ namespace ControlLibrary.Controls.TextControl.TextEditor
 		/// </summary>
 		public TextLocation GetLogicalPosition(Point mousePosition)
 		{
-			FoldMarker dummy;
-			return GetLogicalColumn(GetLogicalLine(mousePosition.Y), mousePosition.X, out dummy);
+			return GetLogicalColumn(GetLogicalLine(mousePosition.Y), mousePosition.X, out _);
 		}
 
 		/// <summary>
@@ -773,8 +771,7 @@ namespace ControlLibrary.Controls.TextControl.TextEditor
 		/// </summary>
 		public TextLocation GetLogicalPosition(int visualPosX, int visualPosY)
 		{
-			FoldMarker dummy;
-			return GetLogicalColumn(GetLogicalLine(visualPosY), visualPosX, out dummy);
+			return GetLogicalColumn(GetLogicalLine(visualPosY), visualPosX, out FoldMarker dummy);
 		}
 
 		/// <summary>
@@ -782,8 +779,7 @@ namespace ControlLibrary.Controls.TextControl.TextEditor
 		/// </summary>
 		public FoldMarker GetFoldMarkerFromPosition(int visualPosX, int visualPosY)
 		{
-			FoldMarker foldMarker;
-			GetLogicalColumn(GetLogicalLine(visualPosY), visualPosX, out foldMarker);
+			GetLogicalColumn(GetLogicalLine(visualPosY), visualPosX, out FoldMarker foldMarker);
 			return foldMarker;
 		}
 

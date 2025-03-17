@@ -59,7 +59,7 @@ namespace ControlLibrary.Controls.TextControl.TextEditor
 
 		public override bool Equals(object obj)
 		{
-			return !(obj is TextLocation) ? false : (TextLocation)obj == this;
+			return obj is TextLocation location && location == this;
 		}
 
 		public bool Equals(TextLocation other)
@@ -79,12 +79,12 @@ namespace ControlLibrary.Controls.TextControl.TextEditor
 
 		public static bool operator <(TextLocation a, TextLocation b)
 		{
-			return a.y < b.y ? true : a.y == b.y ? a.x < b.x : false;
+			return a.y < b.y || (a.y == b.y && a.x < b.x);
 		}
 
 		public static bool operator >(TextLocation a, TextLocation b)
 		{
-			return a.y > b.y ? true : a.y == b.y ? a.x > b.x : false;
+			return a.y > b.y || (a.y == b.y && a.x > b.x);
 		}
 
 		public static bool operator <=(TextLocation a, TextLocation b)

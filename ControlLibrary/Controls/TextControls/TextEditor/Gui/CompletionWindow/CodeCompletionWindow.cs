@@ -8,13 +8,13 @@ namespace ControlLibrary.Controls.TextControl.TextEditor.Gui.CompletionWindow
 {
 	public class CodeCompletionWindow : AbstractCompletionWindow
 	{
-		private ICompletionData[] completionData;
+		private readonly ICompletionData[] completionData;
 		private CodeCompletionListView codeCompletionListView;
-		private VScrollBar vScrollBar = new VScrollBar();
-		private ICompletionDataProvider dataProvider;
-		private IDocument document;
-		private bool showDeclarationWindow = true;
-		private bool fixedListViewWidth = true;
+		private readonly VScrollBar vScrollBar = new VScrollBar();
+		private readonly ICompletionDataProvider dataProvider;
+		private readonly IDocument document;
+		private readonly bool showDeclarationWindow = true;
+		private readonly bool fixedListViewWidth = true;
 		private const int ScrollbarWidth = 16;
 		private const int MaxListLength = 10;
 		private int startOffset;
@@ -168,7 +168,7 @@ namespace ControlLibrary.Controls.TextControl.TextEditor.Gui.CompletionWindow
 			}
 		}
 
-		private Util.MouseWheelHandler mouseWheelHandler = new Util.MouseWheelHandler();
+		private readonly Util.MouseWheelHandler mouseWheelHandler = new Util.MouseWheelHandler();
 
 		public void HandleMouseWheel(MouseEventArgs e)
 		{

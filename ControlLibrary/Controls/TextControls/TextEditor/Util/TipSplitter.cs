@@ -6,9 +6,9 @@ namespace ControlLibrary.Controls.TextControl.TextEditor.Util
 {
 	internal class TipSplitter : TipSection
 	{
-		private bool isHorizontal;
-		private float[] offsets;
-		private TipSection[] tipSections;
+		private readonly bool isHorizontal;
+		private readonly float[] offsets;
+		private readonly TipSection[] tipSections;
 
 		public TipSplitter(Graphics graphics, bool horizontal, params TipSection[] sections) : base(graphics)
 		{

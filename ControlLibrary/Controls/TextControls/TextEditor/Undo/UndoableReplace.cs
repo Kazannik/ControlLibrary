@@ -9,12 +9,12 @@ namespace ControlLibrary.Controls.TextControl.TextEditor.Undo
 	/// </summary>
 	public class UndoableReplace : IUndoableOperation
 	{
-		private IDocument document;
+		private readonly IDocument document;
 
 		//		int       oldCaretPos;
-		private int offset;
-		private string text;
-		private string origText;
+		private readonly int offset;
+		private readonly string text;
+		private readonly string origText;
 
 		/// <summary>
 		/// Creates a new instance of <see cref="UndoableReplace"/>

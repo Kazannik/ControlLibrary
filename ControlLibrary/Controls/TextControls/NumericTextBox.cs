@@ -40,8 +40,7 @@ namespace ControlLibrary.Controls.TextControl
 
 		private bool IsNumeric(string s)
 		{
-			double output;
-			return double.TryParse(s, out output);
+			return double.TryParse(s, out double output);
 		}
 
 		public double Value
@@ -92,7 +91,7 @@ namespace ControlLibrary.Controls.TextControl
 		/// <summary>
 		/// Обязательная переменная конструктора.
 		/// </summary>
-		private System.ComponentModel.IContainer components = null;
+		private readonly IContainer components = null;
 
 		/// <summary> 
 		/// Освободить все используемые ресурсы.

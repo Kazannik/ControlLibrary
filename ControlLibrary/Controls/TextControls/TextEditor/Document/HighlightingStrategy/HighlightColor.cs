@@ -12,12 +12,12 @@ namespace ControlLibrary.Controls.TextControl.TextEditor.Document
 	/// </summary>
 	public class HighlightColor
 	{
-		private Color color;
-		private Color backgroundcolor = System.Drawing.Color.WhiteSmoke;
-		private bool bold = false;
-		private bool italic = false;
-		private bool hasForeground = false;
-		private bool hasBackground = false;
+		private readonly Color color;
+		private readonly Color backgroundcolor = System.Drawing.Color.WhiteSmoke;
+		private readonly bool bold = false;
+		private readonly bool italic = false;
+		private readonly bool hasForeground = false;
+		private readonly bool hasBackground = false;
 
 		public bool HasForeground => hasForeground;
 

@@ -11,7 +11,7 @@ namespace ControlLibrary.Controls.TextControl.TextEditor.Gui.CompletionWindow
 	[ToolboxItem(false)]
 	public class CodeCompletionListView : System.Windows.Forms.UserControl
 	{
-		private ICompletionData[] completionData;
+		private readonly ICompletionData[] completionData;
 		private int firstItem = 0;
 		private int selectedItem = -1;
 		private ImageList imageList;
@@ -154,11 +154,7 @@ namespace ControlLibrary.Controls.TextControl.TextEditor.Gui.CompletionWindow
 				{
 					double priority = completionData[i].Priority;
 					int quality = lowerText == startText ? itemText == originalStartText ? 3 : 2 : itemText.StartsWith(originalStartText) ? 1 : 0;
-					bool useThisItem = bestQuality < quality
-						? true
-						: bestIndex == selectedItem
-							? false
-							: i == selectedItem ? bestQuality == quality : bestQuality == quality && bestPriority < priority;
+					bool useThisItem = bestQuality < quality || (bestIndex != selectedItem && (i == selectedItem ? bestQuality == quality : bestQuality == quality && bestPriority < priority));
 					if (useThisItem)
 					{
 						bestIndex = i;

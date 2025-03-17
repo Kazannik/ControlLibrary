@@ -15,7 +15,7 @@ namespace ControlLibrary.Controls.TextControl.TextEditor
 	public class TextEditorBox : TextEditorControlBase
 	{
 		protected Panel textAreaPanel = new Panel();
-		private TextAreaControl primaryTextArea;
+		private readonly TextAreaControl primaryTextArea;
 		private Splitter textAreaSplitter = null;
 		private TextAreaControl secondaryTextArea = null;
 		private PrintDocument printDocument = null;
@@ -82,10 +82,7 @@ namespace ControlLibrary.Controls.TextControl.TextEditor
 		public override void OptionsChanged()
 		{
 			primaryTextArea.OptionsChanged();
-			if (secondaryTextArea != null)
-			{
-				secondaryTextArea.OptionsChanged();
-			}
+			secondaryTextArea?.OptionsChanged();
 		}
 
 		public void Split()
@@ -202,10 +199,7 @@ namespace ControlLibrary.Controls.TextControl.TextEditor
 						secondaryTextArea = null;
 						textAreaSplitter = null;
 					}
-					if (primaryTextArea != null)
-					{
-						primaryTextArea.Dispose();
-					}
+					primaryTextArea?.Dispose();
 					textAreaPanel.Dispose();
 					textAreaPanel = null;
 				}
@@ -235,40 +229,25 @@ namespace ControlLibrary.Controls.TextControl.TextEditor
 				switch (update.TextAreaUpdateType)
 				{
 					case TextAreaUpdateType.PositionToEnd:
-						this.primaryTextArea.TextArea.UpdateToEnd(update.Position.Y);
-						if (this.secondaryTextArea != null)
-						{
-							this.secondaryTextArea.TextArea.UpdateToEnd(update.Position.Y);
-						}
+						primaryTextArea.TextArea.UpdateToEnd(update.Position.Y);
+						secondaryTextArea?.TextArea.UpdateToEnd(update.Position.Y);
 						break;
 					case TextAreaUpdateType.PositionToLineEnd:
 					case TextAreaUpdateType.SingleLine:
-						this.primaryTextArea.TextArea.UpdateLine(update.Position.Y);
-						if (this.secondaryTextArea != null)
-						{
-							this.secondaryTextArea.TextArea.UpdateLine(update.Position.Y);
-						}
+						primaryTextArea.TextArea.UpdateLine(update.Position.Y);
+						secondaryTextArea?.TextArea.UpdateLine(update.Position.Y);
 						break;
 					case TextAreaUpdateType.SinglePosition:
-						this.primaryTextArea.TextArea.UpdateLine(update.Position.Y, update.Position.X, update.Position.X);
-						if (this.secondaryTextArea != null)
-						{
-							this.secondaryTextArea.TextArea.UpdateLine(update.Position.Y, update.Position.X, update.Position.X);
-						}
+						primaryTextArea.TextArea.UpdateLine(update.Position.Y, update.Position.X, update.Position.X);
+						secondaryTextArea?.TextArea.UpdateLine(update.Position.Y, update.Position.X, update.Position.X);
 						break;
 					case TextAreaUpdateType.LinesBetween:
-						this.primaryTextArea.TextArea.UpdateLines(update.Position.X, update.Position.Y);
-						if (this.secondaryTextArea != null)
-						{
-							this.secondaryTextArea.TextArea.UpdateLines(update.Position.X, update.Position.Y);
-						}
+						primaryTextArea.TextArea.UpdateLines(update.Position.X, update.Position.Y);
+						secondaryTextArea?.TextArea.UpdateLines(update.Position.X, update.Position.Y);
 						break;
 					case TextAreaUpdateType.WholeTextArea:
-						this.primaryTextArea.TextArea.Invalidate();
-						if (this.secondaryTextArea != null)
-						{
-							this.secondaryTextArea.TextArea.Invalidate();
-						}
+						primaryTextArea.TextArea.Invalidate();
+						secondaryTextArea?.TextArea.Invalidate();
 						break;
 				}
 			}

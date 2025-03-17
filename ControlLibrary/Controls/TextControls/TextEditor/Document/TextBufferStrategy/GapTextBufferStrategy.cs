@@ -6,7 +6,7 @@ namespace ControlLibrary.Controls.TextControl.TextEditor.Document
 	public class GapTextBufferStrategy : ITextBufferStrategy
 	{
 #if DEBUG
-		private int creatorThread = System.Threading.Thread.CurrentThread.ManagedThreadId;
+		private readonly int creatorThread = System.Threading.Thread.CurrentThread.ManagedThreadId;
 
 		private void CheckThread()
 		{

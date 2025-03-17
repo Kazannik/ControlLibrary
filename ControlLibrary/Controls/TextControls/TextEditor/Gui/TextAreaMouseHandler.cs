@@ -12,7 +12,7 @@ namespace ControlLibrary.Controls.TextControl.TextEditor
 	/// </summary>
 	public class TextAreaMouseHandler
 	{
-		private TextArea textArea;
+		private readonly TextArea textArea;
 		private bool doubleclick = false;
 		private bool clickedOnSelectedText = false;
 		private MouseButtons button;

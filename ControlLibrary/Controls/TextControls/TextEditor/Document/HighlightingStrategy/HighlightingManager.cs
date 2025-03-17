@@ -7,13 +7,13 @@ namespace ControlLibrary.Controls.TextControl.TextEditor.Document
 {
 	public class HighlightingManager
 	{
-		private ArrayList syntaxModeFileProviders = new ArrayList();
-		private static HighlightingManager highlightingManager;
+		private readonly ArrayList syntaxModeFileProviders = new ArrayList();
+		private static readonly HighlightingManager highlightingManager;
 
 		// hash table from extension name to highlighting definition,
 		// OR from extension name to Pair SyntaxMode,ISyntaxModeFileProvider
-		private Hashtable highlightingDefs = new Hashtable();
-		private Hashtable extensionsToName = new Hashtable();
+		private readonly Hashtable highlightingDefs = new Hashtable();
+		private readonly Hashtable extensionsToName = new Hashtable();
 
 		public Hashtable HighlightingDefinitions => highlightingDefs;
 
@@ -86,9 +86,7 @@ namespace ControlLibrary.Controls.TextControl.TextEditor.Document
 			DefaultHighlightingStrategy highlightingStrategy = null;
 			try
 			{
-				var reader = syntaxModeFileProvider.GetSyntaxModeFile(syntaxMode);
-				if (reader == null)
-					throw new HighlightingDefinitionInvalidException("Could not get syntax mode file for " + syntaxMode.Name);
+				var reader = syntaxModeFileProvider.GetSyntaxModeFile(syntaxMode) ?? throw new HighlightingDefinitionInvalidException("Could not get syntax mode file for " + syntaxMode.Name);
 				highlightingStrategy = HighlightingDefinitionParser.Parse(syntaxMode, reader);
 				if (highlightingStrategy.Name != syntaxMode.Name)
 				{
@@ -127,7 +125,7 @@ namespace ControlLibrary.Controls.TextControl.TextEditor.Document
 		public IHighlightingStrategy FindHighlighter(string name)
 		{
 			object def = highlightingDefs[name];
-			return def is DictionaryEntry ? LoadDefinition((DictionaryEntry)def) : def == null ? DefaultHighlighting : (IHighlightingStrategy)def;
+			return def is DictionaryEntry entry ? LoadDefinition(entry) : def == null ? DefaultHighlighting : (IHighlightingStrategy)def;
 		}
 
 		public IHighlightingStrategy FindHighlighterForFile(string fileName)
@@ -136,7 +134,7 @@ namespace ControlLibrary.Controls.TextControl.TextEditor.Document
 			if (highlighterName != null)
 			{
 				object def = highlightingDefs[highlighterName];
-				return def is DictionaryEntry ? LoadDefinition((DictionaryEntry)def) : def == null ? DefaultHighlighting : (IHighlightingStrategy)def;
+				return def is DictionaryEntry entry ? LoadDefinition(entry) : def == null ? DefaultHighlighting : (IHighlightingStrategy)def;
 			}
 			else
 			{

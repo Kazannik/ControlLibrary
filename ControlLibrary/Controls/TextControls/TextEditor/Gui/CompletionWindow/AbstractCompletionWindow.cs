@@ -12,7 +12,7 @@ namespace ControlLibrary.Controls.TextControl.TextEditor.Gui.CompletionWindow
 		protected TextEditorBox control;
 		protected Size drawingSize;
 		private Rectangle workingScreen;
-		private Form parentForm;
+		private readonly Form parentForm;
 
 		protected AbstractCompletionWindow(Form parentForm, TextEditorBox control)
 		{

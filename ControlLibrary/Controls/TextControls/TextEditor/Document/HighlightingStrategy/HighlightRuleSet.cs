@@ -7,15 +7,15 @@ namespace ControlLibrary.Controls.TextControl.TextEditor.Document
 {
 	public class HighlightRuleSet
 	{
-		private LookupTable keyWords;
+		private readonly LookupTable keyWords;
 		private ArrayList spans = new ArrayList();
-		private LookupTable prevMarkers;
-		private LookupTable nextMarkers;
-		private char escapeCharacter;
-		private bool ignoreCase = false;
+		private readonly LookupTable prevMarkers;
+		private readonly LookupTable nextMarkers;
+		private readonly char escapeCharacter;
+		private readonly bool ignoreCase = false;
 		private string name = null;
-		private bool[] delimiters = new bool[256];
-		private string reference = null;
+		private readonly bool[] delimiters = new bool[256];
+		private readonly string reference = null;
 
 		public ArrayList Spans => spans;
 

@@ -54,7 +54,7 @@ namespace ControlLibrary.Controls.TextControl.TextEditor.Document
 
 		public static bool IsLetterDigitOrUnderscore(char c)
 		{
-			return !Char.IsLetterOrDigit(c) ? c == '_' : true;
+			return char.IsLetterOrDigit(c) || c == '_';
 		}
 
 		public enum CharacterType

@@ -482,7 +482,7 @@ namespace ControlLibrary.Controls.QRCoder
 				{
 					datawords.Enqueue(data[i] != '0');
 				}
-				for (var x = size - 1; x >= 0; x = x - 2)
+				for (var x = size - 1; x >= 0; x -= 2)
 				{
 					if (x == 6)
 						x = 5;
@@ -552,7 +552,7 @@ namespace ControlLibrary.Controls.QRCoder
 				var size = qrCode.ModuleMatrix.Count;
 				int[] locations = { 0, 0, size - 7, 0, 0, size - 7 };
 
-				for (var i = 0; i < 6; i = i + 2)
+				for (var i = 0; i < 6; i += 2)
 				{
 					for (var x = 0; x < 7; x++)
 					{
@@ -1224,7 +1224,7 @@ namespace ControlLibrary.Controls.QRCoder
 		{
 			var localAlignmentPatternTable = new List<AlignmentPattern>(40);
 
-			for (var i = 0; i < (7 * 40); i = i + 7)
+			for (var i = 0; i < (7 * 40); i += 7)
 			{
 				var points = new List<Point>();
 				for (var x = 0; x < 7; x++)
@@ -1256,7 +1256,7 @@ namespace ControlLibrary.Controls.QRCoder
 		private static List<ECCInfo> CreateCapacityECCTable()
 		{
 			var localCapacityECCTable = new List<ECCInfo>(160);
-			for (var i = 0; i < (4 * 6 * 40); i = i + (4 * 6))
+			for (var i = 0; i < (4 * 6 * 40); i += (4 * 6))
 			{
 				localCapacityECCTable.AddRange(
 				new[]
@@ -1311,7 +1311,7 @@ namespace ControlLibrary.Controls.QRCoder
 		private static List<VersionInfo> CreateCapacityTable()
 		{
 			var localCapacityTable = new List<VersionInfo>(40);
-			for (var i = 0; i < (16 * 40); i = i + 16)
+			for (var i = 0; i < (16 * 40); i += 16)
 			{
 				localCapacityTable.Add(new VersionInfo(
 

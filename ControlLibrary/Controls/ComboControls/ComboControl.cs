@@ -104,13 +104,11 @@ namespace ControlLibrary.Controls.ComboControls
 				graphics.DrawString("", Font, foreCodeBrush, rectCode, sfCode);
 				graphics.DrawString("(не выбрано)", Font, foreCaptionBrush, rectText, sfCaption);
 				return;
-			}
-
-			if (Items.Count <= e.Index) return;
+			} 
+			else if (Items.Count <= e.Index) return;
 
 			string itemCode = this[e.Index].Code;
-			string itemCodeString = itemCode.ToString();
-			string itemCaptionString = this[e.Index].Text.Trim();
+			string itemCaption = this[e.Index].Text.Trim();
 
 			if ((e.State & DrawItemState.ComboBoxEdit) == DrawItemState.ComboBoxEdit)
 			{
@@ -123,11 +121,11 @@ namespace ControlLibrary.Controls.ComboControls
 				graphics.FillRectangle(backCaptionBrush, e.Bounds);
 				graphics.FillRectangle(backCodeBrush, rectCode);
 
-				DrawHighlightText(graphics, rectCode, Font, foreCodeBrush, SystemBrushes.HighlightText, SystemBrushes.Highlight, itemCodeString, sfCode, codeBuffer);
+				DrawHighlightText(graphics, rectCode, Font, foreCodeBrush, SystemBrushes.HighlightText, SystemBrushes.Highlight, itemCode, sfCode, codeBuffer);
 
 				graphics.DrawRectangle(borderPen, rectCode);
 
-				DrawHighlightText(graphics, rectText, Font, foreCaptionBrush, SystemBrushes.HighlightText, SystemBrushes.Highlight, itemCaptionString, sfCaption, textBuffer);
+				DrawHighlightText(graphics, rectText, Font, foreCaptionBrush, SystemBrushes.HighlightText, SystemBrushes.Highlight, itemCaption, sfCaption, textBuffer);
 			}
 			else
 			{
@@ -150,8 +148,8 @@ namespace ControlLibrary.Controls.ComboControls
 				graphics.FillRectangle(backCaptionBrush, e.Bounds);
 				graphics.FillRectangle(backCodeBrush, rectCode);
 				graphics.DrawRectangle(borderPen, rectCode);
-				graphics.DrawString(itemCodeString, Font, foreCodeBrush, rectCode, sfCode);
-				graphics.DrawString(itemCaptionString, Font, foreCaptionBrush, rectText, sfCaption);
+				graphics.DrawString(itemCode, Font, foreCodeBrush, rectCode, sfCode);
+				graphics.DrawString(itemCaption, Font, foreCaptionBrush, rectText, sfCaption);
 			}
 		}
 
@@ -349,7 +347,7 @@ namespace ControlLibrary.Controls.ComboControls
 			}
 		}
 
-		public long? Value => string.IsNullOrWhiteSpace(Code) ? (long?)null : long.Parse(Code);
+		public long? Value => long.TryParse(Code, out long result) ? result : (long?)null;
 
 		[ReadOnly(true)]
 		public T this[int index] => (T)Items[index: index];

@@ -9,8 +9,8 @@ namespace ControlLibrary.Controls.TextControl.TextEditor.Util
 	/// </summary>
 	public class LookupTable
 	{
-		private Node root = new Node(null, null);
-		private bool casesensitive;
+		private readonly Node root = new Node(null, null);
+		private readonly bool casesensitive;
 		private int length;
 
 		/// <value>
@@ -146,7 +146,7 @@ namespace ControlLibrary.Controls.TextControl.TextEditor.Util
 			// because we don't have to store the array for leaf nodes.
 			public Node this[int index]
 			{
-				get => children != null ? children[index] : null;
+				get => children?[index];
 				set
 				{
 					if (children == null)

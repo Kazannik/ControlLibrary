@@ -8,7 +8,7 @@ namespace ControlLibrary.Controls.TextControl.TextEditor
 	{
 		private Point mousePosition;
 		private TextLocation logicalPosition;
-		private bool inDocument;
+		private readonly bool inDocument;
 
 		public Point MousePosition => mousePosition;
 

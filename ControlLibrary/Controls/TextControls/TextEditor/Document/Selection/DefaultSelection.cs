@@ -8,7 +8,7 @@ namespace ControlLibrary.Controls.TextControl.TextEditor.Document
 	/// </summary>
 	public class DefaultSelection : ISelection
 	{
-		private IDocument document;
+		private readonly IDocument document;
 		private bool isRectangularSelection;
 		private TextLocation startPosition;
 		private TextLocation endPosition;
@@ -77,15 +77,13 @@ namespace ControlLibrary.Controls.TextControl.TextEditor.Document
 		/// </summary>
 		public override string ToString()
 		{
-			return String.Format("[DefaultSelection : StartPosition={0}, EndPosition={1}]", startPosition, endPosition);
+			return string.Format("[DefaultSelection : StartPosition={0}, EndPosition={1}]", startPosition, endPosition);
 		}
 		public bool ContainsPosition(TextLocation position)
 		{
-			return this.IsEmpty
-				? false
-				: (startPosition.Y < position.Y && position.Y < endPosition.Y) ||
+			return !IsEmpty && ((startPosition.Y < position.Y && position.Y < endPosition.Y) ||
 				(startPosition.Y == position.Y && startPosition.X <= position.X && (startPosition.Y != endPosition.Y || position.X <= endPosition.X)) ||
-				(endPosition.Y == position.Y && startPosition.Y != endPosition.Y && position.X <= endPosition.X);
+				(endPosition.Y == position.Y && startPosition.Y != endPosition.Y && position.X <= endPosition.X));
 		}
 
 		public bool ContainsOffset(int offset)

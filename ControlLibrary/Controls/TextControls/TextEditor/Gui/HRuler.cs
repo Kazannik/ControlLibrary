@@ -10,7 +10,7 @@ namespace ControlLibrary.Controls.TextControl.TextEditor
 	[ToolboxItem(false)]
 	public class HRuler : Control
 	{
-		private TextArea textArea;
+		private readonly TextArea textArea;
 
 		public HRuler(TextArea textArea)
 		{

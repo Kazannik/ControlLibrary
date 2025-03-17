@@ -7,7 +7,7 @@ namespace ControlLibrary.Controls.TextControl.TextEditor.Document
 {
 	public class FileSyntaxModeProvider : ISyntaxModeFileProvider
 	{
-		private string directory;
+		private readonly string directory;
 		private List<SyntaxMode> syntaxModes = null;
 
 		public ICollection<SyntaxMode> SyntaxModes => syntaxModes;

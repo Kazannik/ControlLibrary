@@ -15,11 +15,11 @@ namespace ControlLibrary.Controls.TextControl.TextEditor.Document
 	/// </summary>
 	public class TextMarker : AbstractSegment
 	{
-		private TextMarkerType textMarkerType;
-		private Color color;
-		private Color foreColor;
+		private readonly TextMarkerType textMarkerType;
+		private readonly Color color;
+		private readonly Color foreColor;
 		private string toolTip = null;
-		private bool overrideForeColor = false;
+		private readonly bool overrideForeColor = false;
 
 		public TextMarkerType TextMarkerType => textMarkerType;
 

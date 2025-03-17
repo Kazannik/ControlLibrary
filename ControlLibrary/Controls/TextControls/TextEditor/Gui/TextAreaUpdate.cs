@@ -20,8 +20,8 @@ namespace ControlLibrary.Controls.TextControl.TextEditor
 	/// </summary>
 	public class TextAreaUpdate
 	{
-		private TextLocation position;
-		private TextAreaUpdateType type;
+		private readonly TextLocation position;
+		private readonly TextAreaUpdateType type;
 
 		public TextAreaUpdateType TextAreaUpdateType => type;
 

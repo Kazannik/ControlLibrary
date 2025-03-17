@@ -160,12 +160,9 @@ namespace ControlLibrary.Controls.TextControl.TextEditor.Document
 				ruleSet.Highlighter = this;
 				if (ruleSet.Reference != null)
 				{
-					IHighlightingStrategy highlighter = HighlightingManager.Manager.FindHighlighter(ruleSet.Reference);
-
-					if (highlighter == null)
-						throw new HighlightingDefinitionInvalidException("The mode defintion " + ruleSet.Reference + " which is refered from the " + this.Name + " mode definition could not be found");
-					ruleSet.Highlighter = highlighter is IHighlightingStrategyUsingRuleSets
-						? (IHighlightingStrategyUsingRuleSets)highlighter
+					IHighlightingStrategy highlighter = HighlightingManager.Manager.FindHighlighter(ruleSet.Reference) ?? throw new HighlightingDefinitionInvalidException("The mode defintion " + ruleSet.Reference + " which is refered from the " + this.Name + " mode definition could not be found");
+					ruleSet.Highlighter = highlighter is IHighlightingStrategyUsingRuleSets sets
+						? sets
 						: throw new HighlightingDefinitionInvalidException("The mode defintion " + ruleSet.Reference + " which is refered from the " + this.Name + " mode definition does not implement IHighlightingStrategyUsingRuleSets");
 				}
 			}
@@ -190,8 +187,7 @@ namespace ControlLibrary.Controls.TextControl.TextEditor.Document
 
 		public HighlightColor GetColorFor(string name)
 		{
-			HighlightColor color;
-			return environmentColors.TryGetValue(name, out color) ? color : defaultTextColor;
+			return environmentColors.TryGetValue(name, out HighlightColor color) ? color : defaultTextColor;
 		}
 
 		public HighlightColor GetColor(IDocument document, LineSegment currentSegment, int currentOffset, int currentLength)
@@ -260,10 +256,7 @@ namespace ControlLibrary.Controls.TextControl.TextEditor.Document
 				currentLineNumber = lineNumber;
 				List<TextWord> words = ParseLine(document);
 				// Alex: clear old words
-				if (currentLine.Words != null)
-				{
-					currentLine.Words.Clear();
-				}
+				currentLine.Words?.Clear();
 				currentLine.Words = words;
 				currentLine.HighlightSpanStack = (currentSpanStack == null || currentSpanStack.IsEmpty) ? null : currentSpanStack;
 
@@ -395,7 +388,7 @@ namespace ControlLibrary.Controls.TextControl.TextEditor.Document
 			}
 
 			//// Alex: remove old words
-			if (currentLine.Words != null) currentLine.Words.Clear();
+			currentLine.Words?.Clear();
 			currentLine.Words = words;
 			currentLine.HighlightSpanStack = (currentSpanStack != null && !currentSpanStack.IsEmpty) ? currentSpanStack : null;
 
@@ -783,8 +776,8 @@ namespace ControlLibrary.Controls.TextControl.TextEditor.Document
 
 				if (inSpan)
 				{
-					HighlightColor c = null;
 					bool hasDefaultColor = true;
+					HighlightColor c;
 					if (activeSpan.Rule == null)
 					{
 						c = activeSpan.Color;

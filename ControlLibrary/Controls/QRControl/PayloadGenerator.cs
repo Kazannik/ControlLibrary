@@ -501,14 +501,11 @@ namespace ControlLibrary.Controls.QRCoder
 					payload += "TYPE=HOME,PREF:";
 				else
 					payload += "TYPE=home,pref:";
-				string addressString = string.Empty;
-
-				addressString = $";;{(!string.IsNullOrEmpty(street) ? street + " " : "")}{(!string.IsNullOrEmpty(houseNumber) ? houseNumber : "")};{(!string.IsNullOrEmpty(zipCode) ? zipCode : "")};{(!string.IsNullOrEmpty(city) ? city : "")};{(!string.IsNullOrEmpty(stateRegion) ? stateRegion : "")};{(!string.IsNullOrEmpty(country) ? country : "")}\r\n";
-
+				string addressString = $";;{(!string.IsNullOrEmpty(street) ? street + " " : "")}{(!string.IsNullOrEmpty(houseNumber) ? houseNumber : "")};{(!string.IsNullOrEmpty(zipCode) ? zipCode : "")};{(!string.IsNullOrEmpty(city) ? city : "")};{(!string.IsNullOrEmpty(stateRegion) ? stateRegion : "")};{(!string.IsNullOrEmpty(country) ? country : "")}\r\n";
 				payload += addressString;
 
 				if (birthday != null)
-					payload += $"BDAY:{((DateTime)birthday).ToString("yyyyMMdd")}\r\n";
+					payload += $"BDAY:{(DateTime)birthday:yyyyMMdd}\r\n";
 				if (!string.IsNullOrEmpty(website))
 					payload += $"URL:{website}\r\n";
 				if (!string.IsNullOrEmpty(email))

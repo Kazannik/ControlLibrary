@@ -8,7 +8,7 @@ namespace ControlLibrary.Controls.TextControl.TextEditor.Document
 	/// </summary>
 	public class HighlightBackground : HighlightColor
 	{
-		private Image backgroundImage;
+		private readonly Image backgroundImage;
 
 		/// <value>
 		/// The image used as background

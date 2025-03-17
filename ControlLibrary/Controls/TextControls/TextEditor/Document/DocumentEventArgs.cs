@@ -13,9 +13,9 @@ namespace ControlLibrary.Controls.TextControl.TextEditor.Document
 	public class DocumentEventArgs : EventArgs
 	{
 		private readonly IDocument document;
-		private int offset;
-		private int length;
-		private string text;
+		private readonly int offset;
+		private readonly int length;
+		private readonly string text;
 
 		/// <returns>
 		/// always a valid Document which is related to the Event.

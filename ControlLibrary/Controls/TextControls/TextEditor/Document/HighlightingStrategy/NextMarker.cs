@@ -8,9 +8,9 @@ namespace ControlLibrary.Controls.TextControl.TextEditor.Document
 	/// </summary>
 	public class NextMarker
 	{
-		private string what;
-		private HighlightColor color;
-		private bool markMarker = false;
+		private readonly string what;
+		private readonly HighlightColor color;
+		private readonly bool markMarker = false;
 
 		/// <value>
 		/// String value to indicate to mark next token

@@ -6,8 +6,8 @@ namespace ControlLibrary.Controls.TextControl.TextEditor.Document
 {
 	internal sealed class LineManager
 	{
-		private LineSegmentTree lineCollection = new LineSegmentTree();
-		private IDocument document;
+		private readonly LineSegmentTree lineCollection = new LineSegmentTree();
+		private readonly IDocument document;
 		private IHighlightingStrategy highlightingStrategy;
 
 		public IList<LineSegment> LineSegmentCollection => lineCollection;
@@ -22,10 +22,7 @@ namespace ControlLibrary.Controls.TextControl.TextEditor.Document
 				if (highlightingStrategy != value)
 				{
 					highlightingStrategy = value;
-					if (highlightingStrategy != null)
-					{
-						highlightingStrategy.MarkTokens(document);
-					}
+					highlightingStrategy?.MarkTokens(document);
 				}
 			}
 		}
@@ -323,7 +320,7 @@ namespace ControlLibrary.Controls.TextControl.TextEditor.Document
 		}
 
 		// use always the same DelimiterSegment object for the NextDelimiter
-		private DelimiterSegment delimiterSegment = new DelimiterSegment();
+		private readonly DelimiterSegment delimiterSegment = new DelimiterSegment();
 
 		private DelimiterSegment NextDelimiter(string text, int offset)
 		{

@@ -5,6 +5,10 @@ namespace ControlLibrary.Controls.ComboControls
 {
 	internal class DataGridViewDateTimePickerCell : DataGridViewTextBoxCell
 	{
+
+
+
+
 		public DataGridViewDateTimePickerCell() : base()
 		{
 			Style.Format = "d";

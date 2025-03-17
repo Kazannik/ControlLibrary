@@ -18,9 +18,9 @@ namespace ControlLibrary.Controls.TextControl.TextEditor.Document
 	public class TextWord
 	{
 		private HighlightColor color;
-		private LineSegment line;
-		private IDocument document;
-		private int offset;
+		private readonly LineSegment line;
+		private readonly IDocument document;
+		private readonly int offset;
 		private int length;
 
 		public sealed class SpaceTextWord : TextWord
@@ -66,9 +66,9 @@ namespace ControlLibrary.Controls.TextControl.TextEditor.Document
 			public override bool IsWhiteSpace => true;
 		}
 
-		private static TextWord spaceWord = new SpaceTextWord();
-		private static TextWord tabWord = new TabTextWord();
-		private bool hasDefaultColor;
+		private static readonly TextWord spaceWord = new SpaceTextWord();
+		private static readonly TextWord tabWord = new TabTextWord();
+		private readonly bool hasDefaultColor;
 
 		public static TextWord Space => spaceWord;
 
@@ -110,9 +110,9 @@ namespace ControlLibrary.Controls.TextControl.TextEditor.Document
 
 		public Color Color => color == null ? Color.Black : color.Color;
 
-		public bool Bold => color == null ? false : color.Bold;
+		public bool Bold => color != null && color.Bold;
 
-		public bool Italic => color == null ? false : color.Italic;
+		public bool Italic => color != null && color.Italic;
 
 		public HighlightColor SyntaxColor
 		{

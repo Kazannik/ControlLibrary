@@ -23,7 +23,7 @@ namespace ControlLibrary.Controls.TextControl.TextEditor.Document
 		}
 
 		private IDocument document;
-		private TextArea textArea;
+		private readonly TextArea textArea;
 		internal SelectFrom selectFrom = new SelectFrom();
 
 		internal List<ISelection> selectionCollection = new List<ISelection>();
@@ -55,9 +55,7 @@ namespace ControlLibrary.Controls.TextControl.TextEditor.Document
 
 		internal static bool SelectionIsReadOnly(IDocument document, ISelection sel)
 		{
-			return document.TextEditorProperties.SupportReadOnlySegments
-				? document.MarkerStrategy.GetMarkers(sel.Offset, sel.Length).Exists(m => m.IsReadOnly)
-				: false;
+			return document.TextEditorProperties.SupportReadOnlySegments && document.MarkerStrategy.GetMarkers(sel.Offset, sel.Length).Exists(m => m.IsReadOnly);
 		}
 
 		/// <value>

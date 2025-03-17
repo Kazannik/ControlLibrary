@@ -30,16 +30,16 @@ namespace ControlLibrary.Controls.TextControl.TextEditor
 		private Point virtualTop = new Point(0, 0);
 		private TextAreaControl motherTextAreaControl;
 		private TextEditorBox motherTextEditorControl;
-		private List<BracketHighlightingSheme> bracketshemes = new List<BracketHighlightingSheme>();
-		private TextAreaClipboardHandler textAreaClipboardHandler;
+		private readonly List<BracketHighlightingSheme> bracketshemes = new List<BracketHighlightingSheme>();
+		private readonly TextAreaClipboardHandler textAreaClipboardHandler;
 		private bool autoClearSelection = false;
-		private List<AbstractMargin> leftMargins = new List<AbstractMargin>();
-		private TextView textView;
-		private GutterMargin gutterMargin;
-		private FoldMargin foldMargin;
-		private IconBarMargin iconBarMargin;
-		private SelectionManager selectionManager;
-		private Caret caret;
+		private readonly List<AbstractMargin> leftMargins = new List<AbstractMargin>();
+		private readonly TextView textView;
+		private readonly GutterMargin gutterMargin;
+		private readonly FoldMargin foldMargin;
+		private readonly IconBarMargin iconBarMargin;
+		private readonly SelectionManager selectionManager;
+		private readonly Caret caret;
 
 		internal Point mousepos = new Point(0, 0);
 
@@ -210,8 +210,7 @@ namespace ControlLibrary.Controls.TextControl.TextEditor
 
 		public void SetCaretToDesiredColumn()
 		{
-			FoldMarker dummy;
-			Caret.Position = textView.GetLogicalColumn(Caret.Line, Caret.DesiredColumn + VirtualTop.X, out dummy);
+			Caret.Position = textView.GetLogicalColumn(Caret.Line, Caret.DesiredColumn + VirtualTop.X, out _);
 		}
 
 		public void OptionsChanged()
@@ -403,10 +402,7 @@ namespace ControlLibrary.Controls.TextControl.TextEditor
 					margin.HandleMouseMove(new Point(e.X, e.Y), e.Button);
 					if (lastMouseInMargin != margin)
 					{
-						if (lastMouseInMargin != null)
-						{
-							lastMouseInMargin.HandleMouseLeave(EventArgs.Empty);
-						}
+						lastMouseInMargin?.HandleMouseLeave(EventArgs.Empty);
 						lastMouseInMargin = margin;
 					}
 					return;
@@ -462,11 +458,7 @@ namespace ControlLibrary.Controls.TextControl.TextEditor
 
 			g.TextRenderingHint = this.TextEditorProperties.TextRenderingHint;
 
-			if (updateMargin != null)
-			{
-				updateMargin.Paint(g, updateMargin.DrawingPosition);
-				//				clipRectangle.Intersect(updateMargin.DrawingPosition);
-			}
+			updateMargin?.Paint(g, updateMargin.DrawingPosition);
 
 			if (clipRectangle.Width <= 0 || clipRectangle.Height <= 0)
 			{
@@ -546,7 +538,7 @@ namespace ControlLibrary.Controls.TextControl.TextEditor
 		/// </returns>
 		protected internal virtual bool HandleKeyPress(char ch)
 		{
-			return KeyEventHandler != null ? KeyEventHandler(ch) : false;
+			return KeyEventHandler != null && KeyEventHandler(ch);
 		}
 
 		// Fixes SD2-747: Form containing the text editor and a button with a shortcut
@@ -557,18 +549,12 @@ namespace ControlLibrary.Controls.TextControl.TextEditor
 
 		internal bool IsReadOnly(int offset)
 		{
-			return Document.ReadOnly
-				? true
-				: TextEditorProperties.SupportReadOnlySegments ? Document.MarkerStrategy.GetMarkers(offset).Exists(m => m.IsReadOnly) : false;
+			return Document.ReadOnly || (TextEditorProperties.SupportReadOnlySegments && Document.MarkerStrategy.GetMarkers(offset).Exists(m => m.IsReadOnly));
 		}
 
 		internal bool IsReadOnly(int offset, int length)
 		{
-			return Document.ReadOnly
-				? true
-				: TextEditorProperties.SupportReadOnlySegments
-				? Document.MarkerStrategy.GetMarkers(offset, length).Exists(m => m.IsReadOnly)
-				: false;
+			return Document.ReadOnly || (TextEditorProperties.SupportReadOnlySegments && Document.MarkerStrategy.GetMarkers(offset, length).Exists(m => m.IsReadOnly));
 		}
 
 		public void SimulateKeyPress(char ch)
@@ -705,9 +691,7 @@ namespace ControlLibrary.Controls.TextControl.TextEditor
 			motherTextEditorControl.EndUpdate();
 		}
 
-		public bool EnableCutOrPaste => motherTextAreaControl == null
-					? false
-					: SelectionManager.HasSomethingSelected ? !SelectionManager.SelectionIsReadonly : !IsReadOnly(Caret.Offset);
+		public bool EnableCutOrPaste => motherTextAreaControl != null && (SelectionManager.HasSomethingSelected ? !SelectionManager.SelectionIsReadonly : !IsReadOnly(Caret.Offset));
 
 		private string GenerateWhitespaceString(int length)
 		{
@@ -864,10 +848,7 @@ namespace ControlLibrary.Controls.TextControl.TextEditor
 						caret.PositionChanged -= new EventHandler(SearchMatchingBracket);
 						caret.Dispose();
 					}
-					if (selectionManager != null)
-					{
-						selectionManager.Dispose();
-					}
+					selectionManager?.Dispose();
 					Document.TextContentChanged -= new EventHandler(TextContentChanged);
 					Document.FoldingManager.FoldingsChanged -= new EventHandler(DocumentFoldingsChanged);
 					motherTextAreaControl = null;

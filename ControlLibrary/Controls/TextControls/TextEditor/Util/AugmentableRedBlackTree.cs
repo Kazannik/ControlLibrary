@@ -353,9 +353,7 @@ namespace ControlLibrary.Controls.TextControl.TextEditor.Util
 		#region Remove
 		public void RemoveAt(RedBlackTreeIterator<T> iterator)
 		{
-			RedBlackTreeNode<T> node = iterator.node;
-			if (node == null)
-				throw new ArgumentException("Invalid iterator");
+			RedBlackTreeNode<T> node = iterator.node ?? throw new ArgumentException("Invalid iterator");
 			while (node.parent != null)
 				node = node.parent;
 			if (node != root)
@@ -420,7 +418,7 @@ namespace ControlLibrary.Controls.TextControl.TextEditor.Util
 
 		private static bool GetColor(RedBlackTreeNode<T> node)
 		{
-			return node != null ? node.color : BLACK;
+			return node != null && node.color;
 		}
 
 		private void FixTreeOnDelete(RedBlackTreeNode<T> node, RedBlackTreeNode<T> parentNode)
