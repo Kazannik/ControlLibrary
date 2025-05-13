@@ -88,12 +88,12 @@ namespace ControlLibrary.Controls.ListControls
 					top = rectangle.Y + rectangle.Height;
 					notes[i].Draw(new DrawItemEventArgs(e.Graphics, e.Font, rectangle, e.Index, e.State, e.ForeColor, e.BackColor));
 #if DEBUG
-					e.Graphics.DrawRectangle(Pens.LimeGreen, new Rectangle(rectangle.X + 1, rectangle.Y, rectangle.Width - 2, rectangle.Height - 1));
+					//e.Graphics.DrawRectangle(Pens.LimeGreen, new Rectangle(rectangle.X + 1, rectangle.Y, rectangle.Width - 2, rectangle.Height - 1));
 #endif
 				}
 			}
 #if DEBUG
-			e.Graphics.DrawRectangle(Pens.Green, new Rectangle(e.Bounds.X + 1, e.Bounds.Y, e.Bounds.Width - 2, e.Bounds.Height - 1));
+			//e.Graphics.DrawRectangle(Pens.Green, new Rectangle(e.Bounds.X + 1, e.Bounds.Y, e.Bounds.Width - 2, e.Bounds.Height - 1));
 #endif
 		}
 
