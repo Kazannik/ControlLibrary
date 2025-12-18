@@ -1,4 +1,5 @@
-﻿using System;
+﻿using ControlLibrary.Utils;
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Globalization;
@@ -9,8 +10,7 @@ namespace ControlLibrary.Controls.ListControls
 {
 	public class ItemCollection<I, S> : ObjectCollection, IList<I>, ICollection<I>, IEnumerable<I> 
 		where I : IListItem, new()
-		where S : IListItemNote
-		
+		where S : IListItemNote		
 	{
 		public ItemCollection(ListControl<I, S> owner) : base(owner: owner) { }
 		public ItemCollection(ListControl<I, S> owner, object[] value) : base(owner: owner, value: value) { }
@@ -32,13 +32,11 @@ namespace ControlLibrary.Controls.ListControls
 			DoSizeChanged();
 		}
 				
-		public void Add(I item)
-		{
-			Add(value: item);
-		}
+		public void Add(I item) => Add(value: item);
 
 		public new void AddRange(object[] value)
 		{
+			Argument.AssertNotNull(value, nameof(value));
 			for (int i = 0; i < value.Length; i++)
 			{
 				OnValidate(value[i]);
@@ -56,6 +54,7 @@ namespace ControlLibrary.Controls.ListControls
 
 		public new void AddRange(ObjectCollection value)
 		{
+			Argument.AssertNotNull(value, nameof(value));
 			for (int i = 0; i < value.Count; i++)
 			{
 				OnValidate(value[i]);
@@ -67,20 +66,14 @@ namespace ControlLibrary.Controls.ListControls
 			DoSizeChanged();
 		}
 
-		public void AddRange(ItemCollection<I, S> items)
-		{
+		public void AddRange(ItemCollection<I, S> items) => 
 			AddRange(value: items);
-		}
 
-		public void AddRange(IList<I> items)
-		{
+		public void AddRange(IList<I> items) => 
 			AddRange(value: (from I item in items select (object)item).ToArray());
-		}
 
-		public void AddRange(IList items)
-		{
+		public void AddRange(IList items) => 
 			AddRange(value: items.Cast<object>().ToArray());
-		}
 
 		public new int IndexOf(object value)
 		{
@@ -88,11 +81,9 @@ namespace ControlLibrary.Controls.ListControls
 			return base.IndexOf(value);
 		}
 
-		public int IndexOf(I item)
-		{
-			return IndexOf(value: item);
-		}
-
+		public int IndexOf(I item) =>
+			IndexOf(value: item);
+		
 		public new void Insert(int index, object value)
 		{
 			OnValidate(value: value);
@@ -103,11 +94,9 @@ namespace ControlLibrary.Controls.ListControls
 			DoSizeChanged();
 		}
 
-		public void Insert(int index, I item)
-		{
+		public void Insert(int index, I item) =>
 			Insert(index: index, value: item);
-		}
-
+		
 		public new void Remove(object value)
 		{
 			OnValidate(value: value);
@@ -118,13 +107,12 @@ namespace ControlLibrary.Controls.ListControls
 			DoSizeChanged();
 		}
 
-		public void Remove(I item)
-		{
+		public void Remove(I item) => 
 			Remove(value: item);
-		}
 
 		bool ICollection<I>.Remove(I item)
 		{
+			Argument.AssertNotNull(item, nameof(item));
 			Remove(value: item);
 			return !base.Contains(item);
 		}
@@ -148,101 +136,70 @@ namespace ControlLibrary.Controls.ListControls
 			return base.Contains(value: value);
 		}
 
-		public bool Contains(I item)
-		{
-			return Contains(value: item);
-		}
+		public bool Contains(I item) => Contains(value: item);
 
 		protected void OnValidate(object value)
 		{
+			Argument.AssertNotNull(value, nameof(value));
 			if (!typeof(I).IsAssignableFrom(value.GetType()))
 			{
-				throw new ArgumentException(string.Format(CultureInfo.CurrentCulture, "Не удалось привести тип Value: {0} к поддурживаемому коллекцией типу: {1}.", value.GetType().ToString(), typeof(I).ToString()));
+				throw new ArgumentException(string.Format(CultureInfo.CurrentCulture, "Не удалось привести тип Value: {0} к поддерживаемому коллекцией типу: {1}.", value.GetType().ToString(), typeof(I).ToString()));
 			}
 		}
 
-
 		public event EventHandler<ItemEventArgs<I>> ItemAdded;
 
-		private void DoItemAdded(I item)
-		{
+		private void DoItemAdded(I item) => 
 			OnItemAdded(new ItemEventArgs<I>(item: item, argument: null));
-		}
 
-		protected virtual void OnItemAdded(ItemEventArgs<I> e)
-		{
+		protected virtual void OnItemAdded(ItemEventArgs<I> e) =>
 			ItemAdded?.Invoke(this, e);
-		}
-
 
 		public event EventHandler<EventArgs> ItemDeleted;
 
-		private void DoItemDeleted()
-		{
+		private void DoItemDeleted() => 
 			OnItemDeleted(new EventArgs());
-		}
-
-		protected virtual void OnItemDeleted(EventArgs e)
-		{
+		
+		protected virtual void OnItemDeleted(EventArgs e) =>
 			ItemDeleted?.Invoke(this, e);
-		}
-
+		
 		public event EventHandler<EventArgs> SizeChanged;
 
-		private void DoSizeChanged()
-		{
+		private void DoSizeChanged() =>
 			OnSizeChanged(new EventArgs());
-		}
 
-		protected virtual void OnSizeChanged(EventArgs e)
-		{
+		protected virtual void OnSizeChanged(EventArgs e) => 
 			SizeChanged?.Invoke(this, e);
-		}
 
-		private void ItemCollection_ClipSizeChanged(object sender, EventArgs e)
-		{
+		private void ItemCollection_ClipSizeChanged(object sender, EventArgs e) =>
 			DoClipSizeChanged((I)sender);
-		}
+		
 
 		public event EventHandler<ItemEventArgs<I>> ClipSizeChanged;
 
-		private void DoClipSizeChanged(I item)
-		{
+		private void DoClipSizeChanged(I item) =>
 			OnClipSizeChanged(new ItemEventArgs<I>(item: item, argument: null));
-		}
 
-		protected virtual void OnClipSizeChanged(ItemEventArgs<I> e)
-		{
+		protected virtual void OnClipSizeChanged(ItemEventArgs<I> e) => 
 			ClipSizeChanged?.Invoke(this, e);
-		}
 
-		private void ItemCollection_ContentChanged(object sender, EventArgs e)
-		{
+		private void ItemCollection_ContentChanged(object sender, EventArgs e) =>
 			DoContentChanged((I)sender);
-		}
-		
+				
 		public event EventHandler<ItemEventArgs<I>> ContentChanged;
 
-		private void DoContentChanged(I item)
-		{
+		private void DoContentChanged(I item) => 
 			OnContentChanged(new ItemEventArgs<I>(item: item, argument: null));
-		}
 
-		protected virtual void OnContentChanged(ItemEventArgs<I> e)
-		{
+		protected virtual void OnContentChanged(ItemEventArgs<I> e) =>
 			ContentChanged?.Invoke(this, e);
-		}
 
-		IEnumerator<I> IEnumerable<I>.GetEnumerator()
-		{
-			return new ListItemEnumerator(GetEnumerator());
-		}
-
-		public void CopyTo(I[] array, int arrayIndex)
-		{
+		IEnumerator<I> IEnumerable<I>.GetEnumerator() =>
+			new ListItemEnumerator(GetEnumerator());
+		
+		public void CopyTo(I[] array, int arrayIndex) =>
 			Array.Copy(sourceArray: this.ToArray(), sourceIndex: 0, destinationArray: array, destinationIndex: arrayIndex, length: Count);
-		}
-
+		
 		private class ListItemEnumerator : IEnumerator<I>
 		{
 			private readonly IEnumerator enumerator;
@@ -256,33 +213,11 @@ namespace ControlLibrary.Controls.ListControls
 
 			object IEnumerator.Current => Current;
 
-			public void Dispose()
-			{
-				enumerator.Reset();
-			}
+			public void Dispose() => enumerator.Reset();
 
-			public bool MoveNext()
-			{
-				return enumerator.MoveNext();
-			}
+			public bool MoveNext() => enumerator.MoveNext();
 
-			public void Reset()
-			{
-				enumerator.Reset();
-			}
-		}
-	}
-
-	public class ItemEventArgs<I> : EventArgs where I : IListItem, new()
-	{
-		public ItemEventArgs(I item, object argument) : base()
-		{
-			Item = item;
-			Argument = argument;
-		}
-
-		public I Item { get; }
-
-		public object Argument { get; }
-	}
+			public void Reset() => enumerator.Reset();
+		}	
+	}	
 }

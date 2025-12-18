@@ -8,7 +8,7 @@
     <OutputType>Library</OutputType>
     <RootNamespace>ControlLibrary</RootNamespace>
     <AssemblyName>ControlLibrary</AssemblyName>
-    <TargetFrameworkVersion>v4.8.1</TargetFrameworkVersion>
+    <TargetFrameworkVersion>v4.8</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <Deterministic>true</Deterministic>
     <TargetFrameworkProfile />
@@ -22,7 +22,7 @@
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>5</WarningLevel>
     <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
-    <PlatformTarget>x64</PlatformTarget>
+    <PlatformTarget>AnyCPU</PlatformTarget>
     <TreatWarningsAsErrors>false</TreatWarningsAsErrors>
     <RegisterForComInterop>false</RegisterForComInterop>
   </PropertyGroup>
@@ -40,7 +40,8 @@
     <SignAssembly>false</SignAssembly>
   </PropertyGroup>
   <PropertyGroup>
-    <AssemblyOriginatorKeyFile>Kazannik Test Software CA.pfx</AssemblyOriginatorKeyFile>
+    <AssemblyOriginatorKeyFile>
+    </AssemblyOriginatorKeyFile>
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="stdole, Version=17.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
@@ -60,7 +61,10 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Controls\ComboControls\IComboItem.cs" />
     <Compile Include="Controls\ListControls\IListItemNote.cs" />
+    <Compile Include="Controls\ListControls\ItemEventArgs.cs" />
+    <Compile Include="Controls\ListControls\ItemMouseEventArgs.cs" />
     <Compile Include="Controls\ListControls\ListItemNote.cs" />
     <Compile Include="Controls\PeriodControls\PeriodControl.cs">
       <SubType>Component</SubType>
@@ -258,6 +262,7 @@
     <Compile Include="Controls\TextControls\TextEditor\Util\TipText.cs" />
     <Compile Include="Controls\TextControls\TextEditor\Util\WeakCollection.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Utils\Argument.cs" />
     <Compile Include="Utils\Directories.cs" />
     <Compile Include="Utils\Drawing.cs" />
     <Compile Include="Utils\FileCopier.cs" />
@@ -285,9 +290,6 @@
       <Generator>ResXFileCodeGenerator</Generator>
       <LastGenOutput>Resources.Designer.cs</LastGenOutput>
     </EmbeddedResource>
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="Kazannik Test Software CA.pfx" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>

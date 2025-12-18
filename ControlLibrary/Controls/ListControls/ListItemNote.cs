@@ -6,26 +6,24 @@ namespace ControlLibrary.Controls.ListControls
 {
 	public abstract class ListItemNote: IListItemNote
 	{
-		private Size size;
+		private Size _size;
 		
 		public event EventHandler<EventArgs> ClipSizeChanged;
 		public event EventHandler<EventArgs> ContentChanged;
 				
-		public Size Size { get { return size; } }
+		public Size Size => _size; 
 
 		protected ListItemNote()
 		{
-			size = Size.Empty;
+			_size = Size.Empty;
 		}
 
-		public void Draw(DrawItemEventArgs e)
-		{
+		public void Draw(DrawItemEventArgs e) =>
 			OnDraw(e: e);
-		}
-		
+				
 		public Size MeasureBound(Graphics graphics, Font font, int itemWidth, int itemHeight)
 		{
-			size = OnMeasureBound(graphics: graphics, font: font, itemWidth: itemWidth, itemHeight: itemHeight);
+			_size = OnMeasureBound(graphics: graphics, font: font, itemWidth: itemWidth, itemHeight: itemHeight);
 			return Size;
 		}
 		
@@ -33,25 +31,17 @@ namespace ControlLibrary.Controls.ListControls
 
 		protected abstract Size OnMeasureBound(Graphics graphics, Font font, int itemWidth, int itemHeight);
 
-		private void OnClipSizeChanged(EventArgs e)
-		{
+		private void OnClipSizeChanged(EventArgs e) =>
 			ClipSizeChanged?.Invoke(this, e);
-		}
-
-		protected void DoClipSizeChanged()
-		{
+		
+		protected void DoClipSizeChanged() =>
 			OnClipSizeChanged(new EventArgs());
-		}
-
-		private void OnContentChanged(EventArgs e)
-		{
+		
+		private void OnContentChanged(EventArgs e) =>
 			ContentChanged?.Invoke(this, e);
-		}
 
-		protected void DoContentChanged()
-		{
+		protected void DoContentChanged() =>
 			OnContentChanged(new EventArgs());
-		}
 
 		protected Size GetTextSize(Graphics graphics, string text, Font font, int width, StringFormat stringFormat)
 		{

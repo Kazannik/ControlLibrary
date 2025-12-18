@@ -1,4 +1,6 @@
-﻿using System;
+﻿// Ignore Spelling: Multiline
+
+using System;
 using System.ComponentModel;
 using System.Drawing;
 using System.Runtime.InteropServices;
@@ -38,10 +40,7 @@ namespace ControlLibrary.Controls.TextControl
 		[Browsable(false), ReadOnly(true)]
 		public new ScrollBars ScrollBars => base.ScrollBars;
 
-		private bool IsNumeric(string s)
-		{
-			return double.TryParse(s, out double output);
-		}
+		private bool IsNumeric(string s) => double.TryParse(s, out double output);
 
 		public double Value
 		{

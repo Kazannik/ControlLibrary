@@ -7,9 +7,7 @@ using System.Windows.Forms;
 
 namespace ControlLibrary.Controls.ListControls
 {
-	[ToolboxItem(false)]
 	[DesignerCategory("code")]
-	[DesignTimeVisible(true)]
 	[ToolboxBitmap(typeof(ListBox))]
 	[ComVisible(false)]
 	public abstract class ListControl<I, S> : ListBox
@@ -21,6 +19,8 @@ namespace ControlLibrary.Controls.ListControls
 
 		private readonly BufferedGraphicsContext context;
 		private BufferedGraphics grafx;
+
+		#region InitializeObjectCollection
 
 		protected override ObjectCollection CreateItemCollection()
 		{
@@ -55,9 +55,11 @@ namespace ControlLibrary.Controls.ListControls
 
 		private void Collection_ContentChanged(object sender, ItemEventArgs<I> e)
 		{
-			base.Invalidate(e.Item.Bounds);
+			Invalidate(e.Item.Bounds);
 			OnItemContentChanged(e);
 		}
+
+		#endregion
 
 		private void ResizeTimer_Tick(object sender, EventArgs e)
 		{
@@ -123,6 +125,15 @@ namespace ControlLibrary.Controls.ListControls
 
 		public I this[int index] => (I)base.Items[index];
 
+		[Browsable(false)]
+		[Bindable(true)]
+		[DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
+		public new I SelectedItem
+		{
+			get => (I)base.SelectedItem; set => base.SelectedItem = value;
+		}
+
+
 		#region Click Event
 
 		[Category("Action"), Browsable(true), EditorBrowsable(EditorBrowsableState.Always)]
@@ -146,50 +157,23 @@ namespace ControlLibrary.Controls.ListControls
 		[Category("Mouse"), Browsable(true), EditorBrowsable(EditorBrowsableState.Always)]
 		public event EventHandler<ItemMouseEventArgs<I, S>> ItemMouseMove;
 
-		protected virtual void OnSelectedItemChanged(ItemEventArgs<I> e)
-		{
-			SelectedItemChanged?.Invoke(this, e);
-		}
+		protected virtual void OnSelectedItemChanged(ItemEventArgs<I> e) => SelectedItemChanged?.Invoke(this, e);
 
-		protected virtual void OnItemContentChanged(ItemEventArgs<I> e)
-		{
-			ItemContentChanged?.Invoke(this, e);
-		}
+		protected virtual void OnItemContentChanged(ItemEventArgs<I> e) => ItemContentChanged?.Invoke(this, e);
 
-		protected virtual void OnItemAdded(ItemEventArgs<I> e)
-		{
-			ItemAdded?.Invoke(this, e);
-		}
+		protected virtual void OnItemAdded(ItemEventArgs<I> e) => ItemAdded?.Invoke(this, e);
 
-		protected virtual void OnItemDeleted(EventArgs e)
-		{
-			ItemDeleted?.Invoke(this, e);
-		}
+		protected virtual void OnItemDeleted(EventArgs e) => ItemDeleted?.Invoke(this, e);
 
-		protected virtual void OnItemMouseDown(ItemMouseEventArgs<I, S> e)
-		{
-			ItemMouseDown?.Invoke(this, e);
-		}
+		protected virtual void OnItemMouseDown(ItemMouseEventArgs<I, S> e) => ItemMouseDown?.Invoke(this, e);
 
-		protected virtual void OnItemMouseUp(ItemMouseEventArgs<I, S> e)
-		{
-			ItemMouseUp?.Invoke(this, e);
-		}
+		protected virtual void OnItemMouseUp(ItemMouseEventArgs<I, S> e) => ItemMouseUp?.Invoke(this, e);
 
-		protected virtual void OnItemMouseClick(ItemMouseEventArgs<I, S> e)
-		{
-			ItemMouseClick?.Invoke(this, e);
-		}
+		protected virtual void OnItemMouseClick(ItemMouseEventArgs<I, S> e) => ItemMouseClick?.Invoke(this, e);
 
-		protected virtual void OnItemMouseDoubleClick(ItemMouseEventArgs<I, S> e)
-		{
-			ItemMouseDoubleClick?.Invoke(this, e);
-		}
-		
-		protected virtual void OnItemMouseMove(ItemMouseEventArgs<I, S> e)
-		{
-			ItemMouseMove?.Invoke(this, e);
-		}
+		protected virtual void OnItemMouseDoubleClick(ItemMouseEventArgs<I, S> e) => ItemMouseDoubleClick?.Invoke(this, e);
+
+		protected virtual void OnItemMouseMove(ItemMouseEventArgs<I, S> e) => ItemMouseMove?.Invoke(this, e);
 
 		#endregion
 
@@ -287,19 +271,35 @@ namespace ControlLibrary.Controls.ListControls
 			}
 			base.OnMouseMove(e);
 		}
-		
+
 		#endregion
 
-		public ListControl()
+		#region Initialize
+
+		[DebuggerNonUserCode()]
+		public ListControl(IContainer container) : this() => container?.Add(this);
+
+		[DebuggerNonUserCode()]
+		protected override void Dispose(bool disposing)
 		{
-			oldSize = Size.Empty;
-			context = BufferedGraphicsManager.Current;
-			InitializeComponent();
+			try
+			{
+				if (disposing && components != null)
+				{ components.Dispose(); }
+			}
+			finally
+			{ 
+				base.Dispose(disposing);
+			}
 		}
+
+		private IContainer components;
 
 		[DebuggerStepThrough()]
 		private void InitializeComponent()
 		{
+			components = new Container();
+
 			SuspendLayout();
 			// 
 			// Timer
@@ -315,10 +315,19 @@ namespace ControlLibrary.Controls.ListControls
 			// 
 			base.ScrollAlwaysVisible = true;
 			base.DrawMode = DrawMode.OwnerDrawVariable;
-			base.ClientSizeChanged += new EventHandler(ListControl_ClientSizeChanged);
+			ClientSizeChanged += new EventHandler(ListControl_ClientSizeChanged);
 			ResumeLayout(false);
 		}
 
+		public ListControl() : base()
+		{
+			oldSize = Size.Empty;
+			context = BufferedGraphicsManager.Current;
+			InitializeComponent();
+		}
+
+		#endregion
+				
 		private void ListControl_ClientSizeChanged(object sender, EventArgs e)
 		{
 			context.MaximumBuffer = new Size(ClientSize.Width + 1, ClientSize.Height + 1);
@@ -327,7 +336,7 @@ namespace ControlLibrary.Controls.ListControls
 				grafx.Dispose();
 				grafx = null;
 			}
-			grafx = context.Allocate(this.CreateGraphics(), new Rectangle(0, 0, ClientSize.Width, ClientSize.Height));
+			grafx = context.Allocate(CreateGraphics(), new Rectangle(0, 0, ClientSize.Width + 1, ClientSize.Height + 1));
 		}
 
 		[ReadOnly(true)]
@@ -338,21 +347,5 @@ namespace ControlLibrary.Controls.ListControls
 
 		[ReadOnly(true)]
 		public new int ItemHeight => base.ItemHeight;		
-	}
-	
-	public class ItemMouseEventArgs<I, S> : MouseEventArgs where I : IListItem, new() where S : IListItemNote
-	{
-		public ItemMouseEventArgs(I item, S subItem, object argument, MouseEventArgs eventArgs) : base(eventArgs.Button, eventArgs.Clicks, eventArgs.X, eventArgs.Y, eventArgs.Delta)
-		{
-			Item = item;
-			SubItem = subItem;
-			Argument = argument;
-		}
-
-		public I Item { get; }
-
-		public S SubItem { get; }
-
-		public object Argument { get; }
-	}
+	}	
 }

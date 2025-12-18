@@ -10,6 +10,8 @@ namespace ControlLibrary.Structures
 		/// </summary>
 		public static readonly Version Empty = new Version(-1, -1, string.Empty);
 
+		private Version(long major, long minor, string guid) : this(major: (int)major, minor: (int) minor, guid: guid )	{}
+
 		private Version(int major, int minor, string guid)
 		{
 			Major = major;
@@ -17,15 +19,13 @@ namespace ControlLibrary.Structures
 			Guid = guid;
 		}
 
-		public static Version Create(int major, string guid)
-		{
-			return new Version(major, -1, guid);
-		}
+		public static Version Create(long major, string guid) => new Version(major, -1, guid);
 
-		public static Version Create(int major, int minor, string guid)
-		{
-			return new Version(major, minor, guid);
-		}
+		public static Version Create(int major, string guid) => new Version(major, -1, guid);
+
+		public static Version Create(long major, long minor, string guid) => new Version(major, minor, guid);
+
+		public static Version Create(int major, int minor, string guid) => new Version(major, minor, guid);
 
 		public int Major { get; }
 
@@ -33,15 +33,14 @@ namespace ControlLibrary.Structures
 
 		public string Guid { get; }
 
-		public new string ToString()
-		{
-			return ((Major >= 0 || Minor >= 0) ? Major.ToString() : string.Empty) + (Minor >= 0 ? "." + Minor.ToString() : string.Empty);
-		}
+		public new string ToString() =>
+			((Major >= 0 || Minor >= 0) ? Major.ToString() : string.Empty) + (Minor >= 0 ? "." + Minor.ToString() : string.Empty);
+		
+		public int ToInt() => Major;
+		
+		public static explicit operator string(Version value) => value.ToString();
 
-		public static explicit operator string(Version value)
-		{
-			return value.ToString();
-		}
+		public static explicit operator int(Version value) => value.ToInt();
 
 		public override bool Equals(object obj)
 		{
@@ -56,35 +55,18 @@ namespace ControlLibrary.Structures
 			}
 		}
 
-		public override int GetHashCode()
-		{
-			return unchecked((87 * Major.GetHashCode()) ^ Minor.GetHashCode() ^ Guid.GetHashCode());
-		}
+		public override int GetHashCode() =>
+			unchecked((87 * Major.GetHashCode()) ^ Minor.GetHashCode() ^ Guid.GetHashCode());
+		
+		public static bool operator ==(Version x, Version y) => Compare(x, y) == 0;
 
-		public static bool operator ==(Version x, Version y)
-		{
-			return Compare(x, y) == 0;
-		}
+		public static bool operator !=(Version x, Version y) => Compare(x, y) != 0;
 
-		public static bool operator !=(Version x, Version y)
-		{
-			return Compare(x, y) != 0;
-		}
+		public static bool operator ==(Version x, int major) => Compare(x, major) == 0;
 
-		public static bool operator ==(Version x, int major)
-		{
-			return Compare(x, major) == 0;
-		}
+		public static bool operator !=(Version x, int major) => Compare(x, major) != 0;
 
-		public static bool operator !=(Version x, int major)
-		{
-			return Compare(x, major) != 0;
-		}
-
-		public int CompareTo(Version other)
-		{
-			return Compare(this, other);
-		}
+		public int CompareTo(Version other) => Compare(this, other);
 
 		public static int Compare(Version x, Version y)
 		{
@@ -126,10 +108,7 @@ namespace ControlLibrary.Structures
 
 		public class VersionComparer : IComparer<Version>
 		{
-			public int Compare(Version x, Version y)
-			{
-				return Version.Compare(x, y);
-			}
+			public int Compare(Version x, Version y) => Version.Compare(x, y);
 		}
 	}
 }

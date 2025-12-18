@@ -1,4 +1,6 @@
-﻿using System;
+﻿// Ignore Spelling: HIWORD
+
+using System;
 using System.Windows.Forms;
 using System.Windows.Forms.Design;
 
@@ -9,36 +11,36 @@ namespace ControlLibrary.Controls.PickerControls
 	[ToolStripItemDesignerAvailability(ToolStripItemDesignerAvailability.All)]
 	public abstract class PickerControl<T> : ComboBox where T : UserControl, new()
 	{
-		private readonly ToolStripControlHost controlHost;
-		private readonly T popupForm;
-		private static ToolStripDropDown dropDown;
+		private readonly ToolStripControlHost _controlHost;
+		private readonly T _popupForm;
+		private static ToolStripDropDown _dropDown;
 
 		public PickerControl()
 		{
-			popupForm = new T
+			_popupForm = new T
 			{
 				BorderStyle = BorderStyle.None
 			};
 
-			controlHost = new ToolStripControlHost(popupForm);
-			dropDown = new ToolStripDropDown();
-			dropDown.Items.Add(controlHost);
-			DropDownHeight = popupForm.Height;
-			DropDownWidth = popupForm.Width;
-			controlHost.Width = DropDownWidth;
-			controlHost.Height = DropDownHeight;
+			_controlHost = new ToolStripControlHost(_popupForm);
+			_dropDown = new ToolStripDropDown();
+			_dropDown.Items.Add(_controlHost);
+			DropDownHeight = _popupForm.Height;
+			DropDownWidth = _popupForm.Width;
+			_controlHost.Width = DropDownWidth;
+			_controlHost.Height = DropDownHeight;
 		}
 
-		public T PopupForm => (T)controlHost.Control;
+		public T PopupForm => (T)_controlHost.Control;
 
 		private void ShowDropDown()
 		{
-			if (dropDown != null)
+			if (_dropDown != null)
 			{
-				controlHost.Width = DropDownWidth;
-				controlHost.Height = DropDownHeight;
+				_controlHost.Width = DropDownWidth;
+				_controlHost.Height = DropDownHeight;
 
-				dropDown.Show(this, 0, Height);
+				_dropDown.Show(this, 0, Height);
 				//'   dropDown.Hide()
 			}
 		}
@@ -48,15 +50,9 @@ namespace ControlLibrary.Controls.PickerControls
 		private const int WM_COMMAND = 0X111;
 		private const int CBN_DROPDOWN = 0X7;
 
-		public static int HIWORD(int n)
-		{
-			return (n >> 16) & 0xffff;
-		}
+		public static int HIWORD(int n) => (n >> 16) & 0xffff;
 
-		public static int HIWORD(IntPtr n)
-		{
-			return HIWORD(unchecked((int)(long)n));
-		}
+		public static int HIWORD(IntPtr n) => HIWORD(unchecked((int)(long)n));
 
 		protected override void WndProc(ref Message m)
 		{
@@ -75,10 +71,10 @@ namespace ControlLibrary.Controls.PickerControls
 		{
 			if (disposing)
 			{
-				if (dropDown != null)
+				if (_dropDown != null)
 				{
-					dropDown.Dispose();
-					dropDown = null;
+					_dropDown.Dispose();
+					_dropDown = null;
 				}
 			}
 			base.Dispose(disposing);

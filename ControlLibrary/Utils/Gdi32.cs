@@ -1,4 +1,4 @@
-﻿// Ignore Spelling: Utils Gdi BLENDFUNCTION RGBQUAD rgb BITMAPINFOHEADER Pels Clr DIBSECTION
+﻿// Ignore Spelling: Utils Gdi BLENDFUNCTION RGBQUAD rgb BITMAPINFOHEADER Pels Clr DIBSECTION SRCCOPY
 
 using System;
 using System.Drawing;
@@ -175,9 +175,9 @@ namespace ControlLibrary.Utils
 							int offset = (y * dibsection.dsBmih.biWidth) + x;
 							if (pBits[offset].rgbReserved > 0 && (pBits[offset].rgbBlue > pBits[offset].rgbReserved || pBits[offset].rgbGreen > pBits[offset].rgbReserved || pBits[offset].rgbRed > pBits[offset].rgbReserved))
 							{
-								pBits[offset].rgbBlue = (byte)(((((int)pBits[offset].rgbBlue * (int)pBits[offset].rgbReserved) + 1) * 257) >> 16);
-								pBits[offset].rgbGreen = (byte)(((((int)pBits[offset].rgbGreen * (int)pBits[offset].rgbReserved) + 1) * 257) >> 16);
-								pBits[offset].rgbRed = (byte)(((((int)pBits[offset].rgbRed * (int)pBits[offset].rgbReserved) + 1) * 257) >> 16);
+								pBits[offset].rgbBlue = (byte)((((pBits[offset].rgbBlue * pBits[offset].rgbReserved) + 1) * 257) >> 16);
+								pBits[offset].rgbGreen = (byte)((((pBits[offset].rgbGreen * pBits[offset].rgbReserved) + 1) * 257) >> 16);
+								pBits[offset].rgbRed = (byte)((((pBits[offset].rgbRed * pBits[offset].rgbReserved) + 1) * 257) >> 16);
 							}
 						}
 					}

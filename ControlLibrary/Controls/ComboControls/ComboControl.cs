@@ -1,4 +1,5 @@
-﻿using System;
+﻿using ControlLibrary.Utils;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Diagnostics;
@@ -12,7 +13,7 @@ namespace ControlLibrary.Controls.ComboControls
 	[DesignerCategory("code")]
 	[ToolboxBitmap(typeof(ComboBox))]
 	[ComVisible(false)]
-	public abstract class ComboControl<T> : ComboBox where T : ComboControl<T>.IComboControlItem
+	public abstract class ComboControl<T> : ComboBox where T : IComboItem
 	{
 		protected StringFormat sfCode;
 		protected StringFormat sfCaption;
@@ -32,10 +33,14 @@ namespace ControlLibrary.Controls.ComboControls
 			try
 			{
 				if (disposing && components != null)
-				{ components.Dispose(); }
+				{
+					components.Dispose();
+				}
 			}
 			finally
-			{ base.Dispose(disposing); }
+			{
+				base.Dispose(disposing);
+			}
 		}
 
 		private IContainer components;
@@ -108,7 +113,7 @@ namespace ControlLibrary.Controls.ComboControls
 			else if (Items.Count <= e.Index) return;
 
 			string itemCode = this[e.Index].Code;
-			string itemCaption = this[e.Index].Text.Trim();
+			string itemCaption = this[e.Index].Caption.Trim();
 
 			if ((e.State & DrawItemState.ComboBoxEdit) == DrawItemState.ComboBoxEdit)
 			{
@@ -278,6 +283,7 @@ namespace ControlLibrary.Controls.ComboControls
 
 		private bool FindCode(string code)
 		{
+			Argument.AssertNotNullOrEmpty(code, nameof(code));
 			int i = 0;
 			foreach (T item in Items)
 			{
@@ -294,10 +300,11 @@ namespace ControlLibrary.Controls.ComboControls
 
 		private bool FindText(string text)
 		{
+			Argument.AssertNotNullOrEmpty(text, nameof(text));
 			int i = 0;
 			foreach (T item in Items)
 			{
-				if (item.Text.ToLower().Contains(text.ToLower()))
+				if (item.Caption.ToLower().Contains(text.ToLower()))
 				{
 					i += 1;
 					SelectedItem = item;
@@ -306,6 +313,29 @@ namespace ControlLibrary.Controls.ComboControls
 				}
 			}
 			return false;
+		}
+
+		public string Guid
+		{
+			get => SelectedItem != null ? SelectedItem.Code : string.Empty;
+			set
+			{
+				if (string.IsNullOrWhiteSpace(value))
+				{
+					SelectedIndex = -1;
+				}
+				else
+				{
+					if (ContainsGuid(value))
+					{
+						SelectedItem = GetItem(value);
+					}
+					else
+					{
+						SelectedIndex = -1;
+					}
+				}
+			}
 		}
 
 		public string Code
@@ -355,28 +385,17 @@ namespace ControlLibrary.Controls.ComboControls
 		[ReadOnly(true)]
 		public new ComboBoxStyle DropDownStyle => base.DropDownStyle;
 
-		protected void Insert(int index, T item)
-		{
-			Items.Insert(index, item);
-		}
+		protected void Insert(int index, T item) => Items.Insert(index, item);
 
-		protected void Remove(T value)
-		{
-			Items.Remove(value);
-		}
+		protected void Remove(T value) =>	Items.Remove(value);
 
-		protected void RemoveAt(int index)
-		{
-			Items.RemoveAt(index);
-		}
+		protected void RemoveAt(int index) =>	Items.RemoveAt(index);
 
-		protected void Clear()
-		{
-			Items.Clear();
-		}
+		protected void Clear() => Items.Clear();
 
 		public int Add(T item)
 		{
+			Argument.AssertNotNull(item, nameof(item));
 			foreach (T i in Items)
 			{
 				if (i.Code.Equals(item.Code, StringComparison.CurrentCultureIgnoreCase))
@@ -389,6 +408,7 @@ namespace ControlLibrary.Controls.ComboControls
 
 		public bool Contains(long id)
 		{
+			Argument.AssertNotNull(id, nameof(id));
 			foreach (T i in Items)
 			{
 				if (i.Id.Equals(id))
@@ -401,9 +421,22 @@ namespace ControlLibrary.Controls.ComboControls
 
 		public bool Contains(string code)
 		{
+			Argument.AssertNotNullOrEmpty(code, nameof(code));
 			foreach (T i in Items)
 			{
 				if (i.Code.Equals(code, StringComparison.CurrentCultureIgnoreCase))
+				{
+					return true;
+				}
+			}
+			return false;
+		}
+		public bool ContainsGuid(string guid)
+		{
+			Argument.AssertNotNullOrEmpty(guid, nameof(guid));
+			foreach (T i in Items)
+			{
+				if (i.Guid.Equals(guid, StringComparison.CurrentCultureIgnoreCase))
 				{
 					return true;
 				}
@@ -414,11 +447,33 @@ namespace ControlLibrary.Controls.ComboControls
 		public new T SelectedItem
 		{
 			get => (T)base.SelectedItem;
-			set => base.SelectedItem = value;
+			set
+			{
+				if (value == null)
+					base.SelectedItem = null;
+				else
+				{
+					T item;
+					if (!string.IsNullOrEmpty(value.Guid))
+					{
+						item = GetItemOfGuid(value.Guid);
+					}
+					else if (!string.IsNullOrEmpty(value.Code))
+					{
+						item = GetItem(value.Code);
+					}
+					else
+					{
+						item = GetItem(value.Id);
+					}
+					base.SelectedItem = item;
+				}
+			} 
 		}
 
 		public T GetItem(long id)
 		{
+			Argument.AssertNotNull(id, nameof(id));
 			foreach (T i in Items)
 			{
 				if (i.Id.Equals(id))
@@ -431,6 +486,7 @@ namespace ControlLibrary.Controls.ComboControls
 
 		public T GetItem(string code)
 		{
+			Argument.AssertNotNullOrEmpty(code, nameof(code));
 			foreach (T i in Items)
 			{
 				if (i.Code.Equals(code, StringComparison.CurrentCultureIgnoreCase))
@@ -441,19 +497,22 @@ namespace ControlLibrary.Controls.ComboControls
 			return default;
 		}
 
-		public interface IComboControlItem
+		public T GetItemOfGuid(string guid)
 		{
-			long Id { get; }
-			string Code { get; }
-			string Text { get; }
+			Argument.AssertNotNullOrEmpty(guid, nameof(guid));
+			foreach (T i in Items)
+			{
+				if (i.Guid.Equals(guid, StringComparison.CurrentCultureIgnoreCase))
+				{
+					return i;
+				}
+			}
+			return default;
 		}
 
 		public class ItemComparer : IComparer<T>
 		{
-			int IComparer<T>.Compare(T x, T y)
-			{
-				return Compare(x, y);
-			}
+			int IComparer<T>.Compare(T x, T y) => Compare(x, y);
 
 			public static int Compare(T x, T y)
 			{

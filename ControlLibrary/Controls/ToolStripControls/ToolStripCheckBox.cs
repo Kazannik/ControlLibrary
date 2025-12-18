@@ -31,20 +31,11 @@ namespace ControlLibrary.Controls.ToolStripControls
 
 		public event EventHandler CheckedChanged;
 
-		public void DoCheckedChanged()
-		{
-			OnCheckedChanged(new EventArgs());
-		}
+		public void DoCheckedChanged() => OnCheckedChanged(new EventArgs());
 
-		protected virtual void OnCheckedChanged(EventArgs e)
-		{
-			CheckedChanged?.Invoke(this, e);
-		}
+		protected virtual void OnCheckedChanged(EventArgs e) => CheckedChanged?.Invoke(this, e);
 
-		private void CheckBox_CheckedChanged(object sender, EventArgs e)
-		{
-			DoCheckedChanged();
-		}
+		private void CheckBox_CheckedChanged(object sender, EventArgs e) => DoCheckedChanged();
 
 		#endregion
 
@@ -58,20 +49,11 @@ namespace ControlLibrary.Controls.ToolStripControls
 
 		public event EventHandler CheckStateChanged;
 
-		public void DoCheckStateChanged()
-		{
-			OnCheckStateChanged(new EventArgs());
-		}
+		public void DoCheckStateChanged() => OnCheckStateChanged(new EventArgs());
 
-		protected virtual void OnCheckStateChanged(EventArgs e)
-		{
-			CheckStateChanged?.Invoke(this, e);
-		}
+		protected virtual void OnCheckStateChanged(EventArgs e) => CheckStateChanged?.Invoke(this, e);
 
-		private void CheckBox_CheckStateChanged(object sender, EventArgs e)
-		{
-			DoCheckStateChanged();
-		}
+		private void CheckBox_CheckStateChanged(object sender, EventArgs e) => DoCheckStateChanged();
 
 		#endregion
 	}

@@ -30,20 +30,11 @@ namespace ControlLibrary.Controls.ToolStripControls
 
 		public event EventHandler ValueChanged;
 
-		public void DoValueChanged()
-		{
-			OnValueChanged(new EventArgs());
-		}
+		public void DoValueChanged() => OnValueChanged(new EventArgs());
 
-		protected virtual void OnValueChanged(EventArgs e)
-		{
-			ValueChanged?.Invoke(this, e);
-		}
+		protected virtual void OnValueChanged(EventArgs e) => ValueChanged?.Invoke(this, e);
 
-		private void NumericUpDown_ValueChanged(object sender, EventArgs e)
-		{
-			DoValueChanged();
-		}
+		private void NumericUpDown_ValueChanged(object sender, EventArgs e) => DoValueChanged();
 
 		#endregion
 	}

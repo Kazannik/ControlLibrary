@@ -1,4 +1,6 @@
-﻿using System.Collections;
+﻿// Ignore Spelling: Subitem
+
+using System.Collections;
 using System.Collections.Generic;
 using System.Drawing;
 using System.Drawing.Drawing2D;
@@ -39,7 +41,7 @@ namespace ControlLibrary.Controls.ListControls
 				this.notes[i].ClipSizeChanged += new System.EventHandler<System.EventArgs>(ListItem_ClipSizeChanged);
 				this.notes[i].ContentChanged += new System.EventHandler<System.EventArgs>(ListItem_ContentChanged);
 			}
-			this.Size = Size.Empty;
+			Size = Size.Empty;
 		}
 
 		public Rectangle Bounds { get; protected set; }
@@ -58,9 +60,9 @@ namespace ControlLibrary.Controls.ListControls
 			return new Rectangle(Bounds.X, top, notes[index].Size.Width, notes[index].Size.Height);
 		}
 
-		public IListItemNote this[int index] { get { return notes[index]; } }
+		public IListItemNote this[int index] => notes[index]; 
 
-		public int Count { get { return notes.Length; } }
+		public int Count => notes.Length; 
 				
 		protected virtual Size OnMeasureBound(Graphics graphics, Font font, int itemWidth, int itemHeight)
 		{
@@ -100,55 +102,36 @@ namespace ControlLibrary.Controls.ListControls
 		public event System.EventHandler<System.EventArgs> ClipSizeChanged;
 		public event System.EventHandler<System.EventArgs> ContentChanged;
 
-		private void ListItem_ClipSizeChanged(object sender, System.EventArgs e)
-		{
+		private void ListItem_ClipSizeChanged(object sender, System.EventArgs e) =>
 			DoClipSizeChanged();
-		}
-
-		private void DoClipSizeChanged()
-		{
+		
+		private void DoClipSizeChanged() => 
 			OnClipSizeChanged(new System.EventArgs());
-		}
 
-		protected virtual void OnClipSizeChanged(System.EventArgs e)
-		{
+		protected virtual void OnClipSizeChanged(System.EventArgs e) =>
 			ClipSizeChanged?.Invoke(this, e);
-		}
+		
 
-		private void ListItem_ContentChanged(object sender, System.EventArgs e)
-		{
+		private void ListItem_ContentChanged(object sender, System.EventArgs e) =>
 			DoContentChanged();
-		}
 
-		private void DoContentChanged()
-		{
+		private void DoContentChanged() => 
 			OnContentChanged(new System.EventArgs());
-		}
 
-		protected virtual void OnContentChanged(System.EventArgs e)
-		{
+		protected virtual void OnContentChanged(System.EventArgs e) => 
 			ContentChanged?.Invoke(this, e);
-		}
 
-		Size IListItem.MeasureBound(Graphics graphics, Font font, int itemWidth, int itemHeight)
-		{
-			return OnMeasureBound(graphics: graphics, font: font, itemWidth: itemWidth, itemHeight: itemHeight);
-		}
+		Size IListItem.MeasureBound(Graphics graphics, Font font, int itemWidth, int itemHeight) => 
+			OnMeasureBound(graphics: graphics, font: font, itemWidth: itemWidth, itemHeight: itemHeight);
 
-		void IListItem.Draw(DrawItemEventArgs e)
-		{
+		void IListItem.Draw(DrawItemEventArgs e) =>
 			OnDraw(e);
-		}
 
-		IEnumerator<IListItemNote> IEnumerable<IListItemNote>.GetEnumerator()
-		{
-			return new ListItemNoteEnumerator(GetEnumerator());
-		}
+		IEnumerator<IListItemNote> IEnumerable<IListItemNote>.GetEnumerator() => 
+			new ListItemNoteEnumerator(GetEnumerator());
 
-		public IEnumerator GetEnumerator()
-		{
-			return notes.GetEnumerator();
-		}
+		public IEnumerator GetEnumerator() => 
+			notes.GetEnumerator();
 
 		private class Note : ListItemNote, IListItemNote
 		{			
@@ -161,60 +144,46 @@ namespace ControlLibrary.Controls.ListControls
 			
 			public string Text
 			{
-				get
-				{
-					return text;
-				}
+				get => text;
 				set
 				{
 					if (text != value)
 					{
 						text = value;
 						DoContentChanged();
-					}					
+					}
 				}
 			}
-			
-			protected override void OnDraw(DrawItemEventArgs e)
+
+			protected sealed override void OnDraw(DrawItemEventArgs e)
 			{
 				Brush brush = new SolidBrush(e.ForeColor);
 				e.Graphics.DrawString(Text, e.Font, brush, e.Bounds, LEFT_STRING_FORMAT);
 				brush.Dispose();
 			}
 			
-			protected override Size OnMeasureBound(Graphics graphics, Font font, int itemWidth, int itemHeight)
-			{
-				return GetTextSize(graphics: graphics, Text, font: font, width: itemWidth, LEFT_STRING_FORMAT);
-			}
+			protected sealed override Size OnMeasureBound(Graphics graphics, Font font, int itemWidth, int itemHeight) => 
+				GetTextSize(graphics: graphics, Text, font: font, width: itemWidth, LEFT_STRING_FORMAT);
 		}
 
 		private class ListItemNoteEnumerator : IEnumerator<IListItemNote>
 		{
-			private readonly IEnumerator enumerator;
+			private readonly IEnumerator _enumerator;
 
 			internal ListItemNoteEnumerator(IEnumerator enumerator)
 			{
-				this.enumerator = enumerator;
+				this._enumerator = enumerator;
 			}
 
-			public IListItemNote Current => (IListItemNote)enumerator.Current;
+			public IListItemNote Current => (IListItemNote)_enumerator.Current;
 
 			object IEnumerator.Current => Current;
 
-			public void Dispose()
-			{
-				enumerator.Reset();
-			}
+			public void Dispose() => _enumerator.Reset();
 
-			public bool MoveNext()
-			{
-				return enumerator.MoveNext();
-			}
+			public bool MoveNext() => _enumerator.MoveNext();
 
-			public void Reset()
-			{
-				enumerator.Reset();
-			}
+			public void Reset() => _enumerator.Reset();
 		}
 	}	
 }

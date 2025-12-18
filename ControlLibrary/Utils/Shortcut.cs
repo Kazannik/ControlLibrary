@@ -88,10 +88,8 @@ namespace ControlLibrary.Utils
 		/// <param name="description">Комментарий.</param>
 		/// <param name="workingDirectory">Рабочая папка.</param>
 		/// <param name="arguments">Аргументы командной строки.</param>
-		public static void Create(string name, Environment.SpecialFolder folder, string targetPath, WindowStyle windowsSyle, string hotkey, string iconLocation, string description, string workingDirectory, string arguments)
-		{
+		public static void Create(string name, Environment.SpecialFolder folder, string targetPath, WindowStyle windowsSyle, string hotkey, string iconLocation, string description, string workingDirectory, string arguments) => 
 			Create(name: name, path: Environment.GetFolderPath(folder), targetPath: targetPath, windowsSyle: windowsSyle, hotkey: hotkey, iconLocation: iconLocation, description: description, workingDirectory: workingDirectory, arguments: arguments);
-		}
 
 		/// <summary>
 		/// Определяет, существует ли заданный ярлык.
@@ -120,10 +118,8 @@ namespace ControlLibrary.Utils
 		/// <param name="name">Имя ярлыка.</param>
 		/// <param name="folder">Системная папка.</param>
 		/// <param name="targetPath">Объект (путь к папке или запускаемому файлу).</param>
-		public static bool Exists(string name, Environment.SpecialFolder folder, string targetPath)
-		{
-			return Exists(name: name, path: Environment.GetFolderPath(folder), targetPath: targetPath);
-		}
+		public static bool Exists(string name, Environment.SpecialFolder folder, string targetPath) =>
+			Exists(name: name, path: Environment.GetFolderPath(folder), targetPath: targetPath);
 
 		/// <summary>
 		/// Стиль окна.

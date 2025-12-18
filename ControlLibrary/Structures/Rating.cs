@@ -36,20 +36,11 @@ namespace ControlLibrary.Structures
 
 		public int Value { get; }
 
-		public bool IsEmpty 
-		{
-			get { return Value == EMPTY_VALUE; }
-		}
+		public bool IsEmpty => Value == EMPTY_VALUE; 
 
-		public bool IsMin
-		{
-			get { return Value == MIN_VALUE; }
-		}
+		public bool IsMin => Value == MIN_VALUE; 
 
-		public bool IsMax
-		{
-			get { return Value == MAX_VALUE; }
-		}
+		public bool IsMax => Value == MAX_VALUE; 
 
 		private static void Validate(int value)
 		{
@@ -59,30 +50,18 @@ namespace ControlLibrary.Structures
 			}
 		}
 
-		public new string ToString()
-		{
-			return Value.ToString();
-		}
+		public new string ToString() => Value.ToString();
 
 		public int GetPercent(int index, int count)
 		{
 			return 50;
 		}
 
-		public static explicit operator string(Rating value)
-		{
-			return value.ToString();
-		}
+		public static explicit operator string(Rating value) => value.ToString();
 
-		public static explicit operator int(Rating value)
-		{
-			return value.Value;
-		}
+		public static explicit operator int(Rating value) => value.Value;
 
-		public static explicit operator Rating(int value)
-		{
-			return new Rating(value);
-		}
+		public static explicit operator Rating(int value) => new Rating(value);
 
 		public override bool Equals(object obj)
 		{
@@ -97,110 +76,48 @@ namespace ControlLibrary.Structures
 			}
 		}
 
-		public override int GetHashCode()
-		{
-			return unchecked((87 * Value.GetHashCode()) ^ Value.GetHashCode());
-		}
+		public override int GetHashCode() =>
+			unchecked((87 * Value.GetHashCode()) ^ Value.GetHashCode());
 
-		public static Rating operator +(Rating a, Rating b)
-		{
-			return new Rating(value: a.Value + b.Value);
-		}
+		public static Rating operator +(Rating a, Rating b) => new Rating(value: a.Value + b.Value);
 
-		public static Rating operator ++(Rating value)
-		{
-			return new Rating(value: value.Value + 1);
-		}
+		public static Rating operator ++(Rating value) => new Rating(value: value.Value + 1);
 
-		public static Rating operator -(Rating a, Rating b)
-		{
-			return new Rating(value: a.Value - b.Value);
-		}
+		public static Rating operator -(Rating a, Rating b) => new Rating(value: a.Value - b.Value);
 
-		public static Rating operator --(Rating value)
-		{
-			return new Rating(value: value.Value - 1);
-		}
+		public static Rating operator --(Rating value) => new Rating(value: value.Value - 1);
 
-		public static bool operator ==(Rating x, Rating y)
-		{
-			return Compare(x, y) == 0;
-		}
+		public static bool operator ==(Rating x, Rating y) => Compare(x, y) == 0;
 
-		public static bool operator !=(Rating x, Rating y)
-		{
-			return Compare(x, y) != 0;
-		}
+		public static bool operator !=(Rating x, Rating y) => Compare(x, y) != 0;
 
-		public static bool operator >(Rating x, Rating y)
-		{
-			return Compare(x, y) > 0;
-		}
+		public static bool operator >(Rating x, Rating y) => Compare(x, y) > 0;
 
-		public static bool operator <(Rating x, Rating y)
-		{
-			return Compare(x, y) < 0;
-		}
+		public static bool operator <(Rating x, Rating y) => Compare(x, y) < 0;
 
-		public static bool operator >=(Rating x, Rating y)
-		{
-			return Compare(x, y) >= 0;
-		}
+		public static bool operator >=(Rating x, Rating y) => Compare(x, y) >= 0;
 
-		public static bool operator <=(Rating x, Rating y)
-		{
-			return Compare(x, y) <= 0;
-		}
+		public static bool operator <=(Rating x, Rating y) => Compare(x, y) <= 0;
 
-		public static Rating operator +(Rating a, int b)
-		{
-			return new Rating(value: a.Value + b);
-		}
+		public static Rating operator +(Rating a, int b) => new Rating(value: a.Value + b);
 
-		public static Rating operator -(Rating a, int b)
-		{
-			return new Rating(value: a.Value - b);
-		}
+		public static Rating operator -(Rating a, int b) => new Rating(value: a.Value - b);
 
-		public static bool operator ==(Rating x, int y)
-		{
-			return Compare(x, y) == 0;
-		}
+		public static bool operator ==(Rating x, int y) => Compare(x, y) == 0;
 
-		public static bool operator !=(Rating x, int y)
-		{
-			return Compare(x, y) != 0;
-		}
+		public static bool operator !=(Rating x, int y) => Compare(x, y) != 0;
 
-		public static bool operator >(Rating x, int y)
-		{
-			return Compare(x, y) > 0;
-		}
+		public static bool operator >(Rating x, int y) => Compare(x, y) > 0;
 
-		public static bool operator <(Rating x, int y)
-		{
-			return Compare(x, y) < 0;
-		}
+		public static bool operator <(Rating x, int y) => Compare(x, y) < 0;
 
-		public static bool operator >=(Rating x, int y)
-		{
-			return Compare(x, y) >= 0;
-		}
+		public static bool operator >=(Rating x, int y) => Compare(x, y) >= 0;
 
-		public static bool operator <=(Rating x, int y)
-		{
-			return Compare(x, y) <= 0;
-		}
+		public static bool operator <=(Rating x, int y) => Compare(x, y) <= 0;
 
-		public int CompareTo(Rating other)
-		{
-			return Compare(this, other);
-		}
+		public int CompareTo(Rating other) => Compare(this, other);
 
-		public int CompareTo(int other)
-		{
-			return Compare(this, other);
-		}
+		public int CompareTo(int other) => Compare(this, other);
 
 		public static int Compare(Rating x, Rating y)
 		{
@@ -238,10 +155,7 @@ namespace ControlLibrary.Structures
 		
 		public class RatingComparer : IComparer<Rating>
 		{
-			public int Compare(Rating x, Rating y)
-			{
-				return Rating.Compare(x, y);
-			}
+			public int Compare(Rating x, Rating y) => Rating.Compare(x, y);
 		}
 	}
 

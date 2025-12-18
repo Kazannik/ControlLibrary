@@ -1,4 +1,7 @@
-﻿using System;
+﻿// Ignore Spelling: Previouse
+
+using ControlLibrary.Utils;
+using System;
 using System.Collections.Generic;
 using System.Globalization;
 
@@ -32,6 +35,8 @@ namespace ControlLibrary.Structures
 
 		public static Period Create(int year, int month)
 		{
+			Argument.AssertNotNull(year, nameof(year));
+			Argument.AssertNotNull(month, nameof(month));
 			if (month > 12)
 				throw new ArgumentOutOfRangeException("Номер месяца не может быть больше 12");
 			else if (month < 0)
@@ -40,25 +45,17 @@ namespace ControlLibrary.Structures
 			return new Period(year: year, month: month);
 		}
 
-		public static Period Create(DateTime date)
-		{
-			return Create(year: date.Year, month: date.Month);
-		}
+		public static Period Create(DateTime date) =>
+			Create(year: date.Year, month: date.Month);
 
-		public static Period Create(int year)
-		{
-			return Create(year: year, month: 0);
-		}
+		public static Period Create(int year) =>
+			Create(year: year, month: 0);
 
-		public static Period Today()
-		{
-			return Create(DateTime.Today);
-		}
+		public static Period Today() =>
+			Create(DateTime.Today);
 
-		public static Period Now()
-		{
-			return Create(DateTime.Now);
-		}
+		public static Period Now() =>
+			Create(DateTime.Now);
 
 		public static bool ParseTry(string s, out Period result)
 		{
@@ -89,7 +86,7 @@ namespace ControlLibrary.Structures
 				? throw new ArgumentNullException("Строка не может быть пустой, либо содержать только пробельные символы")
 				: s.Length != 6
 				? throw new ArgumentException("Число знаков в строке должно равняться 6")
-				: !ParseTry(s, out Period result) ? throw new ArgumentException("Строка не соотвествует формату") : result;
+				: !ParseTry(s, out Period result) ? throw new ArgumentException("Строка не соответствует формату") : result;
 		}
 
 		public int Month { get; }
@@ -103,6 +100,7 @@ namespace ControlLibrary.Structures
 		public Period LastMonth => new Period(year: Year, month: 12);
 
 		public Period PreviouseMonth => Month <= 1 ? new Period(year: Year - 1, month: 12) : new Period(year: Year, month: Month - 1);
+
 		public Period NextMonth => Month == 12 ? new Period(year: Year + 1, month: 1) : new Period(year: Year, month: Month + 1);
 
 		public Period PreviouseYear => new Period(year: Year - 1, month: Month);
@@ -120,35 +118,23 @@ namespace ControlLibrary.Structures
 				return Year.ToString("0000");
 		}
 
-		public DateTime ToDate()
-		{
-			return Month > 0 ? new DateTime(year: Year, month: Month, day: 1) : new DateTime(year: Year, month: 1, day: 1);
-		}
+		public DateTime ToDate() =>
+			Month > 0 ? new DateTime(year: Year, month: Month, day: 1) : new DateTime(year: Year, month: 1, day: 1);
+		
+		public new string ToString() =>
+			Year.ToString("0000") + Month.ToString("00");
+		
+		public static implicit operator Period(int year) =>
+			new Period(year: year, month: 0);
 
-		public new string ToString()
-		{
-			return Year.ToString("0000") + Month.ToString("00");
-		}
-
-		public static implicit operator Period(int year)
-		{
-			return new Period(year: year, month: 0);
-		}
-
-		public static explicit operator int(Period period)
-		{
-			return period.Year;
-		}
-
-		public static implicit operator Period(DateTime date)
-		{
-			return new Period(year: date.Year, month: date.Month);
-		}
-
-		public static explicit operator DateTime(Period period)
-		{
-			return period.ToDate();
-		}
+		public static explicit operator int(Period period) =>
+			period.Year;
+		
+		public static implicit operator Period(DateTime date) =>
+			new Period(year: date.Year, month: date.Month);
+		
+		public static explicit operator DateTime(Period period) =>
+			period.ToDate();
 
 		public override bool Equals(object obj)
 		{
@@ -163,10 +149,9 @@ namespace ControlLibrary.Structures
 			}
 		}
 
-		public override int GetHashCode()
-		{
-			return unchecked((87 * Year.GetHashCode()) ^ Month.GetHashCode());
-		}
+		public override int GetHashCode() =>
+			unchecked((87 * Year.GetHashCode()) ^ Month.GetHashCode());
+		
 
 		public static Period operator +(Period a, Period b)
 		{
@@ -200,71 +185,33 @@ namespace ControlLibrary.Structures
 			return new Period(year: (int)year, month: (int)month);
 		}
 
-		public static bool operator ==(Period x, Period y)
-		{
-			return Compare(x, y) == 0;
-		}
+		public static bool operator ==(Period x, Period y) => Compare(x, y) == 0;
 
-		public static bool operator !=(Period x, Period y)
-		{
-			return Compare(x, y) != 0;
-		}
+		public static bool operator !=(Period x, Period y) => Compare(x, y) != 0;
 
-		public static bool operator >(Period x, Period y)
-		{
-			return Compare(x, y) > 0;
-		}
-		public static bool operator <(Period x, Period y)
-		{
-			return Compare(x, y) < 0;
-		}
+		public static bool operator >(Period x, Period y) => Compare(x, y) > 0;
 
-		public static bool operator >=(Period x, Period y)
-		{
-			return Compare(x, y) >= 0;
-		}
-		public static bool operator <=(Period x, Period y)
-		{
-			return Compare(x, y) <= 0;
-		}
+		public static bool operator <(Period x, Period y) => Compare(x, y) < 0;
 
-		public static bool operator ==(Period x, DateTime y)
-		{
-			return Compare(x, y) == 0;
-		}
+		public static bool operator >=(Period x, Period y) => Compare(x, y) >= 0;
 
-		public static bool operator !=(Period x, DateTime y)
-		{
-			return Compare(x, y) != 0;
-		}
+		public static bool operator <=(Period x, Period y) => Compare(x, y) <= 0; 
 
-		public static bool operator >(Period x, DateTime y)
-		{
-			return Compare(x, y) > 0;
-		}
-		public static bool operator <(Period x, DateTime y)
-		{
-			return Compare(x, y) < 0;
-		}
+		public static bool operator ==(Period x, DateTime y) => Compare(x, y) == 0;
 
-		public static bool operator >=(Period x, DateTime y)
-		{
-			return Compare(x, y) >= 0;
-		}
-		public static bool operator <=(Period x, DateTime y)
-		{
-			return Compare(x, y) <= 0;
-		}
+		public static bool operator !=(Period x, DateTime y) => Compare(x, y) != 0;
 
-		public int CompareTo(Period value)
-		{
-			return Compare(this, value);
-		}
+		public static bool operator >(Period x, DateTime y) => Compare(x, y) > 0;
 
-		public int CompareTo(DateTime value)
-		{
-			return Compare(this, value);
-		}
+		public static bool operator <(Period x, DateTime y) => Compare(x, y) < 0;
+
+		public static bool operator >=(Period x, DateTime y) => Compare(x, y) >= 0;
+
+		public static bool operator <=(Period x, DateTime y) => Compare(x, y) <= 0;
+
+		public int CompareTo(Period value) => Compare(this, value);
+
+		public int CompareTo(DateTime value) => Compare(this, value);
 
 		public static int Compare(Period x, Period y)
 		{
@@ -306,20 +253,41 @@ namespace ControlLibrary.Structures
 
 		public class PeriodComparer : IComparer<Period>
 		{
-			public int Compare(Period x, Period y)
-			{
-				return Period.Compare(x, y);
-			}
+			public int Compare(Period x, Period y) => Period.Compare(x, y);
 		}
 	}
-
 
 	public static class PeriodExtensions
 	{
 		public static void FirstMonth(ref this Period period)
 		{
 			period = period.FirstMonth;
-		} 
+		}
+
+		public static void PreviouseMonth(ref this Period period)
+		{
+			period = period.PreviouseMonth;
+		}
+
+		public static void NextMonth(ref this Period period)
+		{
+			period = period.NextMonth;
+		}
+
+		public static void LastMonth(ref this Period period)
+		{
+			period = period.LastMonth;
+		}
+
+		public static void PreviouseYear(ref this Period period)
+		{
+			period = period.PreviouseYear;
+		}
+
+		public static void NextYear(ref this Period period)
+		{
+			period = period.NextYear;
+		}
 	}
 
 	public class PeriodEventArgs : EventArgs
@@ -328,6 +296,7 @@ namespace ControlLibrary.Structures
 		{
 			Period = args;
 		}
+
 		public Period Period { get; }
 	}
 }
