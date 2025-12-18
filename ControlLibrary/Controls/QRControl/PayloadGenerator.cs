@@ -40,8 +40,7 @@ namespace ControlLibrary.Controls.QRCoder
 
 			public override string ToString()
 			{
-				return
-					$"WIFI:T:{authenticationMode};S:{ssid};P:{password};{(isHiddenSSID ? "H:true" : string.Empty)};";
+				return $"WIFI:T:{authenticationMode};S:{ssid};P:{password};{(isHiddenSSID ? "H:true" : string.Empty)};";
 			}
 
 			public enum Authentication

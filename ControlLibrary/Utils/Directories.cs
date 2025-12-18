@@ -18,7 +18,8 @@ namespace ControlLibrary.Utils
 		/// <param name="icon">Значек для папки</param>
 		public static void CreateFolder(string path, Icon icon)
 		{
-			if (icon == null) throw new ArgumentNullException("icon", "Параметр не может быть null.");
+			Argument.AssertNotNull(icon, "Значек для папки");
+
 			if (Directory.Exists(path)) 
 			{
 				Directory.CreateDirectory(path);

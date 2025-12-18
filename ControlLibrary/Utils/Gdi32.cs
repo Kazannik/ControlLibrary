@@ -1,4 +1,4 @@
-﻿// Ignore Spelling: Utils Gdi BLENDFUNCTION RGBQUAD rgb BITMAPINFOHEADER Pels Clr DIBSECTION SRCCOPY
+﻿// Ignore Spelling: Utils Gdi BLENDFUNCTION RGBQUAD rgb BITMAPINFOHEADER Pels Clr DIBSECTION SRCCOPY Dest
 
 using System;
 using System.Drawing;

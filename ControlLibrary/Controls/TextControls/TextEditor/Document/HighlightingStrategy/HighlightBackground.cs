@@ -29,7 +29,7 @@ namespace ControlLibrary.Controls.TextControl.TextEditor.Document
 		/// <summary>
 		/// Creates a new instance of <see cref="HighlightBackground"/>
 		/// </summary>
-		public HighlightBackground(Color color, Color backgroundcolor, bool bold, bool italic) : base(color, backgroundcolor, bold, italic)
+		public HighlightBackground(Color color, Color backgroundColor, bool bold, bool italic) : base(color, backgroundColor, bold, italic)
 		{
 		}
 

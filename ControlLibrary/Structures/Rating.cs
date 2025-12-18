@@ -29,11 +29,8 @@ namespace ControlLibrary.Structures
 			Value = value;
 		}
 
-		public static Rating Create(int value)
-		{
-			return new Rating(value: value);
-		}
-
+		public static Rating Create(int value) => new Rating(value: value);
+		
 		public int Value { get; }
 
 		public bool IsEmpty => Value == EMPTY_VALUE; 

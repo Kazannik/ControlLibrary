@@ -1,4 +1,4 @@
-﻿// Ignore Spelling: Utils
+﻿// Ignore Spelling: Utils Mso img
 
 using System;
 using System.Drawing;
@@ -61,8 +61,8 @@ namespace ControlLibrary.Utils
 
 		public static GraphicsPath CreateStarPath(PointF location, SizeF size)
 		{
-			double r = (double)size.Height / (double)3.5, R = (double)size.Height / (double)2;
-			double x0 = (double)size.Width / (double)2, y0 = (double)size.Height / (double)2;
+			double r = (double)size.Height / 3.5, R = (double)size.Height / 2;
+			double x0 = (double)size.Width / 2, y0 = (double)size.Height / 2;
 			PointF[] points = new PointF[10];
 			for (int vertex = 0; vertex < 10; vertex++)
 			{
@@ -97,7 +97,7 @@ namespace ControlLibrary.Utils
 			GraphicsPath star = CreateStarPath(rect);
 			RectangleF starRectangle = star.GetBounds();
 			Region starRegion = new Region(star);
-			int percentWidth = (int)((double)starRectangle.Width / (double)100 * (double)Math.Abs(percent));
+			int percentWidth = (int)((double)starRectangle.Width / 100 * Math.Abs(percent));
 
 			if (Math.Abs(percent) >= 100) { }
 			else if (percent < 0)
@@ -123,8 +123,8 @@ namespace ControlLibrary.Utils
 
 		public static void DrawOkIcon(Graphics graphics, Color foreColor, Color backColor, Rectangle rect)
 		{
-			double r = (double)rect.Height / (double)4, R = (double)rect.Height / (double)2.5;
-			double x0 = (double)rect.Width / (double)2, y0 = (double)rect.Height / (double)2;
+			double r = (double)rect.Height / 4, R = rect.Height / 2.5;
+			double x0 = (double)rect.Width / 2, y0 = (double)rect.Height / 2;
 			Point[] points = new Point[3];
 			points[0] = GetVertexPoint(rect.X + x0, rect.Y + y0, R, 8, 1);
 			points[1] = GetVertexPoint(rect.X + x0, rect.Y + y0, R, 8, 4);
@@ -141,8 +141,8 @@ namespace ControlLibrary.Utils
 
 		public static void DrawCancelIcon(Graphics graphics, Color foreColor, Color backColor, Rectangle rect)
 		{
-			double R = (double)rect.Height / (double)4;
-			double x0 = (double)rect.Width / (double)2, y0 = (double)rect.Height / (double)2;
+			double R = (double)rect.Height / 4;
+			double x0 = (double)rect.Width / 2, y0 = (double)rect.Height / 2;
 			Point[] points = new Point[4];
 			points[0] = GetVertexPoint(rect.X + x0 + 1, rect.Y + y0, R, 8, 1);
 			points[1] = GetVertexPoint(rect.X + x0 + 1, rect.Y + y0 + 1, R, 8, 3);
@@ -159,8 +159,8 @@ namespace ControlLibrary.Utils
 
 		public static void DrawCheckedIcon(Graphics graphics, Color foreColor, Color backColor, Rectangle rect)
 		{
-			double r = (double)rect.Height / (double)4, R = (double)rect.Height / (double)2.5;
-			double x0 = (double)rect.Width / (double)2, y0 = (double)rect.Height / (double)2;
+			double r = (double)rect.Height / 4, R = rect.Height / 2.5;
+			double x0 = (double)rect.Width / 2, y0 = (double)rect.Height / 2;
 			Point[] points = new Point[3];
 			points[0] = GetVertexPoint(rect.X + x0, rect.Y + y0, R, 8, 1);
 			points[1] = GetVertexPoint(rect.X + x0, rect.Y + y0, R, 8, 4);

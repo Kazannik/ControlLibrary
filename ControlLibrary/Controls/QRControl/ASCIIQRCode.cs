@@ -1,4 +1,6 @@
-﻿using System;
+﻿// Ignore Spelling: ecc Utf BOM eci
+
+using System;
 using System.Collections.Generic;
 using System.Text;
 using static ControlLibrary.Controls.QRCoder.QRCodeGenerator;

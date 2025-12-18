@@ -47,13 +47,13 @@ namespace ControlLibrary.Controls.TextControl.TextEditor
 			this.textArea = textArea;
 		}
 
-		public virtual void HandleMouseDown(Point mousepos, MouseButtons mouseButtons)
+		public virtual void HandleMouseDown(Point mousePosition, MouseButtons mouseButtons)
 		{
-			MouseDown?.Invoke(this, mousepos, mouseButtons);
+			MouseDown?.Invoke(this, mousePosition, mouseButtons);
 		}
-		public virtual void HandleMouseMove(Point mousepos, MouseButtons mouseButtons)
+		public virtual void HandleMouseMove(Point mousePosition, MouseButtons mouseButtons)
 		{
-			MouseMove?.Invoke(this, mousepos, mouseButtons);
+			MouseMove?.Invoke(this, mousePosition, mouseButtons);
 		}
 		public virtual void HandleMouseLeave(EventArgs e)
 		{

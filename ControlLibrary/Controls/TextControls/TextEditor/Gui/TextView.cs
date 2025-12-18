@@ -42,7 +42,6 @@ namespace ControlLibrary.Controls.TextControl.TextEditor
 				if (FirstVisibleLine != value)
 				{
 					textArea.VirtualTop = new Point(textArea.VirtualTop.X, textArea.Document.GetVisibleLine(value) * fontHeight);
-
 				}
 			}
 		}
@@ -53,7 +52,7 @@ namespace ControlLibrary.Controls.TextControl.TextEditor
 
 		public int VisibleLineCount => 1 + (DrawingPosition.Height / fontHeight);
 
-		public int VisibleColumnCount => (int)(DrawingPosition.Width / WideSpaceWidth) - 1;
+		public int VisibleColumnCount => DrawingPosition.Width / WideSpaceWidth - 1;
 
 		public TextView(TextArea textArea) : base(textArea)
 		{
@@ -88,13 +87,13 @@ namespace ControlLibrary.Controls.TextControl.TextEditor
 
 		public void OptionsChanged()
 		{
-			this.lastFont = TextEditorProperties.FontContainer.RegularFont;
-			this.fontHeight = GetFontHeight(lastFont);
+			lastFont = TextEditorProperties.FontContainer.RegularFont;
+			fontHeight = GetFontHeight(lastFont);
 			// use minimum width - in some fonts, space has no width but kerning is used instead
 			// -> DivideByZeroException
-			this.spaceWidth = Math.Max(GetWidth(' ', lastFont), 1);
+			spaceWidth = Math.Max(GetWidth(' ', lastFont), 1);
 			// tab should have the width of 4*'x'
-			this.wideSpaceWidth = Math.Max(spaceWidth, GetWidth('x', lastFont));
+			wideSpaceWidth = Math.Max(spaceWidth, GetWidth('x', lastFont));
 		}
 
 		#region Paint functions
@@ -115,7 +114,7 @@ namespace ControlLibrary.Controls.TextControl.TextEditor
 			int horizontalDelta = textArea.VirtualTop.X;
 			if (horizontalDelta > 0)
 			{
-				g.SetClip(this.DrawingPosition);
+				g.SetClip(DrawingPosition);
 			}
 
 			for (int y = 0; y < ((DrawingPosition.Height + VisibleLineDrawingRemainder) / fontHeight) + 1; ++y)

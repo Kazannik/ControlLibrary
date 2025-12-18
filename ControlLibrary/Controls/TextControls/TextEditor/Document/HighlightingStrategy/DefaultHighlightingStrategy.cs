@@ -751,13 +751,12 @@ namespace ControlLibrary.Controls.TextControl.TextEditor.Document
 			{
 				if (words.Count > 0 && activeRuleSet != null)
 				{
-					TextWord prevWord = null;
 					int pInd = words.Count - 1;
 					while (pInd >= 0)
 					{
-						if (!((TextWord)words[pInd]).IsWhiteSpace)
+						if (!words[pInd].IsWhiteSpace)
 						{
-							prevWord = (TextWord)words[pInd];
+							TextWord prevWord = words[pInd];
 							if (prevWord.HasDefaultColor)
 							{
 								PrevMarker marker = (PrevMarker)activeRuleSet.PrevMarkers[document, currentLine, currentOffset, currentLength];

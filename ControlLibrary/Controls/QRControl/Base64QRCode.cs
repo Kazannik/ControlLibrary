@@ -15,31 +15,17 @@ namespace ControlLibrary.Controls.QRCoder
 		/// <summary>
 		/// Constructor without params to be used in COM Objects connections
 		/// </summary>
-		public Base64QRCode()
-		{
-			qr = new QRCode();
-		}
+		public Base64QRCode() => qr = new QRCode();
 
-		public Base64QRCode(QRCodeData data) : base(data)
-		{
-			qr = new QRCode(data);
-		}
+		public Base64QRCode(QRCodeData data) : base(data) => qr = new QRCode(data);
 
-		public override void SetQRCodeData(QRCodeData data)
-		{
-			qr.SetQRCodeData(data);
-		}
+		public override void SetQRCodeData(QRCodeData data) => qr.SetQRCodeData(data);
 
-		public string GetGraphic(int pixelsPerModule)
-		{
-			return GetGraphic(pixelsPerModule, Color.Black, Color.White, true);
-		}
+		public string GetGraphic(int pixelsPerModule) => 
+			GetGraphic(pixelsPerModule, Color.Black, Color.White, true);
 
-
-		public string GetGraphic(int pixelsPerModule, string darkColorHtmlHex, string lightColorHtmlHex, bool drawQuietZones = true, ImageType imgType = ImageType.Png)
-		{
-			return GetGraphic(pixelsPerModule, ColorTranslator.FromHtml(darkColorHtmlHex), ColorTranslator.FromHtml(lightColorHtmlHex), drawQuietZones, imgType);
-		}
+		public string GetGraphic(int pixelsPerModule, string darkColorHtmlHex, string lightColorHtmlHex, bool drawQuietZones = true, ImageType imgType = ImageType.Png) =>
+			GetGraphic(pixelsPerModule, ColorTranslator.FromHtml(darkColorHtmlHex), ColorTranslator.FromHtml(lightColorHtmlHex), drawQuietZones, imgType);
 
 		public string GetGraphic(int pixelsPerModule, Color darkColor, Color lightColor, bool drawQuietZones = true, ImageType imgType = ImageType.Png)
 		{

@@ -1,3 +1,5 @@
+// Ignore Spelling: utf BOM eci
+
 using System;
 using System.Drawing;
 using System.Drawing.Drawing2D;
@@ -26,20 +28,16 @@ namespace ControlLibrary.Controls.QRCoder
 		/// </summary>
 		/// <param name="pixelsPerModule">Amount of px each dark/light module of the QR code shall take place in the final QR code image</param>
 		/// <returns>QRCode graphic as bitmap</returns>
-		public Bitmap GetGraphic(int pixelsPerModule)
-		{
-			return this.GetGraphic(pixelsPerModule, Color.Black, Color.White, Color.Transparent);
-		}
+		public Bitmap GetGraphic(int pixelsPerModule) => 
+			GetGraphic(pixelsPerModule, Color.Black, Color.White, Color.Transparent);
 
 		/// <summary>
 		/// Renders an art-style QR code with dots as modules and a background image (With default settings: DarkColor=Black, LightColor=White, Background=Transparent, QuietZone=true)
 		/// </summary>
 		/// <param name="backgroundImage">A bitmap object that will be used as background picture</param>
 		/// <returns>QRCode graphic as bitmap</returns>
-		public Bitmap GetGraphic(Bitmap backgroundImage = null)
-		{
-			return this.GetGraphic(10, Color.Black, Color.White, Color.Transparent, backgroundImage: backgroundImage);
-		}
+		public Bitmap GetGraphic(Bitmap backgroundImage = null) => 
+			GetGraphic(10, Color.Black, Color.White, Color.Transparent, backgroundImage: backgroundImage);
 
 		/// <summary>
 		/// Renders an art-style QR code with dots as modules and various user settings
