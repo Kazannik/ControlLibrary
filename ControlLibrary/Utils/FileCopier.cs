@@ -56,9 +56,9 @@ namespace ControlLibrary.Utils
 			}
 		}
 
-		public string SourceFilePath { get; set; }
+		public string SourceFilePath { get; }
 
-		public string DestFilePath { get; set; }
+		public string DestFilePath { get; }
 
 		public event ProgressChangedDelegate OnProgressChanged;
 

@@ -33,7 +33,5 @@ namespace ControlLibrary.Controls.TextControl.TextEditor.Document
 								 Offset,
 								 Length);
 		}
-
-
 	}
 }

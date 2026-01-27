@@ -66,7 +66,7 @@ namespace ControlLibrary.Controls.TextControl.TextEditor.Document
 			this.textMarkerType = textMarkerType;
 			this.color = color;
 			this.foreColor = foreColor;
-			this.overrideForeColor = true;
+			overrideForeColor = true;
 		}
 	}
 }

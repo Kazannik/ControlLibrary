@@ -22,11 +22,11 @@ namespace ControlLibrary.Controls.TextControl.TextEditor.Actions
 				if (textArea != null)
 				{
 					int column = textArea.TextView.GetVisualColumn(textArea.Caret.Line, textArea.Caret.Column);
-					indent.Append(new String(' ', tabIndent - (column % tabIndent)));
+					indent.Append(new string(' ', tabIndent - (column % tabIndent)));
 				}
 				else
 				{
-					indent.Append(new String(' ', tabIndent));
+					indent.Append(new string(' ', tabIndent));
 				}
 			}
 			else
@@ -209,7 +209,6 @@ namespace ControlLibrary.Controls.TextControl.TextEditor.Actions
 					textArea.Document.UpdateQueue.Clear();
 					textArea.Document.RequestUpdate(new TextAreaUpdate(TextAreaUpdateType.LinesBetween, startLine, endLine));
 					textArea.EndUpdate();
-
 				}
 				textArea.AutoClearSelection = false;
 			}

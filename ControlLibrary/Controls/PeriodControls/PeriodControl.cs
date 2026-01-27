@@ -345,7 +345,7 @@ namespace ControlLibrary.Controls.PriodControls
 					HoveringButton = null;
 					Invalidate(rec);
 				}
-				this.Cursor = Cursors.Default;
+				Cursor = Cursors.Default;
 			}
 		}
 
@@ -377,10 +377,7 @@ namespace ControlLibrary.Controls.PriodControls
 			OnValueChanged(new PeriodEventArgs(this.period));
 		}
 
-		protected virtual void OnValueChanged(PeriodEventArgs e)
-		{
-			ValueChanged?.Invoke(this, e);
-		}
+		protected virtual void OnValueChanged(PeriodEventArgs e) => ValueChanged?.Invoke(this, e);
 
 		#endregion
 
@@ -388,10 +385,7 @@ namespace ControlLibrary.Controls.PriodControls
 
 		public event EventHandler ButtonClick;
 
-		protected virtual void OnButtonClick(EventArgs e)
-		{
-			ButtonClick?.Invoke(this, e);
-		}
+		protected virtual void OnButtonClick(EventArgs e) => ButtonClick?.Invoke(this, e);
 
 		#endregion
 
@@ -401,7 +395,7 @@ namespace ControlLibrary.Controls.PriodControls
 		internal class PeriodBoxButton
 		{
 			internal PeriodControl owner;
-			internal ButtonState state = ButtonState.Passive;
+			private ButtonState state = ButtonState.Passive;
 			internal bool visible = true;
 			internal bool allowed = true;
 			//Private _Image As Icon = My.Resources.DefaultIcon
@@ -417,7 +411,9 @@ namespace ControlLibrary.Controls.PriodControls
 				Index = index;
 				Text = text;
 			}
+
 			public string Text { get; }
+
 			public int Index { get; }
 		}
 
@@ -473,36 +469,28 @@ namespace ControlLibrary.Controls.PriodControls
 				}
 			}
 
-			public int IndexOf(PeriodBoxButton item)
-			{
-				return List.IndexOf(item);
-			}
+			public int IndexOf(PeriodBoxButton item) => List.IndexOf(item);
 
 			public void Insert(int index, PeriodBoxButton value)
 			{
+				value.owner = owner;
 				List.Insert(index, value);
 			}
 
-			public void Remove(PeriodBoxButton value)
-			{
-				List.Remove(value);
-			}
+			public void Remove(PeriodBoxButton value) => List.Remove(value);
 
-			public bool Contains(PeriodBoxButton value)
-			{
-				return List.Contains(value);
-			}
+			public bool Contains(PeriodBoxButton value) => List.Contains(value);
 
 			protected override void OnValidate(object value)
 			{
 				if (!typeof(PeriodBoxButton).IsAssignableFrom(value.GetType()))
 				{
-					throw new ArgumentException("value не является типом PeriodBoxButton.", "value");
+					throw new ArgumentException("value не является типом PeriodBoxButton.", nameof(value));
 				}
 			}
 		}
 
-		internal enum ButtonState : int
+		private enum ButtonState : int
 		{
 			Passive = 0,
 			Hovering = 1,

@@ -156,7 +156,6 @@ namespace ControlLibrary.Utils
 			pen.Dispose();
 		}
 
-
 		public static void DrawCheckedIcon(Graphics graphics, Color foreColor, Color backColor, Rectangle rect)
 		{
 			double r = (double)rect.Height / 4, R = rect.Height / 2.5;
@@ -182,13 +181,21 @@ namespace ControlLibrary.Utils
 			pen.Dispose();
 		}
 
-
 		public static Bitmap GetImageMso(stdole.IPictureDisp img)
 		{
 			// stdole.IPictureDisp img;
 			// Microsoft.Office.Interop.Excel.Application application = Globals.ThisAddIn.Application;
 			// img = application.CommandBars.GetImageMso("SelectAll", 16, 16);
 			return ConvertPixelByPixel(img);
+		}
+
+		public static void DrawText(Graphics graphics, string text, Font font, Color foreColor, Color backColor, Rectangle rect, StringFormat format)
+		{
+			Region[] regions = graphics.MeasureCharacterRanges(text, font, rect, format);
+			for (int i = 0; i < regions.Length; i++) 
+			{
+				//graphics.DrawString(text[i].ToString(), font, SystemBrushes.Control, regions[i].);
+			}
 		}
 	}
 }

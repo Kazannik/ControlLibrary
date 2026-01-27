@@ -14,6 +14,8 @@ namespace ControlLibrary.Controls.TextControl
 	[ComVisible(false)]
 	public partial class NumericTextBox : TextBox
 	{
+		private static readonly Regex numberRegex = new Regex("\\d+([,]\\d+)?", RegexOptions.Singleline);
+
 		public NumericTextBox()
 		{
 			InitializeComponent();
@@ -51,10 +53,9 @@ namespace ControlLibrary.Controls.TextControl
 		protected override void OnKeyPress(KeyPressEventArgs e)
 		{
 			base.OnKeyPress(e);
-			Regex regex = new Regex("\\d+([,]\\d{1,}){0,1}");
 			if (char.IsNumber(e.KeyChar))
 			{
-				e.Handled = !regex.IsMatch(Text + e.KeyChar.ToString());
+				e.Handled = !numberRegex.IsMatch(Text + e.KeyChar.ToString());
 			}
 			else if (Text.IndexOf(',') < 0 && e.KeyChar == ',')
 			{
@@ -70,8 +71,7 @@ namespace ControlLibrary.Controls.TextControl
 
 		protected override void OnTextChanged(EventArgs e)
 		{
-			Regex regex = new Regex("\\d+([,]\\d{1,}){0,1}");
-			if (regex.IsMatch(Text))
+			if (numberRegex.IsMatch(Text))
 			{
 				oldText = Text;
 				base.OnTextChanged(e);

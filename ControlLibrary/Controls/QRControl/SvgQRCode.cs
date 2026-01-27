@@ -39,7 +39,7 @@ namespace ControlLibrary.Controls.QRCoder
 		public string GetGraphic(int pixelsPerModule, Color darkColor, Color lightColor, bool drawQuietZones = true, SizingMode sizingMode = SizingMode.WidthHeightAttribute, SvgLogo logo = null)
 		{
 			var offset = drawQuietZones ? 0 : 4;
-			var edgeSize = (this.QrCodeData.ModuleMatrix.Count * pixelsPerModule) - (offset * 2 * pixelsPerModule);
+			var edgeSize = (QrCodeData.ModuleMatrix.Count * pixelsPerModule) - (offset * 2 * pixelsPerModule);
 			var viewBox = new Size(edgeSize, edgeSize);
 			return this.GetGraphic(viewBox, darkColor, lightColor, drawQuietZones, sizingMode, logo);
 		}
@@ -57,7 +57,7 @@ namespace ControlLibrary.Controls.QRCoder
 		public string GetGraphic(int pixelsPerModule, string darkColorHex, string lightColorHex, bool drawQuietZones = true, SizingMode sizingMode = SizingMode.WidthHeightAttribute, SvgLogo logo = null)
 		{
 			var offset = drawQuietZones ? 0 : 4;
-			var edgeSize = (this.QrCodeData.ModuleMatrix.Count * pixelsPerModule) - (offset * 2 * pixelsPerModule);
+			var edgeSize = (QrCodeData.ModuleMatrix.Count * pixelsPerModule) - (offset * 2 * pixelsPerModule);
 			var viewBox = new Size(edgeSize, edgeSize);
 			return this.GetGraphic(viewBox, darkColorHex, lightColorHex, drawQuietZones, sizingMode, logo);
 		}
@@ -72,7 +72,7 @@ namespace ControlLibrary.Controls.QRCoder
 		/// <returns>SVG as string</returns>
 		public string GetGraphic(Size viewBox, bool drawQuietZones = true, SizingMode sizingMode = SizingMode.WidthHeightAttribute, SvgLogo logo = null)
 		{
-			return this.GetGraphic(viewBox, Color.Black, Color.White, drawQuietZones, sizingMode, logo);
+			return GetGraphic(viewBox, Color.Black, Color.White, drawQuietZones, sizingMode, logo);
 		}
 
 		/// <summary>
@@ -87,7 +87,7 @@ namespace ControlLibrary.Controls.QRCoder
 		/// <returns>SVG as string</returns>
 		public string GetGraphic(Size viewBox, Color darkColor, Color lightColor, bool drawQuietZones = true, SizingMode sizingMode = SizingMode.WidthHeightAttribute, SvgLogo logo = null)
 		{
-			return this.GetGraphic(viewBox, ColorTranslator.ToHtml(Color.FromArgb(darkColor.ToArgb())), ColorTranslator.ToHtml(Color.FromArgb(lightColor.ToArgb())), drawQuietZones, sizingMode, logo);
+			return GetGraphic(viewBox, ColorTranslator.ToHtml(Color.FromArgb(darkColor.ToArgb())), ColorTranslator.ToHtml(Color.FromArgb(lightColor.ToArgb())), drawQuietZones, sizingMode, logo);
 		}
 
 		/// <summary>

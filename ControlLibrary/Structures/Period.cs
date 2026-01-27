@@ -83,7 +83,7 @@ namespace ControlLibrary.Structures
 		public static Period Parse(string s)
 		{
 			return string.IsNullOrWhiteSpace(s)
-				? throw new ArgumentNullException("Строка не может быть пустой, либо содержать только пробельные символы")
+				? throw new ArgumentNullException("Строка не может быть пустой, либо содержать только пробельные символы", nameof(s))
 				: s.Length != 6
 				? throw new ArgumentException("Число знаков в строке должно равняться 6")
 				: !ParseTry(s, out Period result) ? throw new ArgumentException("Строка не соответствует формату") : result;

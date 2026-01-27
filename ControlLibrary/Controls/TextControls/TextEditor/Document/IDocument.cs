@@ -10,11 +10,7 @@ namespace ControlLibrary.Controls.TextControl.TextEditor.Document
 	/// </summary>
 	public interface IDocument
 	{
-		ITextEditorProperties TextEditorProperties
-		{
-			get;
-			set;
-		}
+		ITextEditorProperties TextEditorProperties { get; set; }
 
 		UndoStack UndoStack
 		{
@@ -23,20 +19,12 @@ namespace ControlLibrary.Controls.TextControl.TextEditor.Document
 		/// <value>
 		/// If true the document can't be altered
 		/// </value>
-		bool ReadOnly
-		{
-			get;
-			set;
-		}
+		bool ReadOnly { get; set; }
 
 		/// <summary>
 		/// The <see cref="IFormattingStrategy"/> attached to the <see cref="IDocument"/> instance
 		/// </summary>
-		IFormattingStrategy FormattingStrategy
-		{
-			get;
-			set;
-		}
+		IFormattingStrategy FormattingStrategy { get; set; }
 
 		/// <summary>
 		/// The <see cref="ITextBufferStrategy"/> attached to the <see cref="IDocument"/> instance
@@ -57,11 +45,7 @@ namespace ControlLibrary.Controls.TextControl.TextEditor.Document
 		/// <summary>
 		/// The <see cref="IHighlightingStrategy"/> attached to the <see cref="IDocument"/> instance
 		/// </summary>
-		IHighlightingStrategy HighlightingStrategy
-		{
-			get;
-			set;
-		}
+		IHighlightingStrategy HighlightingStrategy { get; set; }
 
 		/// <summary>
 		/// The <see cref="IBookMarkManager"/> attached to the <see cref="IDocument"/> instance
@@ -196,11 +180,7 @@ namespace ControlLibrary.Controls.TextControl.TextEditor.Document
 		/// Set TextContent only for actions such as loading a file; if you want to change the current document
 		/// use the Replace method instead.
 		/// </value>
-		string TextContent
-		{
-			get;
-			set;
-		}
+		string TextContent { get; set; }
 
 		/// <value>
 		/// The current length of the sequence of characters that can be edited.

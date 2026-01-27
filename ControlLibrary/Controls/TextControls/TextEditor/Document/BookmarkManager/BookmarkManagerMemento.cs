@@ -1,5 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Xml;
 
 namespace ControlLibrary.Controls.TextControl.TextEditor.Document
@@ -40,9 +39,7 @@ namespace ControlLibrary.Controls.TextControl.TextEditor.Document
 		/// <summary>
 		/// Creates a new instance of <see cref="BookmarkManagerMemento"/>
 		/// </summary>
-		public BookmarkManagerMemento()
-		{
-		}
+		public BookmarkManagerMemento() { }
 
 		/// <summary>
 		/// Creates a new instance of <see cref="BookmarkManagerMemento"/>
@@ -51,7 +48,7 @@ namespace ControlLibrary.Controls.TextControl.TextEditor.Document
 		{
 			foreach (XmlElement el in element.ChildNodes)
 			{
-				bookmarks.Add(Int32.Parse(el.Attributes["line"].InnerText));
+				bookmarks.Add(int.Parse(el.Attributes["line"].InnerText));
 			}
 		}
 

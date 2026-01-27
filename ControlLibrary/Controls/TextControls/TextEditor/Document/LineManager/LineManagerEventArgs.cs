@@ -26,8 +26,8 @@ namespace ControlLibrary.Controls.TextControl.TextEditor.Document
 		public LineCountChangeEventArgs(IDocument document, int lineStart, int linesMoved)
 		{
 			this.document = document;
-			this.start = lineStart;
-			this.moved = linesMoved;
+			start = lineStart;
+			moved = linesMoved;
 		}
 	}
 
@@ -61,7 +61,7 @@ namespace ControlLibrary.Controls.TextControl.TextEditor.Document
 		public LineLengthChangeEventArgs(IDocument document, LineSegment lineSegment, int moved)
 			: base(document, lineSegment)
 		{
-			this.lengthDelta = moved;
+			lengthDelta = moved;
 		}
 
 		public override string ToString()

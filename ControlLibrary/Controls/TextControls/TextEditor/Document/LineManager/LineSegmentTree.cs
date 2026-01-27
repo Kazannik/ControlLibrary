@@ -30,8 +30,8 @@ namespace ControlLibrary.Controls.TextControl.TextEditor.Document
 			public RBNode(LineSegment lineSegment)
 			{
 				this.lineSegment = lineSegment;
-				this.count = 1;
-				this.totalLength = lineSegment.TotalLength;
+				count = 1;
+				totalLength = lineSegment.TotalLength;
 			}
 
 			public override string ToString()
@@ -136,9 +136,9 @@ namespace ControlLibrary.Controls.TextControl.TextEditor.Document
 
 		private RedBlackTreeNode<RBNode> GetNodeByOffset(int offset)
 		{
-			if (offset < 0 || offset > this.TotalLength)
+			if (offset < 0 || offset > TotalLength)
 				throw new ArgumentOutOfRangeException("offset", offset, "offset should be between 0 and " + this.TotalLength);
-			if (offset == this.TotalLength)
+			if (offset == TotalLength)
 			{
 				return tree.root == null
 					? throw new InvalidOperationException("Cannot call GetNodeByOffset while tree is empty.")
@@ -357,12 +357,12 @@ namespace ControlLibrary.Controls.TextControl.TextEditor.Document
 
 		IEnumerator<LineSegment> IEnumerable<LineSegment>.GetEnumerator()
 		{
-			return this.GetEnumerator();
+			return GetEnumerator();
 		}
 
 		System.Collections.IEnumerator System.Collections.IEnumerable.GetEnumerator()
 		{
-			return this.GetEnumerator();
+			return GetEnumerator();
 		}
 
 		public Enumerator GetEnumerator()
@@ -414,25 +414,17 @@ namespace ControlLibrary.Controls.TextControl.TextEditor.Document
 
 			object System.Collections.IEnumerator.Current => it.Current.lineSegment;
 
-			public void Dispose()
-			{
-			}
+			public void Dispose() { }
 
 			/// <summary>
 			/// Moves to the next index. Runs in O(lg n), but for k calls, the combined time is only O(k+lg n).
 			/// </summary>
-			public bool MoveNext()
-			{
-				return it.MoveNext();
-			}
+			public bool MoveNext() => it.MoveNext();
 
 			/// <summary>
 			/// Moves to the previous index. Runs in O(lg n), but for k calls, the combined time is only O(k+lg n).
 			/// </summary>
-			public bool MoveBack()
-			{
-				return it.MoveBack();
-			}
+			public bool MoveBack() => it.MoveBack();
 
 			void System.Collections.IEnumerator.Reset()
 			{

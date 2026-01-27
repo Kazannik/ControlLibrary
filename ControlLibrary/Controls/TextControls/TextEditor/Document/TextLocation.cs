@@ -15,46 +15,36 @@ namespace ControlLibrary.Controls.TextControl.TextEditor
 
 		public TextLocation(int column, int line)
 		{
-			x = column;
-			y = line;
+			X = column;
+			Y = line;
 		}
 
-		private int x, y;
-
-		public int X
-		{
-			get => x;
-			set => x = value;
-		}
-
-		public int Y
-		{
-			get => y;
-			set => y = value;
-		}
-
+		public int X { get; set; }
+		
+		public int Y { get; set; }
+		
 		public int Line
 		{
-			get => y;
-			set => y = value;
+			get => Y;
+			set => Y = value;
 		}
 
 		public int Column
 		{
-			get => x;
-			set => x = value;
+			get => X;
+			set => X = value;
 		}
 
-		public bool IsEmpty => x <= 0 && y <= 0;
+		public bool IsEmpty => X <= 0 && Y <= 0;
 
 		public override string ToString()
 		{
-			return string.Format("(Line {1}, Col {0})", x, y);
+			return string.Format("(Line {1}, Col {0})", X, Y);
 		}
 
 		public override int GetHashCode()
 		{
-			return unchecked((87 * x.GetHashCode()) ^ y.GetHashCode());
+			return unchecked((87 * X.GetHashCode()) ^ Y.GetHashCode());
 		}
 
 		public override bool Equals(object obj)
@@ -69,22 +59,22 @@ namespace ControlLibrary.Controls.TextControl.TextEditor
 
 		public static bool operator ==(TextLocation a, TextLocation b)
 		{
-			return a.x == b.x && a.y == b.y;
+			return a.X == b.X && a.Y == b.Y;
 		}
 
 		public static bool operator !=(TextLocation a, TextLocation b)
 		{
-			return a.x != b.x || a.y != b.y;
+			return a.X != b.X || a.Y != b.Y;
 		}
 
 		public static bool operator <(TextLocation a, TextLocation b)
 		{
-			return a.y < b.y || (a.y == b.y && a.x < b.x);
+			return a.Y < b.Y || (a.Y == b.Y && a.X < b.X);
 		}
 
 		public static bool operator >(TextLocation a, TextLocation b)
 		{
-			return a.y > b.y || (a.y == b.y && a.x > b.x);
+			return a.Y > b.Y || (a.Y == b.Y && a.X > b.X);
 		}
 
 		public static bool operator <=(TextLocation a, TextLocation b)

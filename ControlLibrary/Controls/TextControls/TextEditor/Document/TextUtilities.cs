@@ -172,12 +172,12 @@ namespace ControlLibrary.Controls.TextControl.TextEditor.Document
 		{
 			return IsLetterDigitOrUnderscore(c)
 				? CharacterType.LetterDigitOrUnderscore
-				: Char.IsWhiteSpace(c) ? CharacterType.WhiteSpace : CharacterType.Other;
+				: char.IsWhiteSpace(c) ? CharacterType.WhiteSpace : CharacterType.Other;
 		}
 
 		public static int GetFirstNonWSChar(IDocument document, int offset)
 		{
-			while (offset < document.TextLength && Char.IsWhiteSpace(document.GetCharAt(offset)))
+			while (offset < document.TextLength && char.IsWhiteSpace(document.GetCharAt(offset)))
 			{
 				++offset;
 			}
@@ -295,7 +295,7 @@ namespace ControlLibrary.Controls.TextControl.TextEditor.Document
 			for (int i = line.Offset; i < line.Offset + line.Length; ++i)
 			{
 				char ch = document.GetCharAt(i);
-				if (!Char.IsWhiteSpace(ch))
+				if (!char.IsWhiteSpace(ch))
 				{
 					return false;
 				}
@@ -312,7 +312,7 @@ namespace ControlLibrary.Controls.TextControl.TextEditor.Document
 		{
 			if (offset < 0 || offset >= document.TextLength - 1 || !IsWordPart(document.GetCharAt(offset)))
 			{
-				return String.Empty;
+				return string.Empty;
 			}
 			int startOffset = offset;
 			int endOffset = offset;

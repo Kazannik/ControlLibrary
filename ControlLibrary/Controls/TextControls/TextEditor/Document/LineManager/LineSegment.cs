@@ -36,12 +36,12 @@ namespace ControlLibrary.Controls.TextControl.TextEditor.Document
 
 		int ISegment.Offset
 		{
-			get => this.Offset;
+			get => Offset;
 			set => throw new NotSupportedException();
 		}
 		int ISegment.Length
 		{
-			get => this.Length;
+			get => Length;
 			set => throw new NotSupportedException();
 		}
 

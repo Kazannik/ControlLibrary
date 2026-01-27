@@ -1,5 +1,4 @@
-﻿using System;
-using System.Diagnostics;
+﻿using System.Diagnostics;
 
 namespace ControlLibrary.Controls.TextControl.TextEditor.Document
 {
@@ -86,9 +85,6 @@ namespace ControlLibrary.Controls.TextControl.TextEditor.Document
 				(endPosition.Y == position.Y && startPosition.Y != endPosition.Y && position.X <= endPosition.X));
 		}
 
-		public bool ContainsOffset(int offset)
-		{
-			return Offset <= offset && offset <= EndOffset;
-		}
+		public bool ContainsOffset(int offset) => Offset <= offset && offset <= EndOffset;
 	}
 }

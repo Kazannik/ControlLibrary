@@ -15,9 +15,8 @@ namespace ControlLibrary.Controls.TextControl.TextEditor.Document
 		private int indentationSize = 4;
 		private IndentStyle indentStyle = IndentStyle.Smart;
 		private DocumentSelectionMode documentSelectionMode = DocumentSelectionMode.Normal;
-		private Encoding encoding = System.Text.Encoding.UTF8;
+		private Encoding encoding = Encoding.UTF8;
 		private BracketMatchingStyle bracketMatchingStyle = BracketMatchingStyle.After;
-		private readonly FontContainer fontContainer;
 		private static Font DefaultFont;
 
 		public DefaultTextEditorProperties()
@@ -26,7 +25,7 @@ namespace ControlLibrary.Controls.TextControl.TextEditor.Document
 			{
 				DefaultFont = new Font("Courier New", 14);
 			}
-			fontContainer = new FontContainer(DefaultFont);
+			FontContainer = new FontContainer(DefaultFont);
 		}
 
 		private bool allowCaretBeyondEOL = false;
@@ -199,11 +198,11 @@ namespace ControlLibrary.Controls.TextControl.TextEditor.Document
 
 		public Font Font
 		{
-			get => fontContainer.DefaultFont;
-			set => fontContainer.DefaultFont = value;
+			get => FontContainer.DefaultFont;
+			set => FontContainer.DefaultFont = value;
 		}
 
-		public FontContainer FontContainer => fontContainer;
+		public FontContainer FontContainer { get; }
 
 		public BracketMatchingStyle BracketMatchingStyle
 		{

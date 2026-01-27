@@ -111,7 +111,6 @@ namespace ControlLibrary.Controls.ListControls
 		protected virtual void OnClipSizeChanged(System.EventArgs e) =>
 			ClipSizeChanged?.Invoke(this, e);
 		
-
 		private void ListItem_ContentChanged(object sender, System.EventArgs e) =>
 			DoContentChanged();
 
@@ -172,7 +171,7 @@ namespace ControlLibrary.Controls.ListControls
 
 			internal ListItemNoteEnumerator(IEnumerator enumerator)
 			{
-				this._enumerator = enumerator;
+				_enumerator = enumerator;
 			}
 
 			public IListItemNote Current => (IListItemNote)_enumerator.Current;

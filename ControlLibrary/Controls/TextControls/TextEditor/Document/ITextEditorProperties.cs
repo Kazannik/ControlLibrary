@@ -5,195 +5,72 @@ namespace ControlLibrary.Controls.TextControl.TextEditor.Document
 {
 	public interface ITextEditorProperties
 	{
-		bool CaretLine
-		{
-			get;
-			set;
-		}
+		bool CaretLine { get; set; }
 
-		bool AutoInsertCurlyBracket
-		{ // is wrapped in text editor control
-			get;
-			set;
-		}
+		bool AutoInsertCurlyBracket { get; set; }
 
-		bool HideMouseCursor
-		{ // is wrapped in text editor control
-			get;
-			set;
-		}
+		bool HideMouseCursor { get; set; }
 
-		bool IsIconBarVisible
-		{ // is wrapped in text editor control
-			get;
-			set;
-		}
+		bool IsIconBarVisible { get; set; }
 
-		bool AllowCaretBeyondEOL
-		{
-			get;
-			set;
-		}
+		bool AllowCaretBeyondEOL { get; set; }
 
-		bool ShowMatchingBracket
-		{ // is wrapped in text editor control
-			get;
-			set;
-		}
+		bool ShowMatchingBracket { get; set; }
 
-		bool CutCopyWholeLine
-		{
-			get;
-			set;
-		}
+		bool CutCopyWholeLine { get; set; }
 
-		System.Drawing.Text.TextRenderingHint TextRenderingHint
-		{ // is wrapped in text editor control
-			get;
-			set;
-		}
+		System.Drawing.Text.TextRenderingHint TextRenderingHint { get; set; }
 
-		bool MouseWheelScrollDown
-		{
-			get;
-			set;
-		}
+		bool MouseWheelScrollDown { get; set; }
 
-		bool MouseWheelTextZoom
-		{
-			get;
-			set;
-		}
+		bool MouseWheelTextZoom { get; set; }
 
-		string LineTerminator
-		{
-			get;
-			set;
-		}
+		string LineTerminator { get; set; }
 
-		LineViewerStyle LineViewerStyle
-		{ // is wrapped in text editor control
-			get;
-			set;
-		}
+		LineViewerStyle LineViewerStyle { get; set; }
 
-		bool ShowInvalidLines
-		{ // is wrapped in text editor control
-			get;
-			set;
-		}
+		bool ShowInvalidLines { get; set; }
 
-		int VerticalRulerRow
-		{ // is wrapped in text editor control
-			get;
-			set;
-		}
+		int VerticalRulerRow { get; set; }
 
-		bool ShowSpaces
-		{ // is wrapped in text editor control
-			get;
-			set;
-		}
+		bool ShowSpaces { get; set; }
 
-		bool ShowTabs
-		{ // is wrapped in text editor control
-			get;
-			set;
-		}
+		bool ShowTabs { get; set; }
 
-		bool ShowEOLMarker
-		{ // is wrapped in text editor control
-			get;
-			set;
-		}
+		bool ShowEOLMarker { get; set; }
 
-		bool ConvertTabsToSpaces
-		{ // is wrapped in text editor control
-			get;
-			set;
-		}
+		bool ConvertTabsToSpaces { get; set; }
 
-		bool ShowHorizontalRuler
-		{ // is wrapped in text editor control
-			get;
-			set;
-		}
+		bool ShowHorizontalRuler { get; set; }
 
-		bool ShowVerticalRuler
-		{ // is wrapped in text editor control
-			get;
-			set;
-		}
+		bool ShowVerticalRuler { get; set; }
 
-		Encoding Encoding
-		{
-			get;
-			set;
-		}
+		Encoding Encoding { get; set; }
 
-		bool EnableFolding
-		{ // is wrapped in text editor control
-			get;
-			set;
-		}
+		bool EnableFolding { get; set; }
 
-		bool ShowLineNumbers
-		{ // is wrapped in text editor control
-			get;
-			set;
-		}
+		bool ShowLineNumbers { get; set; }
 
 		/// <summary>
 		/// The width of a tab.
 		/// </summary>
-		int TabIndent
-		{ // is wrapped in text editor control
-			get;
-			set;
-		}
+		int TabIndent { get; set; }
 
 		/// <summary>
 		/// The amount of spaces a tab is converted to if ConvertTabsToSpaces is true.
 		/// </summary>
-		int IndentationSize
-		{
-			get;
-			set;
-		}
+		int IndentationSize { get; set; }
 
-		IndentStyle IndentStyle
-		{ // is wrapped in text editor control
-			get;
-			set;
-		}
+		IndentStyle IndentStyle { get; set; }
 
-		DocumentSelectionMode DocumentSelectionMode
-		{
-			get;
-			set;
-		}
+		DocumentSelectionMode DocumentSelectionMode { get; set; }
 
-		Font Font
-		{ // is wrapped in text editor control
-			get;
-			set;
-		}
+		Font Font { get; set; }
 
-		FontContainer FontContainer
-		{
-			get;
-		}
+		FontContainer FontContainer { get; }
 
-		BracketMatchingStyle BracketMatchingStyle
-		{ // is wrapped in text editor control
-			get;
-			set;
-		}
+		BracketMatchingStyle BracketMatchingStyle { get; set; }
 
-		bool SupportReadOnlySegments
-		{
-			get;
-			set;
-		}
+		bool SupportReadOnlySegments { get; set; }
 	}
 }

@@ -18,8 +18,7 @@ namespace ControlLibrary.Controls.ListControls
 			_size = Size.Empty;
 		}
 
-		public void Draw(DrawItemEventArgs e) =>
-			OnDraw(e: e);
+		public void Draw(DrawItemEventArgs e) => OnDraw(e: e);
 				
 		public Size MeasureBound(Graphics graphics, Font font, int itemWidth, int itemHeight)
 		{

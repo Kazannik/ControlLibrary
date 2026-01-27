@@ -10,7 +10,6 @@ namespace ControlLibrary.Controls.TextControl.TextEditor.Actions
 			textArea.Document.BookmarkManager.ToggleMarkAt(textArea.Caret.Position);
 			textArea.Document.RequestUpdate(new TextAreaUpdate(TextAreaUpdateType.SingleLine, textArea.Caret.Line));
 			textArea.Document.CommitUpdate();
-
 		}
 	}
 

@@ -35,8 +35,6 @@ namespace ControlLibrary.Controls.RatingControls
 			Utils.Drawing.DrawStar(e.Graphics, Color.Black, Color.Cyan, 100, e.ClipRectangle);
 		}
 
-
-
 		private void InitializeComponent()
 		{
 			this.components = new System.ComponentModel.Container();

@@ -132,6 +132,7 @@ namespace ControlLibrary.Controls.ListControls
 
 		public new bool Contains(object value)
 		{
+			Argument.AssertType(value, typeof(I));
 			OnValidate(value: value);
 			return base.Contains(value: value);
 		}
@@ -143,7 +144,7 @@ namespace ControlLibrary.Controls.ListControls
 			Argument.AssertNotNull(value, nameof(value));
 			if (!typeof(I).IsAssignableFrom(value.GetType()))
 			{
-				throw new ArgumentException(string.Format(CultureInfo.CurrentCulture, "Не удалось привести тип Value: {0} к поддерживаемому коллекцией типу: {1}.", value.GetType().ToString(), typeof(I).ToString()));
+				throw new ArgumentException(string.Format(CultureInfo.CurrentCulture, "Не удалось привести тип Value: {0} к поддерживаемому коллекцией типу: {1}.", value.GetType().ToString(), typeof(I).ToString()), nameof(value));
 			}
 		}
 

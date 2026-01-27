@@ -87,19 +87,19 @@ namespace ControlLibrary.Utils
 		/// <param name="name">Имя ярлыка.</param>
 		/// <param name="path">Папка размещения ярлыка.</param>
 		/// <param name="targetPath">Объект (путь к папке или запускаемому файлу).</param>
-		/// <param name="windowsSyle">Стиль окна.</param>
+		/// <param name="windowsStyle">Стиль окна.</param>
 		/// <param name="hotkey">Быстрый вызов. Например: "Ctrl+Alt+f</param>
 		/// <param name="iconLocation">Значок. Например: "notepad.exe, 0"</param>
 		/// <param name="description">Комментарий.</param>
 		/// <param name="workingDirectory">Рабочая папка.</param>
 		/// <param name="arguments">Аргументы командной строки.</param>
-		public static void Create(string name, string path, string targetPath, WindowStyle windowsSyle, string hotkey, string iconLocation, string description, string workingDirectory, string arguments)
+		public static void Create(string name, string path, string targetPath, WindowStyle windowsStyle, string hotkey, string iconLocation, string description, string workingDirectory, string arguments)
 		{
 			IWshShortcut shortcut = (IWshShortcut)m_type.InvokeMember("CreateShortcut", System.Reflection.BindingFlags.InvokeMethod, null, m_shell, new object[] { System.IO.Path.Combine(path, name + ".lnk") });
 			shortcut.Description = description;
 			shortcut.Hotkey = hotkey;
 			shortcut.TargetPath = targetPath;
-			shortcut.WindowStyle = (int)windowsSyle;
+			shortcut.WindowStyle = (int)windowsStyle;
 			shortcut.Hotkey = hotkey;
 			shortcut.WorkingDirectory = workingDirectory;
 			shortcut.Arguments = arguments;
@@ -116,14 +116,14 @@ namespace ControlLibrary.Utils
 		/// <param name="name">Имя ярлыка.</param>
 		/// <param name="folder">Системная папка.</param>
 		/// <param name="targetPath">Объект (путь к папке или запускаемому файлу).</param>
-		/// <param name="windowsSyle">Стиль окна.</param>
+		/// <param name="windowsStyle">Стиль окна.</param>
 		/// <param name="hotkey">Быстрый вызов. Например: "Ctrl+Alt+f</param>
 		/// <param name="iconLocation">Значок. Например: "notepad.exe, 0"</param>
 		/// <param name="description">Комментарий.</param>
 		/// <param name="workingDirectory">Рабочая папка.</param>
 		/// <param name="arguments">Аргументы командной строки.</param>
 		public static void Create(string name, Environment.SpecialFolder folder, string targetPath, WindowStyle windowsStyle, string hotkey, string iconLocation, string description, string workingDirectory, string arguments) => 
-			Create(name: name, path: Environment.GetFolderPath(folder), targetPath: targetPath, windowsSyle: windowsStyle, hotkey: hotkey, iconLocation: iconLocation, description: description, workingDirectory: workingDirectory, arguments: arguments);
+			Create(name: name, path: Environment.GetFolderPath(folder), targetPath: targetPath, windowsStyle: windowsStyle, hotkey: hotkey, iconLocation: iconLocation, description: description, workingDirectory: workingDirectory, arguments: arguments);
 
 		/// <summary>
 		/// Определяет, существует ли заданный ярлык.

@@ -33,25 +33,13 @@ namespace ControlLibrary.Controls.ListControls
 			return collection;
 		}
 
-		private void Collection_ItemDeleted(object sender, EventArgs e)
-		{
-			OnItemDeleted(e);
-		}
+		private void Collection_ItemDeleted(object sender, EventArgs e) => OnItemDeleted(e);
 
-		private void Collection_ItemAdded(object sender, ItemEventArgs<I> e)
-		{
-			OnItemAdded(e);
-		}
+		private void Collection_ItemAdded(object sender, ItemEventArgs<I> e) => OnItemAdded(e);
 
-		private void Collection_SizeChanged(object sender, EventArgs e)
-		{
-			base.RefreshItems();
-		}
+		private void Collection_SizeChanged(object sender, EventArgs e) => base.RefreshItems();
 
-		private void Collection_ClipSizeChanged(object sender, ItemEventArgs<I> e)
-		{
-			base.RefreshItems();
-		}
+		private void Collection_ClipSizeChanged(object sender, ItemEventArgs<I> e) => base.RefreshItems();
 
 		private void Collection_ContentChanged(object sender, ItemEventArgs<I> e)
 		{
@@ -130,7 +118,8 @@ namespace ControlLibrary.Controls.ListControls
 		[DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
 		public new I SelectedItem
 		{
-			get => (I)base.SelectedItem; set => base.SelectedItem = value;
+			get => (I)base.SelectedItem;
+			set => base.SelectedItem = value;
 		}
 
 
@@ -179,7 +168,7 @@ namespace ControlLibrary.Controls.ListControls
 
 		protected override void OnSelectedIndexChanged(EventArgs e)
 		{
-			if (SelectedIndex >=0)
+			if (SelectedIndex >= 0)
 			{
 				I item = this[SelectedIndex];
 				OnSelectedItemChanged(new ItemEventArgs<I>(item, null));

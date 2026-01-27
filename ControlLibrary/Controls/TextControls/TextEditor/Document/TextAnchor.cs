@@ -37,7 +37,7 @@ namespace ControlLibrary.Controls.TextControl.TextEditor.Document
 
 		public bool IsDeleted => lineSegment == null;
 
-		public int LineNumber => this.Line.LineNumber;
+		public int LineNumber => Line.LineNumber;
 
 		public int ColumnNumber
 		{
@@ -45,9 +45,9 @@ namespace ControlLibrary.Controls.TextControl.TextEditor.Document
 			internal set => columnNumber = value;
 		}
 
-		public TextLocation Location => new TextLocation(this.ColumnNumber, this.LineNumber);
+		public TextLocation Location => new TextLocation(ColumnNumber, LineNumber);
 
-		public int Offset => this.Line.Offset + columnNumber;
+		public int Offset => Line.Offset + columnNumber;
 
 		/// <summary>
 		/// Controls how the anchor moves.

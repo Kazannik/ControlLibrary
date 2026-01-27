@@ -3,6 +3,7 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Globalization;
 
 namespace ControlLibrary.Utils
 {
@@ -48,16 +49,29 @@ namespace ControlLibrary.Utils
             }
         }
 
-        public static void AssertNotNullOrEmpty(string value, string name)
+        public static void AssertNotNullOrWhiteSpace(string value, string name)
         {
             if (value is null)
             {
                 throw new ArgumentNullException(name);
             }
-            if (value.Length == 0)
+            if (string.IsNullOrWhiteSpace(value))
             {
                 throw new ArgumentException("Value cannot be an empty string.", name);
             }
         }
-    }
+
+		public static void AssertType<T>(T value, Type type)
+		{
+			if (value == null)
+			{
+				throw new ArgumentNullException(nameof(value));
+			}
+			if (!type.IsAssignableFrom(value.GetType()))
+			{
+                throw new TypeAccessException(string.Format(CultureInfo.CurrentCulture,
+                    "Не удалось привести тип аргумента: {0} к поддерживаемому типу: {1}.", value.GetType().ToString(), typeof(T).ToString()));
+			}
+		}
+	}
 }
