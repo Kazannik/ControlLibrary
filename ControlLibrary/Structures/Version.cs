@@ -10,7 +10,7 @@ namespace ControlLibrary.Structures
 		/// </summary>
 		public static readonly Version Empty = new Version(-1, -1, string.Empty);
 
-		private Version(long major, long minor, string guid) : this(major: (int)major, minor: (int) minor, guid: guid )	{}
+		private Version(long major, long minor, string guid) : this(major: (int)major, minor: (int)minor, guid: guid) { }
 
 		private Version(int major, int minor, string guid)
 		{
@@ -35,9 +35,9 @@ namespace ControlLibrary.Structures
 
 		public new string ToString() =>
 			((Major >= 0 || Minor >= 0) ? Major.ToString() : string.Empty) + (Minor >= 0 ? "." + Minor.ToString() : string.Empty);
-		
+
 		public int ToInt() => Major;
-		
+
 		public static explicit operator string(Version value) => value.ToString();
 
 		public static explicit operator int(Version value) => value.ToInt();
@@ -57,7 +57,7 @@ namespace ControlLibrary.Structures
 
 		public override int GetHashCode() =>
 			unchecked((87 * Major.GetHashCode()) ^ Minor.GetHashCode() ^ Guid.GetHashCode());
-		
+
 		public static bool operator ==(Version x, Version y) => Compare(x, y) == 0;
 
 		public static bool operator !=(Version x, Version y) => Compare(x, y) != 0;

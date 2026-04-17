@@ -28,7 +28,7 @@ namespace ControlLibrary.Controls.QRCoder
 		/// </summary>
 		/// <param name="pixelsPerModule">Amount of px each dark/light module of the QR code shall take place in the final QR code image</param>
 		/// <returns>QRCode graphic as bitmap</returns>
-		public Bitmap GetGraphic(int pixelsPerModule) => 
+		public Bitmap GetGraphic(int pixelsPerModule) =>
 			GetGraphic(pixelsPerModule, Color.Black, Color.White, Color.Transparent);
 
 		/// <summary>
@@ -36,7 +36,7 @@ namespace ControlLibrary.Controls.QRCoder
 		/// </summary>
 		/// <param name="backgroundImage">A bitmap object that will be used as background picture</param>
 		/// <returns>QRCode graphic as bitmap</returns>
-		public Bitmap GetGraphic(Bitmap backgroundImage = null) => 
+		public Bitmap GetGraphic(Bitmap backgroundImage = null) =>
 			GetGraphic(10, Color.Black, Color.White, Color.Transparent, backgroundImage: backgroundImage);
 
 		/// <summary>

@@ -21,7 +21,7 @@ namespace ControlLibrary.Controls.QRCoder
 
 		public override void SetQRCodeData(QRCodeData data) => qr.SetQRCodeData(data);
 
-		public string GetGraphic(int pixelsPerModule) => 
+		public string GetGraphic(int pixelsPerModule) =>
 			GetGraphic(pixelsPerModule, Color.Black, Color.White, true);
 
 		public string GetGraphic(int pixelsPerModule, string darkColorHtmlHex, string lightColorHtmlHex, bool drawQuietZones = true, ImageType imgType = ImageType.Png) =>

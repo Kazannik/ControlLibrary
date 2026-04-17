@@ -12,7 +12,6 @@ namespace ControlLibrary.Controls.PriodControls
 {
 	internal class PeriodControl : Control
 	{
-		//private ColorThemeList theme;
 		private Rectangle periodRectangle;
 		private Rectangle todateRectangle;
 
@@ -34,13 +33,15 @@ namespace ControlLibrary.Controls.PriodControls
 
 		public PeriodControl() : base()
 		{
+			SetStyle(ControlStyles.ResizeRedraw, true);
 			period = Period.Today();
 			InitializeComponent();
 			InitializeButton();
 		}
 
-		public PeriodControl(string text) : base(text: text)
+		private PeriodControl(string text) : base(text: text)
 		{
+			SetStyle(ControlStyles.ResizeRedraw, true);
 			period = Period.Today();
 			InitializeComponent();
 			InitializeButton();
@@ -48,6 +49,7 @@ namespace ControlLibrary.Controls.PriodControls
 
 		public PeriodControl(Control parent, string text) : base(parent: parent, text: text)
 		{
+			SetStyle(ControlStyles.ResizeRedraw, true);
 			period = Period.Today();
 			InitializeComponent();
 			InitializeButton();
@@ -55,6 +57,7 @@ namespace ControlLibrary.Controls.PriodControls
 
 		public PeriodControl(string text, int left, int top, int width, int height) : base(text: text, left: left, top: top, width: width, height: height)
 		{
+			SetStyle(ControlStyles.ResizeRedraw, true);
 			period = Period.Today();
 			InitializeComponent();
 			InitializeButton();
@@ -62,6 +65,7 @@ namespace ControlLibrary.Controls.PriodControls
 
 		public PeriodControl(Control parent, string text, int left, int top, int width, int height) : base(parent: parent, text: text, left: left, top: top, width: width, height: height)
 		{
+			SetStyle(ControlStyles.ResizeRedraw, true);
 			period = Period.Today();
 			InitializeComponent();
 			InitializeButton();
@@ -76,11 +80,11 @@ namespace ControlLibrary.Controls.PriodControls
 			Graphics graphics = CreateGraphics();
 			for (int i = 1; i <= 12; i++)
 			{
-				string monthname = FormatInfo.GetMonthName(i);
-				SizeF labelsize = graphics.MeasureString(monthname, Font);
-				if (month_label_height < labelsize.Height) month_label_height = (int)labelsize.Height;
-				if (month_label_width < labelsize.Width) month_label_width = (int)labelsize.Width;
-				buttons.Add(new PeriodBoxButton(i, monthname));
+				string monthName = FormatInfo.GetMonthName(i);
+				SizeF labelSize = graphics.MeasureString(monthName, Font);
+				if (month_label_height < labelSize.Height) month_label_height = (int)labelSize.Height;
+				if (month_label_width < labelSize.Width) month_label_width = (int)labelSize.Width;
+				buttons.Add(new PeriodBoxButton(i, monthName));
 			}
 			month_label_height += month_label_border * 2;
 			month_label_width += month_label_border * 2;
@@ -90,6 +94,8 @@ namespace ControlLibrary.Controls.PriodControls
 				Width = month_label_border + ((month_label_width + month_label_border) * 3);
 				Height = month_label_border + ((month_label_height + month_label_border) * 6);
 			}
+			MinimumSize = new Size(Width, Height);
+			ClientSize = new Size(Width, Height);
 
 			periodRectangle = new Rectangle(month_label_height + month_label_border, month_label_border, Width - (month_label_height * 2) - (month_label_border * 4), month_label_height);
 			todateRectangle = new Rectangle(month_label_height + month_label_border, Height - month_label_height - month_label_border, (int)(month_label_height * 1.5), month_label_height);
@@ -110,33 +116,44 @@ namespace ControlLibrary.Controls.PriodControls
 			// 
 			// PeriodBox
 			// 
+			MouseDown += new MouseEventHandler(PeriodControl_MouseDown);
 			MouseClick += new MouseEventHandler(PeriodBox_MouseClick);
-			MouseLeave += new EventHandler(this.PeriodBox_MouseLeave);
+			MouseLeave += new EventHandler(PeriodBox_MouseLeave);
 			MouseMove += new MouseEventHandler(PeriodBox_MouseMove);
 			MouseUp += new MouseEventHandler(PeriodBox_MouseUp);
-			Resize += new EventHandler(PeriodBox_Resize);
-			ResumeLayout(false);
 
+			ResumeLayout(false);
 		}
 
 		#endregion
 
 		#endregion
 
-		private void PeriodBox_Resize(object sender, EventArgs e)
+		protected override void OnResize(EventArgs e)
 		{
 			if (month_label_width > 0)
 			{
 				Width = month_label_border + ((month_label_width + month_label_border) * 3);
 				Height = month_label_border + ((month_label_height + month_label_border) * 6);
+				ClientSize = new Size(Width, Height);
+				MinimumSize = new Size(Width, Height);
+				return;
 			}
+			base.OnResize(e);
 		}
+
+		protected override void OnPaintBackground(PaintEventArgs pevent)
+		{
+			base.OnPaintBackground(pevent);
+			pevent.Graphics.Clear(BackColor);
+		}
+
 
 		protected override void OnPaint(PaintEventArgs e)
 		{
-			base.OnPaint(e);
-			Graphics graphics = e.Graphics;
+			Rectangle rect = this.ClientRectangle;
 
+			Graphics graphics = e.Graphics;
 			int startY = month_label_height + (month_label_border * 2);
 			int startX = month_label_border;
 			int i = 0;
@@ -144,24 +161,26 @@ namespace ControlLibrary.Controls.PriodControls
 			{
 				for (int x = 0; x <= 2; x++)
 				{
-					Rectangle rec = new Rectangle(startX + ((month_label_border + month_label_width) * x), startY + ((month_label_border + month_label_height) * y), month_label_width, month_label_height);
-					buttons[i].rectangle = rec;
+					Rectangle rectangle = new Rectangle(startX + ((month_label_border + month_label_width) * x), startY + ((month_label_border + month_label_height) * y), month_label_width, month_label_height);
+					buttons[i].rectangle = rectangle;
 					PaintButton(buttons[i], graphics);
 					i++;
 				}
 			}
 
-			graphics.DrawString(period.ToShortDateString(), Font, new SolidBrush(ForeColor), periodRectangle, sf);
+			//graphics.DrawString(period.ToShortDateString(), Font, new SolidBrush(ForeColor), periodRectangle, sf);
 
-			Color BorderColor = GetBorderColor(ButtonState.Selected);
-			Pen BorderColorPen = new Pen(BorderColor, 1);
-			graphics.DrawRectangle(BorderColorPen, todateRectangle);
-			BorderColorPen.Dispose();
+			//Color borderColor = GetBorderColor(ButtonState.Selected);
+			//Pen borderColorPen = new Pen(borderColor, 1);
+			//graphics.DrawRectangle(borderColorPen, todateRectangle);
+			//borderColorPen.Dispose();
+
+			base.OnPaint(new PaintEventArgs(e.Graphics, new Rectangle(e.ClipRectangle.Location, rect.Size)));
 		}
 
 		private void PaintButton(PeriodBoxButton button, Graphics graphics)
 		{
-			Color ForeColor;
+			Color foreColor;
 			if (button.Equals(HoveringButton))
 			{
 				if (LeftClickedButton == null)
@@ -169,18 +188,18 @@ namespace ControlLibrary.Controls.PriodControls
 					if (button.Equals(SelectedButton))
 					{
 						FillButton(button, graphics, ButtonState.Selected | ButtonState.Hovering);
-						ForeColor = GetForeColor(ButtonState.Selected | ButtonState.Hovering);
+						foreColor = GetForeColor(ButtonState.Selected | ButtonState.Hovering);
 					}
 					else
 					{
 						FillButton(button, graphics, ButtonState.Hovering);
-						ForeColor = GetForeColor(ButtonState.Hovering);
+						foreColor = GetForeColor(ButtonState.Hovering);
 					}
 				}
 				else
 				{
 					FillButton(button, graphics, ButtonState.Selected | ButtonState.Hovering);
-					ForeColor = GetForeColor(ButtonState.Selected | ButtonState.Hovering);
+					foreColor = GetForeColor(ButtonState.Selected | ButtonState.Hovering);
 				}
 			}
 			else
@@ -188,46 +207,48 @@ namespace ControlLibrary.Controls.PriodControls
 				if (button.Equals(SelectedButton))
 				{
 					FillButton(button, graphics, ButtonState.Selected);
-					ForeColor = GetForeColor(ButtonState.Selected);
+					foreColor = GetForeColor(ButtonState.Selected);
 				}
 				else
 				{
 					FillButton(button, graphics, ButtonState.Passive);
-					ForeColor = GetForeColor(ButtonState.Passive);
+					foreColor = GetForeColor(ButtonState.Passive);
 				}
 			}
 
-			if (button.ForeColor != ForeColor)
+			if (button.ForeColor != foreColor)
 			{
-				button.ForeColor = ForeColor;
-				Brush ForeColorBrush = new SolidBrush(ForeColor);
-				graphics.DrawString(button.Text, Font, ForeColorBrush, button.rectangle, sf);
-				ForeColorBrush.Dispose();
+				button.ForeColor = foreColor;
+				Brush foreColorBrush = new SolidBrush(foreColor);
+				graphics.DrawString(button.Text, Font, foreColorBrush, button.rectangle, sf);
+				foreColorBrush.Dispose();
 			}
 		}
 
 		private void FillButton(PeriodBoxButton button, Graphics graphics, ButtonState buttonState)
 		{
-			Color BackColor = GetButtonColor(buttonState, 0);
-			if (button.BackColor != BackColor)
+			Color backColor = GetButtonColor(buttonState, 0);
+			if (button.BackColor != backColor)
 			{
-				button.BackColor = BackColor;
-				Brush BackColorBrush = new LinearGradientBrush(button.rectangle, BackColor, GetButtonColor(buttonState, 1), LinearGradientMode.Vertical);
-				graphics.FillRectangle(BackColorBrush, button.rectangle);
-				BackColorBrush.Dispose();
+				button.BackColor = backColor;
+				Brush backColorBrush = new LinearGradientBrush(button.rectangle, backColor, GetButtonColor(buttonState, 1), LinearGradientMode.Vertical);
+				graphics.FillRectangle(backColorBrush, button.rectangle);
+				backColorBrush.Dispose();
 			}
 
 			if (buttonState == ButtonState.Passive) return;
 
-			Color BorderColor = GetBorderColor(buttonState);
-			if (button.BorderColor != BorderColor)
+			Color borderColor = GetBorderColor(buttonState);
+			if (button.BorderColor != borderColor)
 			{
-				button.BorderColor = BorderColor;
-				Pen BorderColorPen = new Pen(BorderColor, 1);
-				graphics.DrawRectangle(BorderColorPen, button.rectangle);
-				BorderColorPen.Dispose();
+				button.BorderColor = borderColor;
+				Pen borderColorPen = new Pen(borderColor, 1);
+				graphics.DrawRectangle(borderColorPen, button.rectangle);
+				borderColorPen.Dispose();
 			}
 		}
+
+		#region Colors
 
 		private Color GetButtonColor(ButtonState buttonState, int colorIndex)
 		{
@@ -291,7 +312,9 @@ namespace ControlLibrary.Controls.PriodControls
 			}
 		}
 
-		private void PeriodBox_MouseClick(object sender, MouseEventArgs e)
+		#endregion
+
+		private void PeriodControl_MouseDown(object sender, MouseEventArgs e)
 		{
 			RightClickedButton = null;
 			PeriodBoxButton button = buttons[e.X, e.Y];
@@ -301,6 +324,7 @@ namespace ControlLibrary.Controls.PriodControls
 				{
 					case MouseButtons.Left:
 						SelectedButton = button;
+						Value = Period.Create(Value.Year, SelectedButton.Index);
 						OnButtonClick(new EventArgs());
 						Invalidate();
 						break;
@@ -310,6 +334,28 @@ namespace ControlLibrary.Controls.PriodControls
 						break;
 				}
 			}
+		}
+
+		private void PeriodBox_MouseClick(object sender, MouseEventArgs e)
+		{
+			//RightClickedButton = null;
+			//PeriodBoxButton button = buttons[e.X, e.Y];
+			//if (button != null)
+			//{
+			//	switch (e.Button)
+			//	{
+			//		case MouseButtons.Left:
+			//			SelectedButton = button;
+			//			Value = Period.Create(Value.Year, SelectedButton.Index);
+			//			OnButtonClick(new EventArgs());
+			//			Invalidate();
+			//			break;
+			//		case MouseButtons.Right:
+			//			RightClickedButton = button;
+			//			Invalidate();
+			//			break;
+			//	}
+			//}
 		}
 
 		private void PeriodBox_MouseLeave(object sender, EventArgs e)
@@ -374,7 +420,7 @@ namespace ControlLibrary.Controls.PriodControls
 		public void DoValueChanged()
 		{
 			Invalidate();
-			OnValueChanged(new PeriodEventArgs(this.period));
+			OnValueChanged(new PeriodEventArgs(period));
 		}
 
 		protected virtual void OnValueChanged(PeriodEventArgs e) => ValueChanged?.Invoke(this, e);
@@ -389,13 +435,9 @@ namespace ControlLibrary.Controls.PriodControls
 
 		#endregion
 
-		public ColorThemeList Theme { get; set; }
-
-
 		internal class PeriodBoxButton
 		{
 			internal PeriodControl owner;
-			private ButtonState state = ButtonState.Passive;
 			internal bool visible = true;
 			internal bool allowed = true;
 			//Private _Image As Icon = My.Resources.DefaultIcon

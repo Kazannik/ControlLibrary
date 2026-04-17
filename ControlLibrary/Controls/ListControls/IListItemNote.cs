@@ -6,10 +6,10 @@ namespace ControlLibrary.Controls.ListControls
 {
 	public interface IListItemNote
 	{
-		event EventHandler<EventArgs> ClipSizeChanged;
 		event EventHandler<EventArgs> ContentChanged;
 		Size MeasureBound(Graphics graphics, Font font, int itemWidth, int itemHeight);
 		void Draw(DrawItemEventArgs e);
-		Size Size { get; }		
+		Rectangle Bounds { get; }
+		Size Size { get; }
 	}
 }

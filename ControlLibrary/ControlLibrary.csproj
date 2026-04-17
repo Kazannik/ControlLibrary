@@ -43,6 +43,9 @@
     <AssemblyOriginatorKeyFile>
     </AssemblyOriginatorKeyFile>
   </PropertyGroup>
+  <PropertyGroup>
+    <RunPostBuildEvent>OnBuildSuccess</RunPostBuildEvent>
+  </PropertyGroup>
   <ItemGroup>
     <Reference Include="stdole, Version=17.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
@@ -61,15 +64,16 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Controls\ComboControls\DataGridViewPeriodPickerCell.cs" />
     <Compile Include="Controls\ComboControls\IComboItem.cs" />
     <Compile Include="Controls\ListControls\IListItemNote.cs" />
     <Compile Include="Controls\ListControls\ItemEventArgs.cs" />
     <Compile Include="Controls\ListControls\ItemMouseEventArgs.cs" />
     <Compile Include="Controls\ListControls\ListItemNote.cs" />
-    <Compile Include="Controls\PeriodControls\PeriodControl.cs">
+    <Compile Include="Controls\MyTreeViewCombo.cs">
       <SubType>Component</SubType>
     </Compile>
-    <Compile Include="Controls\ColorThemeList.cs">
+    <Compile Include="Controls\PeriodControls\PeriodControl.cs">
       <SubType>Component</SubType>
     </Compile>
     <Compile Include="Controls\ComboControls\ComboControl.cs" />
@@ -78,6 +82,7 @@
     <Compile Include="Controls\ListControls\ItemCollection.cs" />
     <Compile Include="Controls\ListControls\ListControl.cs" />
     <Compile Include="Controls\ListControls\ListItem.cs" />
+    <Compile Include="Controls\RatingControls\DataGridViewRatingCell.cs" />
     <Compile Include="Controls\RatingControls\RatingControl.cs">
       <SubType>Component</SubType>
     </Compile>
@@ -88,14 +93,9 @@
     <Compile Include="Controls\PeriodControls\PeriodBox.Designer.cs">
       <DependentUpon>PeriodBox.cs</DependentUpon>
     </Compile>
-    <Compile Include="Controls\PeriodControls\PeriodPicker.cs">
-      <SubType>Form</SubType>
-    </Compile>
+    <Compile Include="Controls\PeriodControls\PeriodPicker.cs" />
     <Compile Include="Controls\PeriodControls\PeriodPickerPopupForm.cs">
       <SubType>UserControl</SubType>
-    </Compile>
-    <Compile Include="Controls\PeriodControls\PeriodPickerPopupForm.Designer.cs">
-      <DependentUpon>PeriodPickerPopupForm.cs</DependentUpon>
     </Compile>
     <Compile Include="Controls\ToolStripControls\ToolStripCheckBox.cs" />
     <Compile Include="Controls\ToolStripControls\ToolStripNumericUpDown.cs" />
@@ -118,6 +118,9 @@
     <Compile Include="Controls\QRControl\QRCodeData.cs" />
     <Compile Include="Controls\QRControl\QRCodeGenerator.cs" />
     <Compile Include="Controls\QRControl\SvgQRCode.cs" />
+    <Compile Include="Controls\ToolStripControls\ToolStripPeriodBox.cs" />
+    <Compile Include="Controls\ToolStripControls\ToolStripRatingBox.cs" />
+    <Compile Include="Controls\ToolStripMonthCalendar.cs" />
     <Compile Include="Properties\Resources.Designer.cs">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
@@ -291,9 +294,11 @@
       <LastGenOutput>Resources.Designer.cs</LastGenOutput>
     </EmbeddedResource>
   </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\DownArrow2.png" />
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>
-    <PostBuildEvent>
-    </PostBuildEvent>
+    <PostBuildEvent>"C:\Program Files (x86)\Microsoft SDKs\ClickOnce\SignTool\signtool.exe" sign /n "Mikhail Kazannik Software" /t http://timestamp.digicert.com /fd SHA256 /a $(TargetPath)</PostBuildEvent>
   </PropertyGroup>
 </Project>

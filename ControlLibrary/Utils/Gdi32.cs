@@ -195,7 +195,8 @@ namespace ControlLibrary.Utils
 			unsafe
 			{
 				RGBQUAD* pBits = (RGBQUAD*)(void*)dibsection.dsBm.bmBits;
-				for (int x = 0; x < dibsection.dsBmih.biWidth; x++) {
+				for (int x = 0; x < dibsection.dsBmih.biWidth; x++)
+				{
 					for (int y = 0; y < dibsection.dsBmih.biHeight; y++)
 					{
 						int offset = (y * dibsection.dsBmih.biWidth) + x;

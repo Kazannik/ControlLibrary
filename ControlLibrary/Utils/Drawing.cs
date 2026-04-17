@@ -1,5 +1,6 @@
 ﻿// Ignore Spelling: Utils Mso img
 
+using ControlLibrary.Structures;
 using System;
 using System.Drawing;
 using System.Drawing.Drawing2D;
@@ -11,6 +12,21 @@ namespace ControlLibrary.Utils
 	public static class Drawing
 	{
 		private const TextFormatFlags CENTER_FORMAT_FLAGS = TextFormatFlags.HorizontalCenter | TextFormatFlags.VerticalCenter | TextFormatFlags.WordBreak;
+		private static readonly StringFormat CENTER_STRING_FORMAT = new StringFormat
+		{
+			Alignment = StringAlignment.Center,
+			LineAlignment = StringAlignment.Center
+		};
+
+		public static void SetGraphicsStyle(Graphics graphics)
+		{
+			graphics.TextRenderingHint = System.Drawing.Text.TextRenderingHint.ClearTypeGridFit;
+			graphics.CompositingMode = System.Drawing.Drawing2D.CompositingMode.SourceOver;
+			graphics.CompositingQuality = System.Drawing.Drawing2D.CompositingQuality.HighQuality;
+			graphics.InterpolationMode = System.Drawing.Drawing2D.InterpolationMode.HighQualityBicubic;
+			graphics.SmoothingMode = System.Drawing.Drawing2D.SmoothingMode.HighQuality;
+		}
+
 
 		public static void DrawTextIcon(Graphics graphics, string text, Font font, Color foreColor, Color backColor, Rectangle rect)
 		{
@@ -49,25 +65,25 @@ namespace ControlLibrary.Utils
 			graphics.FillPath(brush, path);
 		}
 
-		public static GraphicsPath CreateStarPath(Rectangle rect)
+		private static GraphicsPath CreateStarPath(Rectangle rect)
 		{
 			return CreateStarPath(location: rect.Location, size: rect.Size);
 		}
 
-		public static GraphicsPath CreateStarPath(SizeF size)
+		private static GraphicsPath CreateStarPath(SizeF size)
 		{
 			return CreateStarPath(location: PointF.Empty, size: size);
 		}
 
-		public static GraphicsPath CreateStarPath(PointF location, SizeF size)
+		private static GraphicsPath CreateStarPath(PointF location, SizeF size)
 		{
-			double r = (double)size.Height / 3.5, R = (double)size.Height / 2;
+			double r = (double)size.Height / 3.95, R = (double)size.Height / 2;
 			double x0 = (double)size.Width / 2, y0 = (double)size.Height / 2;
 			PointF[] points = new PointF[10];
 			for (int vertex = 0; vertex < 10; vertex++)
 			{
 				double l = vertex % 2 == 0 ? R : r;
-				points[vertex] = GetVertexPoint(location.X + x0, location.Y + y0, l, 10, vertex);
+				points[vertex] = GetVertexPoint(location.X + x0 + 1, location.Y + y0 + 1, l, 10, vertex);
 			}
 			GraphicsPath path = new GraphicsPath();
 			path.AddLines(points);
@@ -82,17 +98,17 @@ namespace ControlLibrary.Utils
 				(int)(y - (radius * Math.Cos(2 * Math.PI / count * part))));
 		}
 
-		public static void DrawStar(Graphics graphics, Color foreColor, Rectangle rect)
+		public static void DrawStar(Graphics graphics, Color borderColor, Rectangle rect)
 		{
-			DrawStar(graphics: graphics, foreColor: foreColor, backColor: foreColor, percent: 0, rect: rect);
+			DrawStar(graphics: graphics, borderColor: borderColor, backBrush: new SolidBrush(borderColor), percent: 0, rect: rect);
 		}
 
-		public static void DrawStar(Graphics graphics, Color foreColor, Color backColor, Rectangle rect)
+		public static void DrawStar(Graphics graphics, Color borderColor, Brush backBrush, Rectangle rect)
 		{
-			DrawStar(graphics: graphics, foreColor: foreColor, backColor: backColor, percent: 100, rect: rect);
+			DrawStar(graphics: graphics, borderColor: borderColor, backBrush: backBrush, percent: 100, rect: rect);
 		}
 
-		public static void DrawStar(Graphics graphics, Color foreColor, Color backColor, int percent, Rectangle rect)
+		public static void DrawStar(Graphics graphics, Color borderColor, Brush backBrush, int percent, Rectangle rect)
 		{
 			GraphicsPath star = CreateStarPath(rect);
 			RectangleF starRectangle = star.GetBounds();
@@ -100,6 +116,7 @@ namespace ControlLibrary.Utils
 			int percentWidth = (int)((double)starRectangle.Width / 100 * Math.Abs(percent));
 
 			if (Math.Abs(percent) >= 100) { }
+
 			else if (percent < 0)
 			{
 				Region backRegion = new Region(new Rectangle((int)starRectangle.Left, (int)starRectangle.Top, (int)starRectangle.Width - percentWidth + 1, (int)starRectangle.Height));
@@ -112,13 +129,45 @@ namespace ControlLibrary.Utils
 				starRegion.Exclude(backRegion);
 				backRegion.Dispose();
 			}
+
 			if (percent != 0)
 			{
-				graphics.FillRegion(new SolidBrush(backColor), starRegion);
+				graphics.FillRegion(backBrush, starRegion);
 				starRegion.Dispose();
 			}
-			graphics.DrawPath(new Pen(foreColor), star);
+			graphics.DrawPath(new Pen(borderColor), star);
 			star.Dispose();
+		}
+
+		public static Rectangle[] DrawRating(Graphics graphics, Font font, Color borderColor, Brush backBrush, Color textColor, Rectangle rect, int starCount = 5)
+		{
+			return DrawRating(graphics: graphics, font: font, borderColor: borderColor, backBrush: backBrush, textColor: textColor, rect: rect, rating: starCount, starCount: starCount);
+		}
+
+		public static Rectangle[] DrawRating(Graphics graphics, Font font, Color borderColor, Brush backBrush, Color textColor, Rectangle rect, Rating rating, int starCount = 5)
+		{
+			return DrawRating(graphics: graphics, font: font, borderColor: borderColor, backBrush: backBrush, textColor: textColor, rect: rect, rating: rating.Value, starCount: starCount);
+		}
+
+		public static Rectangle[] DrawRating(Graphics graphics, Font font, Color borderColor, Brush backBrush, Color textColor, Rectangle rect, int rating, int starCount = 5)
+		{
+			Rectangle[] rectagles = new Rectangle[starCount + 1];
+			for (int i = 0; i < starCount; i++)
+			{
+				int percent = Rating.GetPercent(value: rating, index: i, count: starCount);
+				rectagles[i] = new Rectangle(rect.X + ((rect.Height + 1) * i), rect.Y, rect.Height, rect.Height);
+				DrawStar(graphics: graphics, borderColor: borderColor, backBrush: backBrush, percent: percent, rect: rectagles[i]);
+			}
+			int left = rectagles[starCount - 1].X + rectagles[starCount - 1].Width;
+			rectagles[starCount] = new Rectangle(left, rect.Y, rect.Width - rect.Height * starCount, rect.Height);
+			graphics.DrawString(s: rating.ToString(), font: font, brush: new SolidBrush(textColor), layoutRectangle: rectagles[starCount], format: CENTER_STRING_FORMAT);
+			return rectagles;
+		}
+
+		public static Size MeasureRating(Graphics graphics, Font font, int starCount = 5)
+		{
+			SizeF measure = graphics.MeasureString("000", font, new Point(0, 0), CENTER_STRING_FORMAT);
+			return new Size(((int)measure.Height + 1) * starCount + (int)measure.Width + 1, (int)measure.Height + 1);
 		}
 
 		public static void DrawOkIcon(Graphics graphics, Color foreColor, Color backColor, Rectangle rect)
@@ -192,7 +241,7 @@ namespace ControlLibrary.Utils
 		public static void DrawText(Graphics graphics, string text, Font font, Color foreColor, Color backColor, Rectangle rect, StringFormat format)
 		{
 			Region[] regions = graphics.MeasureCharacterRanges(text, font, rect, format);
-			for (int i = 0; i < regions.Length; i++) 
+			for (int i = 0; i < regions.Length; i++)
 			{
 				//graphics.DrawString(text[i].ToString(), font, SystemBrushes.Control, regions[i].);
 			}

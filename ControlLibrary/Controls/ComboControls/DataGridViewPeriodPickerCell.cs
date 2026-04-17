@@ -1,13 +1,13 @@
-﻿// Ignore Spelling: eventargs
-
+﻿using ControlLibrary.Controls.PriodControls;
+using ControlLibrary.Structures;
 using System;
 using System.Windows.Forms;
 
 namespace ControlLibrary.Controls.ComboControls
 {
-	public class DataGridViewDateTimePickerCell : DataGridViewTextBoxCell
+	public class DataGridViewPeriodPickerCell : DataGridViewTextBoxCell
 	{
-		public DataGridViewDateTimePickerCell() : base()
+		public DataGridViewPeriodPickerCell() : base()
 		{
 			Style.Format = "d";
 		}
@@ -15,7 +15,7 @@ namespace ControlLibrary.Controls.ComboControls
 		public override void InitializeEditingControl(int rowIndex, object initialFormattedValue, DataGridViewCellStyle dataGridViewCellStyle)
 		{
 			base.InitializeEditingControl(rowIndex, initialFormattedValue, dataGridViewCellStyle);
-			CalendarEditingControl ctl = DataGridView.EditingControl as CalendarEditingControl;
+			PeriodEditingControl ctl = DataGridView.EditingControl as PeriodEditingControl;
 
 			if (Value != null && !DBNull.Value.Equals(Value))
 			{
@@ -23,16 +23,16 @@ namespace ControlLibrary.Controls.ComboControls
 			}
 		}
 
-		public override Type EditType => typeof(CalendarEditingControl);
+		public override Type EditType => typeof(PeriodEditingControl);
 
 		public override Type ValueType => typeof(DateTime);
 	}
 
-	public class CalendarEditingControl : DateTimePicker, IDataGridViewEditingControl
+	public class PeriodEditingControl : PeriodPicker, IDataGridViewEditingControl
 	{
-		public CalendarEditingControl()
+		public PeriodEditingControl()
 		{
-			Format = DateTimePickerFormat.Short;
+			//Format = DateTimePickerFormat.Short;
 		}
 
 		public object EditingControlFormattedValue
@@ -64,8 +64,8 @@ namespace ControlLibrary.Controls.ComboControls
 		public void ApplyCellStyleToEditingControl(DataGridViewCellStyle dataGridViewCellStyle)
 		{
 			Font = dataGridViewCellStyle.Font;
-			CalendarForeColor = dataGridViewCellStyle.ForeColor;
-			CalendarMonthBackground = dataGridViewCellStyle.BackColor;
+			//CalendarForeColor = dataGridViewCellStyle.ForeColor;
+			//CalendarMonthBackground = dataGridViewCellStyle.BackColor;
 		}
 
 		public int EditingControlRowIndex { get; set; }
@@ -98,19 +98,19 @@ namespace ControlLibrary.Controls.ComboControls
 
 		public Cursor EditingPanelCursor => base.Cursor;
 
-		protected override void OnValueChanged(EventArgs eventargs)
+		protected override void OnValueChanged(PeriodEventArgs e)
 		{
 			EditingControlValueChanged = true;
 			EditingControlDataGridView.NotifyCurrentCellDirty(true);
-			base.OnValueChanged(eventargs);
+			base.OnValueChanged(e);
 		}
 	}
 
-	public class DataGridViewDateTimePickerColumn : DataGridViewColumn
+	public class DataGridViewPeriodPickerColumn : DataGridViewColumn
 	{
-		public DataGridViewDateTimePickerColumn()
+		public DataGridViewPeriodPickerColumn()
 		{
-			CellTemplate = new DataGridViewDateTimePickerCell();
+			CellTemplate = new DataGridViewPeriodPickerCell();
 		}
 	}
 }

@@ -4,43 +4,38 @@ using System.Windows.Forms;
 
 namespace ControlLibrary.Controls.ListControls
 {
-	public abstract class ListItemNote: IListItemNote
+	public abstract class ListItemNote : IListItemNote
 	{
-		private Size _size;
-		
-		public event EventHandler<EventArgs> ClipSizeChanged;
 		public event EventHandler<EventArgs> ContentChanged;
-				
-		public Size Size => _size; 
+
+		public Size Size { get; protected set; }
+
+		public Rectangle Bounds { get; protected set; }
 
 		protected ListItemNote()
 		{
-			_size = Size.Empty;
+			Bounds = Rectangle.Empty;
+			Size = Size.Empty;
 		}
 
-		public void Draw(DrawItemEventArgs e) => OnDraw(e: e);
-				
+		public void Draw(DrawItemEventArgs e)
+		{
+			Bounds = e.Bounds;
+			OnDraw(e: e);
+		}
+
 		public Size MeasureBound(Graphics graphics, Font font, int itemWidth, int itemHeight)
 		{
-			_size = OnMeasureBound(graphics: graphics, font: font, itemWidth: itemWidth, itemHeight: itemHeight);
-			return Size;
+			return Size = OnMeasureBound(graphics: graphics, font: font, itemWidth: itemWidth, itemHeight: itemHeight);
 		}
-		
+
 		protected abstract void OnDraw(DrawItemEventArgs e);
 
 		protected abstract Size OnMeasureBound(Graphics graphics, Font font, int itemWidth, int itemHeight);
 
-		private void OnClipSizeChanged(EventArgs e) =>
-			ClipSizeChanged?.Invoke(this, e);
-		
-		protected void DoClipSizeChanged() =>
-			OnClipSizeChanged(new EventArgs());
-		
-		private void OnContentChanged(EventArgs e) =>
-			ContentChanged?.Invoke(this, e);
+		private void OnContentChanged(EventArgs e) => ContentChanged?.Invoke(this, e);
 
-		protected void DoContentChanged() =>
-			OnContentChanged(new EventArgs());
+		protected void DoContentChanged() => OnContentChanged(new EventArgs());
 
 		protected Size GetTextSize(Graphics graphics, string text, Font font, int width, StringFormat stringFormat)
 		{

@@ -9,6 +9,7 @@ namespace ControlLibrary.Controls.PriodControls
 		public PeriodBox()
 		{
 			InitializeComponent();
+
 			PeriodControl.Location = new Point(0, 0);
 			if (BorderStyle == BorderStyle.Fixed3D)
 			{
@@ -29,7 +30,6 @@ namespace ControlLibrary.Controls.PriodControls
 
 		protected override void OnResize(EventArgs e)
 		{
-			base.OnResize(e);
 			PeriodControl.Location = new Point(0, 0);
 			if (BorderStyle == BorderStyle.Fixed3D)
 			{
@@ -46,6 +46,7 @@ namespace ControlLibrary.Controls.PriodControls
 				Height = PeriodControl.Height;
 				Width = PeriodControl.Width;
 			}
+			base.OnResize(e);
 		}
 	}
 }

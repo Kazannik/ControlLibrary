@@ -8,7 +8,7 @@
 		TextLocation StartPosition { get; set; }
 
 		TextLocation EndPosition { get; set; }
-		
+
 		int Offset { get; }
 
 		int EndOffset { get; }

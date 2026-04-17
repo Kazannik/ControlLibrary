@@ -8,9 +8,9 @@ using static System.Windows.Forms.ListBox;
 
 namespace ControlLibrary.Controls.ListControls
 {
-	public class ItemCollection<I, S> : ObjectCollection, IList<I>, ICollection<I>, IEnumerable<I> 
+	public class ItemCollection<I, S> : ObjectCollection, IList<I>, ICollection<I>, IEnumerable<I>
 		where I : IListItem, new()
-		where S : IListItemNote		
+		where S : IListItemNote
 	{
 		public ItemCollection(ListControl<I, S> owner) : base(owner: owner) { }
 		public ItemCollection(ListControl<I, S> owner, object[] value) : base(owner: owner, value: value) { }
@@ -31,7 +31,7 @@ namespace ControlLibrary.Controls.ListControls
 			DoItemAdded(item: (I)value);
 			DoSizeChanged();
 		}
-				
+
 		public void Add(I item) => Add(value: item);
 
 		public new void AddRange(object[] value)
@@ -66,13 +66,13 @@ namespace ControlLibrary.Controls.ListControls
 			DoSizeChanged();
 		}
 
-		public void AddRange(ItemCollection<I, S> items) => 
+		public void AddRange(ItemCollection<I, S> items) =>
 			AddRange(value: items);
 
-		public void AddRange(IList<I> items) => 
+		public void AddRange(IList<I> items) =>
 			AddRange(value: (from I item in items select (object)item).ToArray());
 
-		public void AddRange(IList items) => 
+		public void AddRange(IList items) =>
 			AddRange(value: items.Cast<object>().ToArray());
 
 		public new int IndexOf(object value)
@@ -81,9 +81,8 @@ namespace ControlLibrary.Controls.ListControls
 			return base.IndexOf(value);
 		}
 
-		public int IndexOf(I item) =>
-			IndexOf(value: item);
-		
+		public int IndexOf(I item) => IndexOf(value: item);
+
 		public new void Insert(int index, object value)
 		{
 			OnValidate(value: value);
@@ -94,9 +93,8 @@ namespace ControlLibrary.Controls.ListControls
 			DoSizeChanged();
 		}
 
-		public void Insert(int index, I item) =>
-			Insert(index: index, value: item);
-		
+		public void Insert(int index, I item) => Insert(index: index, value: item);
+
 		public new void Remove(object value)
 		{
 			OnValidate(value: value);
@@ -107,8 +105,7 @@ namespace ControlLibrary.Controls.ListControls
 			DoSizeChanged();
 		}
 
-		public void Remove(I item) => 
-			Remove(value: item);
+		public void Remove(I item) => Remove(value: item);
 
 		bool ICollection<I>.Remove(I item)
 		{
@@ -150,7 +147,7 @@ namespace ControlLibrary.Controls.ListControls
 
 		public event EventHandler<ItemEventArgs<I>> ItemAdded;
 
-		private void DoItemAdded(I item) => 
+		private void DoItemAdded(I item) =>
 			OnItemAdded(new ItemEventArgs<I>(item: item, argument: null));
 
 		protected virtual void OnItemAdded(ItemEventArgs<I> e) =>
@@ -158,38 +155,38 @@ namespace ControlLibrary.Controls.ListControls
 
 		public event EventHandler<EventArgs> ItemDeleted;
 
-		private void DoItemDeleted() => 
+		private void DoItemDeleted() =>
 			OnItemDeleted(new EventArgs());
-		
+
 		protected virtual void OnItemDeleted(EventArgs e) =>
 			ItemDeleted?.Invoke(this, e);
-		
+
 		public event EventHandler<EventArgs> SizeChanged;
 
 		private void DoSizeChanged() =>
 			OnSizeChanged(new EventArgs());
 
-		protected virtual void OnSizeChanged(EventArgs e) => 
+		protected virtual void OnSizeChanged(EventArgs e) =>
 			SizeChanged?.Invoke(this, e);
 
 		private void ItemCollection_ClipSizeChanged(object sender, EventArgs e) =>
 			DoClipSizeChanged((I)sender);
-		
+
 
 		public event EventHandler<ItemEventArgs<I>> ClipSizeChanged;
 
 		private void DoClipSizeChanged(I item) =>
 			OnClipSizeChanged(new ItemEventArgs<I>(item: item, argument: null));
 
-		protected virtual void OnClipSizeChanged(ItemEventArgs<I> e) => 
+		protected virtual void OnClipSizeChanged(ItemEventArgs<I> e) =>
 			ClipSizeChanged?.Invoke(this, e);
 
 		private void ItemCollection_ContentChanged(object sender, EventArgs e) =>
 			DoContentChanged((I)sender);
-				
+
 		public event EventHandler<ItemEventArgs<I>> ContentChanged;
 
-		private void DoContentChanged(I item) => 
+		private void DoContentChanged(I item) =>
 			OnContentChanged(new ItemEventArgs<I>(item: item, argument: null));
 
 		protected virtual void OnContentChanged(ItemEventArgs<I> e) =>
@@ -197,10 +194,10 @@ namespace ControlLibrary.Controls.ListControls
 
 		IEnumerator<I> IEnumerable<I>.GetEnumerator() =>
 			new ListItemEnumerator(GetEnumerator());
-		
+
 		public void CopyTo(I[] array, int arrayIndex) =>
 			Array.Copy(sourceArray: this.ToArray(), sourceIndex: 0, destinationArray: array, destinationIndex: arrayIndex, length: Count);
-		
+
 		private class ListItemEnumerator : IEnumerator<I>
 		{
 			private readonly IEnumerator enumerator;
@@ -219,6 +216,6 @@ namespace ControlLibrary.Controls.ListControls
 			public bool MoveNext() => enumerator.MoveNext();
 
 			public void Reset() => enumerator.Reset();
-		}	
-	}	
+		}
+	}
 }

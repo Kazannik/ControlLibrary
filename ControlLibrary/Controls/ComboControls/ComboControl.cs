@@ -5,13 +5,13 @@ using System.ComponentModel;
 using System.Diagnostics;
 using System.Drawing;
 using System.Drawing.Drawing2D;
+using System.Linq;
 using System.Runtime.InteropServices;
 using System.Windows.Forms;
-using System.Linq;
 
 namespace ControlLibrary.Controls.ComboControls
 {
-	[DesignerCategory("code")]
+	[DesignerCategory("Code")]
 	[ToolboxBitmap(typeof(ComboBox))]
 	[ComVisible(false)]
 	public abstract class ComboControl<T> : ComboBox where T : IComboItem
@@ -77,7 +77,7 @@ namespace ControlLibrary.Controls.ComboControls
 		}
 
 		private IEnumerable<T> List => from T item in Items select item;
-		
+
 		#endregion
 
 		#region Draw Item
@@ -85,6 +85,12 @@ namespace ControlLibrary.Controls.ComboControls
 		protected override void OnDrawItem(DrawItemEventArgs e)
 		{
 			Graphics graphics = e.Graphics;
+
+			graphics.TextRenderingHint = System.Drawing.Text.TextRenderingHint.ClearTypeGridFit;
+			graphics.CompositingMode = CompositingMode.SourceOver;
+			graphics.CompositingQuality = CompositingQuality.HighQuality;
+			graphics.InterpolationMode = InterpolationMode.HighQualityBicubic;
+			graphics.SmoothingMode = SmoothingMode.HighQuality;
 
 			SizeF CodeSize = graphics.MeasureString("FFFFF", Font);
 			ItemHeight = (int)CodeSize.Height + (SystemInformation.BorderSize.Height * 4);
@@ -111,7 +117,7 @@ namespace ControlLibrary.Controls.ComboControls
 				graphics.DrawString("", Font, foreCodeBrush, rectCode, sfCode);
 				graphics.DrawString("(не выбрано)", Font, foreCaptionBrush, rectText, sfCaption);
 				return;
-			} 
+			}
 			else if (Items.Count <= e.Index) return;
 
 			string itemCode = this[e.Index].Code;
@@ -128,13 +134,13 @@ namespace ControlLibrary.Controls.ComboControls
 				graphics.FillRectangle(backCaptionBrush, e.Bounds);
 				graphics.FillRectangle(backCodeBrush, rectCode);
 
-				DrawHighlightText(graphics, rectCode, Font, foreCodeBrush, SystemBrushes.HighlightText, SystemBrushes.Highlight, 
-					sfCode, itemCode,  codeBuffer);
+				DrawHighlightText(graphics, rectCode, Font, foreCodeBrush, SystemBrushes.HighlightText, SystemBrushes.Highlight,
+					sfCode, itemCode, codeBuffer);
 
 				graphics.DrawRectangle(borderPen, rectCode);
 
 				DrawHighlightText(graphics, rectText, Font, foreCaptionBrush, SystemBrushes.HighlightText, SystemBrushes.Highlight,
-					sfCaption, itemCaption,  textBuffer);
+					sfCaption, itemCaption, textBuffer);
 			}
 			else
 			{
@@ -163,8 +169,8 @@ namespace ControlLibrary.Controls.ComboControls
 			}
 		}
 
-		private void DrawHighlightText(Graphics graphics, Rectangle rectangle, Font font, 
-			Brush foreColorBrush, Brush highlightForeColor, Brush highlightBackColor, 
+		private void DrawHighlightText(Graphics graphics, Rectangle rectangle, Font font,
+			Brush foreColorBrush, Brush highlightForeColor, Brush highlightBackColor,
 			 StringFormat format, string text, string buffer)
 		{
 			if (string.IsNullOrWhiteSpace(buffer) || !text.Contains(buffer))
@@ -239,12 +245,14 @@ namespace ControlLibrary.Controls.ComboControls
 				if (!string.IsNullOrWhiteSpace(codeBuffer))
 				{
 					codeBuffer = codeBuffer.Substring(0, codeBuffer.Length - 1);
-					if (!string.IsNullOrEmpty(codeBuffer)) FindCode(codeBuffer);
+					if (!string.IsNullOrEmpty(codeBuffer))
+						FindCode(codeBuffer);
 				}
 				if (!string.IsNullOrWhiteSpace(textBuffer))
 				{
 					textBuffer = textBuffer.Substring(0, textBuffer.Length - 1);
-					if (!string.IsNullOrEmpty(textBuffer)) FindText(textBuffer);
+					if (!string.IsNullOrEmpty(textBuffer))
+						FindText(textBuffer);
 				}
 				findNext = 0;
 			}
@@ -294,7 +302,7 @@ namespace ControlLibrary.Controls.ComboControls
 		{
 			Argument.AssertNotNullOrEmpty(code, nameof(code));
 			string lowerCode = code.ToLower();
-			return List.Where(x => x.Code.ToLower().Contains(lowerCode));			
+			return List.Where(x => x.Code.ToLower().Contains(lowerCode));
 		}
 
 		private IEnumerable<T> FindText(string text)
@@ -393,23 +401,23 @@ namespace ControlLibrary.Controls.ComboControls
 		public int Add(T item)
 		{
 			Argument.AssertNotNull(item, nameof(item));
-			if (Contains(code: item.Code)) 
+			if (Contains(code: item.Code))
 			{
-				throw new ArgumentException(string.Format("Элемент с кодом [{0}] ранее добавлен в коллекцию.", item.Code ), nameof(item));
-			}			
+				throw new ArgumentException(string.Format("Элемент с кодом [{0}] ранее добавлен в коллекцию.", item.Code), nameof(item));
+			}
 			return Items.Add(item);
 		}
 
 		public bool Contains(long id)
 		{
 			Argument.AssertNotNull(id, nameof(id));
-			return List.Any(x=> x.Id == id);			
+			return List.Any(x => x.Id == id);
 		}
 
 		public bool Contains(string code)
 		{
 			Argument.AssertNotNullOrEmpty(code, nameof(code));
-			return List.Any(x => x.Code.Equals(code, StringComparison.CurrentCultureIgnoreCase));			
+			return List.Any(x => x.Code.Equals(code, StringComparison.CurrentCultureIgnoreCase));
 		}
 		public bool ContainsGuid(string guid)
 		{
@@ -441,13 +449,13 @@ namespace ControlLibrary.Controls.ComboControls
 					}
 					base.SelectedItem = item;
 				}
-			} 
+			}
 		}
 
 		public T GetItem(long id)
 		{
 			Argument.AssertNotNull(id, nameof(id));
-			return List.FirstOrDefault(x => x.Id == id);			
+			return List.FirstOrDefault(x => x.Id == id);
 		}
 
 		public T GetItem(string code)

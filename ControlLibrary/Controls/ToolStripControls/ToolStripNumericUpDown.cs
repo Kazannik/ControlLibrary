@@ -7,7 +7,7 @@ using System.Windows.Forms.Design;
 
 namespace ControlLibrary.Controls.ToolStripControls
 {
-	[DesignerCategory("code")]
+	[DesignerCategory("Code")]
 	[ToolboxBitmap(typeof(NumericUpDown))]
 	[ComVisible(false)]
 	[ToolStripItemDesignerAvailability(ToolStripItemDesignerAvailability.ToolStrip)]

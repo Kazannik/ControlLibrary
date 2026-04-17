@@ -20,11 +20,11 @@ namespace ControlLibrary.Utils
 		{
 			Argument.AssertNotNull(icon, "Значек для папки");
 
-			if (Directory.Exists(path)) 
+			if (Directory.Exists(path))
 			{
 				Directory.CreateDirectory(path);
 			}
-			
+
 			string iconFileName = Path.Combine(path, ICON_FILE_NAME);
 			if (!File.Exists(iconFileName))
 			{
@@ -38,7 +38,7 @@ namespace ControlLibrary.Utils
 			}
 
 			string iniFileName = Path.Combine(path, INI_FILE_NAME);
-			if (!File.Exists(iniFileName)) 
+			if (!File.Exists(iniFileName))
 			{
 				string iniContent =
 					string.Format(

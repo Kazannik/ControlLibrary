@@ -1,6 +1,4 @@
-﻿using System;
-
-namespace ControlLibrary.Controls.TextControl.TextEditor.Document
+﻿namespace ControlLibrary.Controls.TextControl.TextEditor.Document
 {
 	public class ColumnRange
 	{

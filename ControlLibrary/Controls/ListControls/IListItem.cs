@@ -5,7 +5,7 @@ using System.Windows.Forms;
 
 namespace ControlLibrary.Controls.ListControls
 {
-	public interface IListItem : IEnumerable<IListItemNote> 
+	public interface IListItem : IEnumerable<IListItemNote>
 	{
 		event EventHandler<EventArgs> ClipSizeChanged;
 		event EventHandler<EventArgs> ContentChanged;
@@ -16,6 +16,6 @@ namespace ControlLibrary.Controls.ListControls
 		Size Size { get; }
 		IListItemNote this[int index] { get; }
 		int Count { get; }
-		Rectangle GetSubitemRectangle(int index);		
-	}	
+		Rectangle GetSubitemRectangle(int index);
+	}
 }

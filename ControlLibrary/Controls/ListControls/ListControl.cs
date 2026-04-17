@@ -14,11 +14,15 @@ namespace ControlLibrary.Controls.ListControls
 		where I : IListItem, new()
 		where S : IListItemNote
 	{
+		private const TextFormatFlags DEFAULT_ALIGNMENT_FLAG = TextFormatFlags.Left | TextFormatFlags.Top;
+
+		private I firstViewItem;
+		private int firstViewItemIndex;
+
 		private Timer resizeTimer;
 		private Size oldSize;
 
 		private readonly BufferedGraphicsContext context;
-		private BufferedGraphics grafx;
 
 		#region InitializeObjectCollection
 
@@ -41,11 +45,7 @@ namespace ControlLibrary.Controls.ListControls
 
 		private void Collection_ClipSizeChanged(object sender, ItemEventArgs<I> e) => base.RefreshItems();
 
-		private void Collection_ContentChanged(object sender, ItemEventArgs<I> e)
-		{
-			Invalidate(e.Item.Bounds);
-			OnItemContentChanged(e);
-		}
+		private void Collection_ContentChanged(object sender, ItemEventArgs<I> e) => OnItemContentChanged(e);
 
 		#endregion
 
@@ -53,30 +53,29 @@ namespace ControlLibrary.Controls.ListControls
 		{
 			if (Size != oldSize)
 			{
-				oldSize = Size;
-			}
-			else
-			{
+				Size = oldSize;
 				resizeTimer.Stop();
+				int topIndex = TopIndex;
+				int selectedIndex = SelectedIndex;
 				base.RefreshItems();
+				if (selectedIndex>=0) 
+					SelectedIndex = selectedIndex;
+				TopIndex = topIndex;
 			}
 		}
 
 		protected override void OnResize(EventArgs e)
 		{
 			base.OnResize(e);
-
 			if (!DesignMode && Size != oldSize)
 				resizeTimer.Start();
 		}
-
+		
 		protected override void OnMeasureItem(MeasureItemEventArgs e)
 		{
-			base.OnMeasureItem(e);
-
-			if (!DesignMode
-				&& e.Index >= 0
-				&& e.Index < Items.Count)
+			if (!DesignMode &&
+				e.Index >= 0 &&
+				e.Index < Items.Count)
 			{
 				I item = this[e.Index];
 
@@ -85,25 +84,35 @@ namespace ControlLibrary.Controls.ListControls
 				e.ItemHeight = item.Size.Height;
 				e.ItemWidth = item.Size.Width;
 			}
+			base.OnMeasureItem(e);
 		}
 
 		protected override void OnDrawItem(DrawItemEventArgs e)
 		{
-			if (e.Bounds.Height > 0)
+			if (e.Bounds.Height > 0 && e.Bounds.Width > 0)
 			{
-				grafx = context.Allocate(e.Graphics, e.Bounds);
+				BufferedGraphics grafx = context.Allocate(e.Graphics, e.Bounds);
 				DrawItemEventArgs args = new DrawItemEventArgs(grafx.Graphics, e.Font, e.Bounds, e.Index, e.State, e.ForeColor, e.BackColor);
-				//args.DrawBackground();
+
+				Utils.Drawing.SetGraphicsStyle(args.Graphics);
+
+				args.DrawBackground();
+
 				if (DesignMode || args.Index < 0)
 				{
-					const TextFormatFlags flags = TextFormatFlags.Left | TextFormatFlags.Top;
-					TextRenderer.DrawText(args.Graphics, GetType().Name, args.Font, ClientRectangle, args.ForeColor, flags);
+					TextRenderer.DrawText(args.Graphics, GetType().Name, args.Font, e.Bounds, args.ForeColor, DEFAULT_ALIGNMENT_FLAG);
 				}
-				else 
+				else
 				{
-					this[args.Index].Draw(args);
-					args.DrawFocusRectangle();
+					if (args.Bounds.Y == 0)
+					{
+						firstViewItemIndex = args.Index;
+						FirstViewItem = Items[args.Index];
+					}
+					this[args.Index].Draw(args);					
 				}
+
+				args.DrawFocusRectangle();
 				grafx.Render(e.Graphics);
 			}
 			base.OnDrawItem(e);
@@ -123,8 +132,26 @@ namespace ControlLibrary.Controls.ListControls
 		}
 
 
-		#region Click Event
+		[Browsable(false)]
+		[Bindable(true)]
+		[DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
+		public I FirstViewItem
+		{
+			get => firstViewItem;
+			private set
+			{
+				if (!Equals(firstViewItem, value))
+				{
+					firstViewItem = value;
+					OnFirstViewItemChanged(new ItemEventArgs<I>(firstViewItem, null));
+				}
+			}
+		}
 
+		#region Events
+
+		[Category("Action"), Browsable(true), EditorBrowsable(EditorBrowsableState.Always)]
+		public event EventHandler<ItemEventArgs<I>> FirstViewItemChanged;
 		[Category("Action"), Browsable(true), EditorBrowsable(EditorBrowsableState.Always)]
 		public event EventHandler<ItemEventArgs<I>> SelectedItemChanged;
 		[Category("Action"), Browsable(true), EditorBrowsable(EditorBrowsableState.Always)]
@@ -133,7 +160,6 @@ namespace ControlLibrary.Controls.ListControls
 		public event EventHandler<ItemEventArgs<I>> ItemAdded;
 		[Category("Action"), Browsable(true), EditorBrowsable(EditorBrowsableState.Always)]
 		public event EventHandler<EventArgs> ItemDeleted;
-
 
 		[Category("Mouse"), Browsable(true), EditorBrowsable(EditorBrowsableState.Always)]
 		public event EventHandler<ItemMouseEventArgs<I, S>> ItemMouseDown;
@@ -145,6 +171,8 @@ namespace ControlLibrary.Controls.ListControls
 		public event EventHandler<ItemMouseEventArgs<I, S>> ItemMouseDoubleClick;
 		[Category("Mouse"), Browsable(true), EditorBrowsable(EditorBrowsableState.Always)]
 		public event EventHandler<ItemMouseEventArgs<I, S>> ItemMouseMove;
+
+		protected virtual void OnFirstViewItemChanged(ItemEventArgs<I> e) => FirstViewItemChanged?.Invoke(this, e);
 
 		protected virtual void OnSelectedItemChanged(ItemEventArgs<I> e) => SelectedItemChanged?.Invoke(this, e);
 
@@ -179,9 +207,9 @@ namespace ControlLibrary.Controls.ListControls
 			}
 			base.OnSelectedIndexChanged(e);
 		}
-
+		
 		#region Mouse
-				
+
 		private I GetListItem(Point location)
 		{
 			for (int i = 0; i < Items.Count; i++)
@@ -249,7 +277,7 @@ namespace ControlLibrary.Controls.ListControls
 			}
 			base.OnMouseUp(e);
 		}
-		
+
 		protected override void OnMouseMove(MouseEventArgs e)
 		{
 			I item = GetListItem(e.Location);
@@ -259,6 +287,26 @@ namespace ControlLibrary.Controls.ListControls
 				OnItemMouseMove(new ItemMouseEventArgs<I, S>(item, subitem, null, e));
 			}
 			base.OnMouseMove(e);
+		}
+		
+		private const int WM_MOUSEWHEEL = 0x020A;
+
+		public static int HIWORD(int n) => (n >> 16);
+
+		public static int HIWORD(IntPtr n) => HIWORD(unchecked((int)(long)n));
+
+		protected override void WndProc(ref Message m)
+		{
+			if (m.Msg == WM_MOUSEWHEEL)
+			{
+				int delta = HIWORD(m.WParam);
+				if (delta > 0)
+					TopIndex--;
+				else if (delta < 0)
+					TopIndex++;
+				return;
+			}
+			base.WndProc(ref m);			
 		}
 
 		#endregion
@@ -274,10 +322,10 @@ namespace ControlLibrary.Controls.ListControls
 			try
 			{
 				if (disposing && components != null)
-				{ components.Dispose(); }
+					components.Dispose();
 			}
 			finally
-			{ 
+			{
 				base.Dispose(disposing);
 			}
 		}
@@ -302,8 +350,8 @@ namespace ControlLibrary.Controls.ListControls
 			// 
 			// ListControl
 			// 
-			base.ScrollAlwaysVisible = true;
 			base.DrawMode = DrawMode.OwnerDrawVariable;
+			base.ScrollAlwaysVisible = true;
 			ClientSizeChanged += new EventHandler(ListControl_ClientSizeChanged);
 			ResumeLayout(false);
 		}
@@ -316,25 +364,23 @@ namespace ControlLibrary.Controls.ListControls
 		}
 
 		#endregion
-				
+
 		private void ListControl_ClientSizeChanged(object sender, EventArgs e)
 		{
-			context.MaximumBuffer = new Size(ClientSize.Width + 1, ClientSize.Height + 1);
-			if (grafx != null)
-			{
-				grafx.Dispose();
-				grafx = null;
-			}
-			grafx = context.Allocate(CreateGraphics(), new Rectangle(0, 0, ClientSize.Width + 1, ClientSize.Height + 1));
+			if (ClientSize.Width > 0 && ClientSize.Height > 0)
+				context.MaximumBuffer = new Size(ClientSize.Width + 1, ClientSize.Height + 1);
 		}
 
 		[ReadOnly(true)]
+		[Browsable(false)]
 		public new DrawMode DrawMode => base.DrawMode;
 
 		[ReadOnly(true)]
+		[Browsable(false)]
 		public new bool ScrollAlwaysVisible => base.ScrollAlwaysVisible;
 
 		[ReadOnly(true)]
-		public new int ItemHeight => base.ItemHeight;		
-	}	
+		[Browsable(false)]
+		public new int ItemHeight => base.ItemHeight;
+	}
 }

@@ -1,57 +1,57 @@
-﻿// Ignore Spelling: eventargs
-
+﻿using ControlLibrary.Structures;
 using System;
 using System.Windows.Forms;
 
-namespace ControlLibrary.Controls.ComboControls
+namespace ControlLibrary.Controls.RatingControls
 {
-	public class DataGridViewDateTimePickerCell : DataGridViewTextBoxCell
+	public class DataGridViewRatingCell : DataGridViewTextBoxCell
 	{
-		public DataGridViewDateTimePickerCell() : base()
+		public DataGridViewRatingCell() : base()
 		{
-			Style.Format = "d";
+			Style.Format = string.Empty;
 		}
 
 		public override void InitializeEditingControl(int rowIndex, object initialFormattedValue, DataGridViewCellStyle dataGridViewCellStyle)
 		{
 			base.InitializeEditingControl(rowIndex, initialFormattedValue, dataGridViewCellStyle);
-			CalendarEditingControl ctl = DataGridView.EditingControl as CalendarEditingControl;
+
+			RatingEditingControl ctl = DataGridView.EditingControl as RatingEditingControl;
 
 			if (Value != null && !DBNull.Value.Equals(Value))
 			{
-				ctl.Value = (DateTime)Value;
+				ctl.Rating = (Rating)Value;
 			}
 		}
 
-		public override Type EditType => typeof(CalendarEditingControl);
+		public override Type EditType => typeof(RatingEditingControl);
 
-		public override Type ValueType => typeof(DateTime);
+		public override Type ValueType => typeof(int);
 	}
 
-	public class CalendarEditingControl : DateTimePicker, IDataGridViewEditingControl
+	public class RatingEditingControl : RatingControl, IDataGridViewEditingControl
 	{
-		public CalendarEditingControl()
+		public RatingEditingControl()
 		{
-			Format = DateTimePickerFormat.Short;
+
 		}
 
 		public object EditingControlFormattedValue
 		{
-			get => Value.ToShortDateString();
+			get => Rating;
 			set
 			{
 				if (value is string v &&
-					DateTime.TryParse(v, out DateTime stringDate))
+					int.TryParse(v, out int strRating))
 				{
-					Value = stringDate;
+					Rating = (Rating)strRating;
 				}
-				else if (value is DateTime date)
+				else if (value is int intRating)
 				{
-					Value = date;
+					Rating = (Rating)intRating;
 				}
 				else
 				{
-					Value = DateTime.Today;
+					Rating = Rating.Empty;
 				}
 			}
 		}
@@ -64,8 +64,8 @@ namespace ControlLibrary.Controls.ComboControls
 		public void ApplyCellStyleToEditingControl(DataGridViewCellStyle dataGridViewCellStyle)
 		{
 			Font = dataGridViewCellStyle.Font;
-			CalendarForeColor = dataGridViewCellStyle.ForeColor;
-			CalendarMonthBackground = dataGridViewCellStyle.BackColor;
+			//CalendarForeColor = dataGridViewCellStyle.ForeColor;
+			//CalendarMonthBackground = dataGridViewCellStyle.BackColor;
 		}
 
 		public int EditingControlRowIndex { get; set; }
@@ -98,19 +98,19 @@ namespace ControlLibrary.Controls.ComboControls
 
 		public Cursor EditingPanelCursor => base.Cursor;
 
-		protected override void OnValueChanged(EventArgs eventargs)
+		protected override void OnRatingChanged(RatingEventArgs e)
 		{
 			EditingControlValueChanged = true;
 			EditingControlDataGridView.NotifyCurrentCellDirty(true);
-			base.OnValueChanged(eventargs);
+			base.OnRatingChanged(e);
 		}
 	}
 
-	public class DataGridViewDateTimePickerColumn : DataGridViewColumn
+	public class DataGridViewRatingColumn : DataGridViewColumn
 	{
-		public DataGridViewDateTimePickerColumn()
+		public DataGridViewRatingColumn()
 		{
-			CellTemplate = new DataGridViewDateTimePickerCell();
+			CellTemplate = new DataGridViewRatingCell();
 		}
 	}
 }

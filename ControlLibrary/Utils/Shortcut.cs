@@ -14,69 +14,100 @@ namespace ControlLibrary.Utils
 		private interface IWshShortcut
 		{
 			[DispId(0)]
-			string FullName 
+			string FullName
 			{
-				[return: MarshalAs(UnmanagedType.BStr)][DispId(0)] get;
+				[return: MarshalAs(UnmanagedType.BStr)]
+				[DispId(0)]
+				get;
 			}
-			
+
 			[DispId(0x3e8)]
 			string Arguments
 			{
-				[return: MarshalAs(UnmanagedType.BStr)][DispId(0x3e8)] get;
-				[param: In, MarshalAs(UnmanagedType.BStr)][DispId(0x3e8)] set;
+				[return: MarshalAs(UnmanagedType.BStr)]
+				[DispId(0x3e8)]
+				get;
+				[param: In, MarshalAs(UnmanagedType.BStr)]
+				[DispId(0x3e8)]
+				set;
 			}
-			
+
 			[DispId(0x3e9)]
-			string Description 
+			string Description
 			{
-				[return: MarshalAs(UnmanagedType.BStr)][DispId(0x3e9)] get;
-				[param: In, MarshalAs(UnmanagedType.BStr)][DispId(0x3e9)] set;
+				[return: MarshalAs(UnmanagedType.BStr)]
+				[DispId(0x3e9)]
+				get;
+				[param: In, MarshalAs(UnmanagedType.BStr)]
+				[DispId(0x3e9)]
+				set;
 			}
-			
+
 			[DispId(0x3ea)]
 			string Hotkey
 			{
-				[return: MarshalAs(UnmanagedType.BStr)][DispId(0x3ea)] get;
-				[param: In, MarshalAs(UnmanagedType.BStr)][DispId(0x3ea)] set;
+				[return: MarshalAs(UnmanagedType.BStr)]
+				[DispId(0x3ea)]
+				get;
+				[param: In, MarshalAs(UnmanagedType.BStr)]
+				[DispId(0x3ea)]
+				set;
 			}
-			
+
 			[DispId(0x3eb)]
 			string IconLocation
 			{
-				[return: MarshalAs(UnmanagedType.BStr)][DispId(0x3eb)] get;
-				[param: In, MarshalAs(UnmanagedType.BStr)][DispId(0x3eb)] set;
+				[return: MarshalAs(UnmanagedType.BStr)]
+				[DispId(0x3eb)]
+				get;
+				[param: In, MarshalAs(UnmanagedType.BStr)]
+				[DispId(0x3eb)]
+				set;
 			}
-			
+
 			[DispId(0x3ec)]
 			string RelativePath
 			{
-				[param: In, MarshalAs(UnmanagedType.BStr)][DispId(0x3ec)] set;
+				[param: In, MarshalAs(UnmanagedType.BStr)]
+				[DispId(0x3ec)]
+				set;
 			}
-			
+
 			[DispId(0x3ed)]
 			string TargetPath
 			{
-				[return: MarshalAs(UnmanagedType.BStr)][DispId(0x3ed)] get;
-				[param: In, MarshalAs(UnmanagedType.BStr)][DispId(0x3ed)] set;
+				[return: MarshalAs(UnmanagedType.BStr)]
+				[DispId(0x3ed)]
+				get;
+				[param: In, MarshalAs(UnmanagedType.BStr)]
+				[DispId(0x3ed)]
+				set;
 			}
-			
+
 			[DispId(0x3ee)]
 			int WindowStyle
 			{
-				[DispId(0x3ee)] get;
-				[param: In][DispId(0x3ee)] set;
+				[DispId(0x3ee)]
+				get;
+				[param: In]
+				[DispId(0x3ee)]
+				set;
 			}
-			
+
 			[DispId(0x3ef)]
 			string WorkingDirectory
 			{
-				[return: MarshalAs(UnmanagedType.BStr)][DispId(0x3ef)] get;
-				[param: In, MarshalAs(UnmanagedType.BStr)][DispId(0x3ef)] set;
+				[return: MarshalAs(UnmanagedType.BStr)]
+				[DispId(0x3ef)]
+				get;
+				[param: In, MarshalAs(UnmanagedType.BStr)]
+				[DispId(0x3ef)]
+				set;
 			}
-			
+
 			[TypeLibFunc(0x40), DispId(0x7d0)]
 			void Load([In, MarshalAs(UnmanagedType.BStr)] string PathLink);
-			
+
 			[DispId(0x7d1)]
 			void Save();
 		}
@@ -122,7 +153,7 @@ namespace ControlLibrary.Utils
 		/// <param name="description">Комментарий.</param>
 		/// <param name="workingDirectory">Рабочая папка.</param>
 		/// <param name="arguments">Аргументы командной строки.</param>
-		public static void Create(string name, Environment.SpecialFolder folder, string targetPath, WindowStyle windowsStyle, string hotkey, string iconLocation, string description, string workingDirectory, string arguments) => 
+		public static void Create(string name, Environment.SpecialFolder folder, string targetPath, WindowStyle windowsStyle, string hotkey, string iconLocation, string description, string workingDirectory, string arguments) =>
 			Create(name: name, path: Environment.GetFolderPath(folder), targetPath: targetPath, windowsStyle: windowsStyle, hotkey: hotkey, iconLocation: iconLocation, description: description, workingDirectory: workingDirectory, arguments: arguments);
 
 		/// <summary>

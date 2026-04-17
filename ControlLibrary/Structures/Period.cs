@@ -2,12 +2,13 @@
 
 using ControlLibrary.Utils;
 using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Globalization;
 
 namespace ControlLibrary.Structures
 {
-	public readonly struct Period : IComparable<Period>, IComparable<DateTime>
+	public readonly struct Period : IComparable<Period>, IComparable<DateTime>, IComparable
 	{
 		/// <summary>
 		/// Представляет нулевое значение. Это поле доступно только для чтения.
@@ -45,17 +46,13 @@ namespace ControlLibrary.Structures
 			return new Period(year: year, month: month);
 		}
 
-		public static Period Create(DateTime date) =>
-			Create(year: date.Year, month: date.Month);
+		public static Period Create(DateTime date) => Create(year: date.Year, month: date.Month);
 
-		public static Period Create(int year) =>
-			Create(year: year, month: 0);
+		public static Period Create(int year) => Create(year: year, month: 0);
 
-		public static Period Today() =>
-			Create(DateTime.Today);
+		public static Period Today() => Create(DateTime.Today);
 
-		public static Period Now() =>
-			Create(DateTime.Now);
+		public static Period Now() => Create(DateTime.Now);
 
 		public static bool ParseTry(string s, out Period result)
 		{
@@ -107,6 +104,12 @@ namespace ControlLibrary.Structures
 
 		public Period NextYear => new Period(year: Year + 1, month: Month);
 
+		public bool IsEmpty => Month == 0 && Year == 0;
+
+		public bool IsMinValue => Month == 0 && Year == 1900;
+
+		public bool IsMaxValue => Month == 12 && Year == 2199;
+
 		public string ToShortDateString()
 		{
 			if (Month > 0)
@@ -120,21 +123,16 @@ namespace ControlLibrary.Structures
 
 		public DateTime ToDate() =>
 			Month > 0 ? new DateTime(year: Year, month: Month, day: 1) : new DateTime(year: Year, month: 1, day: 1);
-		
-		public new string ToString() =>
-			Year.ToString("0000") + Month.ToString("00");
-		
-		public static implicit operator Period(int year) =>
-			new Period(year: year, month: 0);
 
-		public static explicit operator int(Period period) =>
-			period.Year;
-		
-		public static implicit operator Period(DateTime date) =>
-			new Period(year: date.Year, month: date.Month);
-		
-		public static explicit operator DateTime(Period period) =>
-			period.ToDate();
+		public new string ToString() => Year.ToString("0000") + Month.ToString("00");
+
+		public static implicit operator Period(int year) => new Period(year: year, month: 0);
+
+		public static explicit operator int(Period period) => period.Year;
+
+		public static implicit operator Period(DateTime date) => new Period(year: date.Year, month: date.Month);
+
+		public static explicit operator DateTime(Period period) => period.ToDate();
 
 		public override bool Equals(object obj)
 		{
@@ -151,7 +149,6 @@ namespace ControlLibrary.Structures
 
 		public override int GetHashCode() =>
 			unchecked((87 * Year.GetHashCode()) ^ Month.GetHashCode());
-		
 
 		public static Period operator +(Period a, Period b)
 		{
@@ -195,7 +192,7 @@ namespace ControlLibrary.Structures
 
 		public static bool operator >=(Period x, Period y) => Compare(x, y) >= 0;
 
-		public static bool operator <=(Period x, Period y) => Compare(x, y) <= 0; 
+		public static bool operator <=(Period x, Period y) => Compare(x, y) <= 0;
 
 		public static bool operator ==(Period x, DateTime y) => Compare(x, y) == 0;
 
@@ -212,6 +209,18 @@ namespace ControlLibrary.Structures
 		public int CompareTo(Period value) => Compare(this, value);
 
 		public int CompareTo(DateTime value) => Compare(this, value);
+
+		public int CompareTo(object obj)
+		{
+			if ((obj == null) || !GetType().Equals(obj.GetType()))
+			{
+				return 1;
+			}
+			else
+			{
+				return Compare(this, (Period)obj);
+			}
+		}
 
 		public static int Compare(Period x, Period y)
 		{
@@ -251,9 +260,43 @@ namespace ControlLibrary.Structures
 			}
 		}
 
-		public class PeriodComparer : IComparer<Period>
+		public class PeriodComparer : IComparer<Period>, IComparer<object>, IComparer
 		{
 			public int Compare(Period x, Period y) => Period.Compare(x, y);
+
+			public int Compare(object x, object y)
+			{
+				if (!Equals(x, null) & !Equals(y, null))
+				{
+					try
+					{
+						if (!typeof(Period).Equals(x.GetType()) && !typeof(Period).Equals(y.GetType()))
+						{
+							return 0;
+						}
+						else if (!typeof(Period).Equals(x.GetType()) && typeof(Period).Equals(y.GetType()))
+						{
+							return -1;
+						}
+						else if (typeof(Period).Equals(x.GetType()) && !typeof(Period).Equals(y.GetType()))
+						{
+							return 1;
+						}
+						else
+						{
+							return Compare((Period)x, (Period)y);
+						}
+					}
+					catch (Exception)
+					{
+						return 0;
+					}
+				}
+				else
+				{
+					return !Equals(x, null) & Equals(y, null) ? 1 : Equals(x, null) & !Equals(y, null) ? -1 : 0;
+				}
+			}
 		}
 	}
 
